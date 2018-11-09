@@ -27,6 +27,7 @@ a, a > code {
 .purple { color: purple; }
 .gray { color: gray; }
 .grey { color: gray; }
+.white { color: white; }
 
 .bold { font-weight: bold; }
 .bolder { font-weight: bolder; }
@@ -196,7 +197,7 @@ a, a > code {
 }
     
     .remark-slide-content {
-      background-color: #FAFAFA;
+      background-color: #FFFFFF;
         border-top: 80px solid #23373B;
       font-size: 20px;
       font-weight: 300;
@@ -205,7 +206,7 @@ a, a > code {
     }
     
     .yourturn {
-      background-color: #FAFAFA;
+      background-color: #FFFFFF;
         border-top: 80px solid #B22222;
       font-size: 20px;
       font-weight: 300;
@@ -214,7 +215,7 @@ a, a > code {
     }
   
   .title-slide .inverse .remark-slide-content {
-    background-color: #FAFAFA;
+    background-color: #FFFFFF;
     background-size: cover;
     border-top: 0px;
   }
@@ -425,3 +426,16 @@ a, a > code {
         float: right;
       }
       
+.clear {
+  border-top: 0px solid #FFFFFF;
+  border-bottom: 0px solid #FFFFFF;
+}
+
+.clear > h1 {
+  font-family: 'Fira Sans';
+  font-weight: normal;
+  font-size: 45px;
+  margin-top: -95px;
+  margin-left: -00px;
+  color: #FFFFFF;
+}
