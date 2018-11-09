@@ -782,7 +782,672 @@ background-size: cover
 library(readr)
 
 # import data
-transactions &lt;- read_csv(file = "data/transactions.csv")
+products &lt;- read_csv(file = "data/products.csv")
+products
+## # A tibble: 151,141 x 5
+##    product_num department commodity brand_ty x5   
+##    &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;
+##  1 0092993     NON-FOOD   PET       PRIVATE  N    
+##  2 0093924     NON-FOOD   PET       PRIVATE  N    
+##  3 0094272     NON-FOOD   PET       PRIVATE  N    
+##  4 0094299     NON-FOOD   PET       PRIVATE  N    
+##  5 0094594     NON-FOOD   PET       PRIVATE  N    
+##  6 0094606     NON-FOOD   PET       PRIVATE  N    
+##  7 0094613     NON-FOOD   PET       PRIVATE  N    
+##  8 0095625     NON-FOOD   PET       PRIVATE  N    
+##  9 0096152     NON-FOOD   PET       PRIVATE  N    
+## 10 0096153     NON-FOOD   PET       PRIVATE  N    
+## # ... with 151,131 more rows
+```
+
+.center[.content-box-gray[.bold[The products data has 151,141 observations (rows) and 5 features (columns)]]]
+
+---
+
+# readxl for Excel files
+
+.pull-left-60[
+
+
+```r
+# load readr library (or tidyverse)
+library(readxl)
+
+# read workbook sheets
+excel_sheets(path = "data/products.xlsx")
+## [1] "metadata"     "products"     "grocery list"
+```
+]
+
+.pull-right-40[
+
+
+- First, we read in the worksheet names with .red[`excel_sheets()`] so we know which sheet to import
+
+- .white[Then we read in the worksheet with `read_excel()`]
+ 
+]
+
+---
+
+# readxl for Excel files
+
+.pull-left-60[
+
+
+```r
+# load readr library (or tidyverse)
+library(readxl)
+
+# read workbook sheets
+excel_sheets(path = "data/products.xlsx")
+## [1] "metadata"      "products data" "grocery list"
+
+# import sheet of interest
+products &lt;- read_excel(path = "data/products.xlsx", sheet = "products data")
+products
+## # A tibble: 151,141 x 5
+##    product_num department commodity brand_ty x5   
+##          &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;
+##  1       92993 NON-FOOD   PET       PRIVATE  N    
+##  2       93924 NON-FOOD   PET       PRIVATE  N    
+##  3       94272 NON-FOOD   PET       PRIVATE  N    
+##  4       94299 NON-FOOD   PET       PRIVATE  N    
+##  5       94594 NON-FOOD   PET       PRIVATE  N    
+##  6       94606 NON-FOOD   PET       PRIVATE  N    
+##  7       94613 NON-FOOD   PET       PRIVATE  N    
+##  8       95625 NON-FOOD   PET       PRIVATE  N    
+##  9       96152 NON-FOOD   PET       PRIVATE  N    
+## 10       96153 NON-FOOD   PET       PRIVATE  N    
+## # ... with 151,131 more rows
+```
+
+]
+
+.pull-right-40[
+
+- .gray[.opacity[First, we read in the worksheet names with `excel_sheets()` so we know which sheet to import]]
+ 
+- Then we read in the worksheet with .red[`read_excel()`]
+
+]
+
+---
+
+# Additional arguments
+
+.font120[Both readr &amp; readxl have many arguments that allow you to...]
+
+.pull-left[
+
+### readr
+
+* read .tsv, .txt, .fwf, and other flat files
+* change column names
+* change data types
+* skip lines
+* re-label missing values
+]
+
+.pull-right[
+
+### readxl
+
+* read a specified range from the spreadsheet
+* change column names
+* change data types
+* skip lines
+* re-label missing values
+
+]
+
+&lt;br&gt;&lt;br&gt;
+
+.center[.content-box-gray[.bold[But these are more advanced options you can learn on your own]]]
+
+---
+
+# What if we have a .bold[<span class=" faa-pulse animated " style=" color:red; display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">big</span>] file?
+
+.pull-left-40[
+
+### Actual data set at work
+
+* 840,861 observations
+* 723 variables
+* equates to 607,942,503 elements
+* 2.7 GB
+
+]
+
+--
+
+.pull-right-60[
+
+### data.table::fread to the rescue <span style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">&lt;img src="https://emojis.slackmojis.com/emojis/images/1471045870/910/rock.gif?1471045870" style="height:1em; width:auto; "/&gt;</span>
+
+
+```r
+# time to import with base R (27 minutes)
+system.time(ynb1 &lt;- read.csv("data/ynb_cheese.csv"))
+##    user  system elapsed 
+## 317.349 1159.192 1678.552
+
+# time to import with readr (10 minutes)
+system.time(ynb2 &lt;- readr::read_csv("data/ynb_cheese.csv"))
+##    user   system  elapsed 
+## 500.954  71.776 594.505
+
+# time to import with data.table::fread (1 minute)
+*system.time(ynb3 &lt;- data.table::fread("data/ynb_cheese.csv", data.table = FALSE))
+*##   user  system elapsed
+*## 40.174   9.861  64.625
+
+```
+
+
+]
+
+
+
+---
+class: yourturn
+
+# Your Turn!
+
+Read in the __transactions.csv__ file and save as `transactions`
+
+--
+
+### Solution
+
+
+```r
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE)
+transactions
+##         basket_num hshd_num purchase_ product_num  spend units store_r
+## 1           100369     3708 09-DEC-17       93466   3.18     2   SOUTH
+## 2           891779      719 20-SEP-17       85201   3.49     1 CENTRAL
+## 3           609562     4995 07-MAR-17     2507006   0.89     1 CENTRAL
+## 4           760220       44 19-JUN-17     4819172   8.99     1   SOUTH
+## 5           869525     3937 04-SEP-17     1055355   1.00     1   SOUTH
+## 6           922989     2356 13-OCT-17     4285485   2.87     1    WEST
+## 7           732544      694 31-MAY-17        8511   0.64     1 CENTRAL
+## 8           536185     3728 14-JAN-17       85939   1.00     1   SOUTH
+## 9           967914      887 15-NOV-17     3775301   4.69     1 CENTRAL
+## 10          102995      574 27-DEC-17       72765   1.29     1    EAST
+## 11          948493     4646 31-OCT-17     5941722   4.39     1 CENTRAL
+## 12          543967     1857 19-JAN-17     5322220   4.54     1    EAST
+## 13          632790     2901 23-MAR-17     4010421   8.97     3    WEST
+## 14          632276     3875 22-MAR-17      274694   2.89     1   SOUTH
+## 15          761527     4862 21-JUN-17        8532   4.99     1    EAST
+## 16          557571     1850 29-JAN-17     4700204   1.99     1 CENTRAL
+## 17          544589     3754 20-JAN-17      208860   1.99     1    EAST
+## 18          686032     4431 29-APR-17     6261179   4.00     2 CENTRAL
+## 19          521430      337 03-JAN-17     5817464   2.25     1    EAST
+## 20          518339     2471 01-JAN-17      256239   5.39     1 CENTRAL
+## 21          938012     1432 22-OCT-17     4633778   0.99     1   SOUTH
+## 22          574340     3290 09-FEB-17        8716   2.50     2    WEST
+## 23          101918     3853 20-DEC-17     6176558   5.99     1   SOUTH
+## 24          948817     4586 01-NOV-17      126122   1.67     1    EAST
+## 25          722802     4731 25-MAY-17     4364736   6.99     1    WEST
+## 26          539956     3600 14-JAN-17       77000   2.29     1   SOUTH
+## 27          839259     4054 12-AUG-17     6151924   2.50     1   SOUTH
+## 28          683839     2349 27-APR-17     5554873   3.99     1   SOUTH
+## 29          916652     3356 08-OCT-17       98432   1.00     1   SOUTH
+## 30          678068     2770 24-APR-17      383285   1.89     1    WEST
+## 31          714526     1266 18-MAY-17      792861   4.99     1    EAST
+## 32          723944     3718 24-MAY-17      193624   1.00     1   SOUTH
+## 33          744115      319 07-JUN-17     3759090   1.00     1    EAST
+## 34          925400     1251 14-OCT-17      100321   2.50     1    EAST
+## 35          558376     1318 30-JAN-17     1148446  19.99     1    EAST
+## 36          916776     3205 08-OCT-17     6031005   2.00     2 CENTRAL
+## 37          715530     1716 20-MAY-17      667140   3.49     1    WEST
+## 38          850838     1044 21-AUG-17      553634   3.99     1   SOUTH
+## 39          899382     1288 25-SEP-17      494672   3.98     2    EAST
+## 40          993603     1207 30-NOV-17      516365  10.58     2    EAST
+## 41          528540     4484 09-JAN-17       85888   1.99     1   SOUTH
+## 42          628627     2717 21-MAR-17     5319971   2.50     1    WEST
+## 43          997628     3113 05-DEC-17      894199   4.49     1    EAST
+## 44          801411     3451 19-JUL-17       84667   7.99     1   SOUTH
+## 45          998420     1239 04-DEC-17        8564   1.18     2 CENTRAL
+## 46          837440     1363 11-AUG-17      471144   3.29     1    EAST
+## 47          622685     4677 15-MAR-17        8511   0.82     1   SOUTH
+## 48          964126     2387 11-NOV-17     2690446  27.99     1    WEST
+## 49          686663     1602 30-APR-17     4643198   1.99     1    WEST
+## 50          845333     1617 18-AUG-17     1471041   1.67     1    WEST
+## 51          646242     4471 01-APR-17      101602   1.50     1   SOUTH
+## 52          579719     2951 12-FEB-17       85351   1.49     1    WEST
+## 53          693738     2132 04-MAY-17     4768382   6.99     1   SOUTH
+## 54          712325      558 15-MAY-17      340916   2.00     1    EAST
+## 55          824031      193 03-AUG-17     5976866   2.39     1    EAST
+## 56          821924      117 02-AUG-17        8655   0.58     1    EAST
+## 57          582157     4664 14-FEB-17      926049   5.24     1   SOUTH
+## 58          524577     2973 07-JAN-17      102176   1.49     1    WEST
+## 59          570805     4267 08-FEB-17       85354   1.99     1    WEST
+## 60          997008     4368 03-DEC-17      139549   1.99     1    EAST
+## 61          931928     4459 20-OCT-17     5135955   2.00     1 CENTRAL
+## 62          980534      201 20-NOV-17     5115496   7.89     1 CENTRAL
+## 63          622068     1521 14-MAR-17     6115724   1.77     1    WEST
+## 64          588480     1339 19-FEB-17     5373603   1.00     1    EAST
+## 65          828313     3955 05-AUG-17     2179750   7.98     2    EAST
+## 66          650913     3706 04-APR-17       99994   1.00     1   SOUTH
+## 67          819096     4650 31-JUL-17       86939   2.50     1    WEST
+## 68          862538     1295 30-AUG-17     2186456   2.99     1    EAST
+## 69          714452     2143 18-MAY-17      899148   3.39     1    EAST
+## 70          754851      851 16-JUN-17       94608   1.38     2 CENTRAL
+## 71          885323     1676 16-SEP-17      966252   2.99     1    EAST
+## 72          763834     1535 21-JUN-17       89360   1.89     1    WEST
+## 73          611155     1998 07-MAR-17     3834271   3.49     1    EAST
+## 74          943237     1337 26-OCT-17      100642   1.99     1   SOUTH
+## 75          922342     4234 11-OCT-17     4754169   6.99     1    EAST
+## 76          524581      760 07-JAN-17     5682276   0.99     1 CENTRAL
+## 77          700300      689 08-MAY-17      142441   3.19     1 CENTRAL
+## 78          102310     2098 23-DEC-17     4634392   3.88     1    WEST
+## 79          586198     4873 17-FEB-17     6115591   1.99     1   SOUTH
+## 80          993710     4427 01-DEC-17      403814   1.00     1   SOUTH
+## 81          581242     3998 13-FEB-17     6330732   2.00     2   SOUTH
+## 82          645429     3404 01-APR-17        8511   1.33     1   SOUTH
+## 83          677886     3975 23-APR-17        8511   0.90     1 CENTRAL
+## 84          628825     3470 21-MAR-17     5504753   8.99     1   SOUTH
+## 85          868499     3884 04-SEP-17     1096402   1.79     1 CENTRAL
+## 86          762886     1009 20-JUN-17       90023   1.39     1 CENTRAL
+## 87          652679     3501 06-APR-17     5819719   2.79     1   SOUTH
+## 88          926570       91 15-OCT-17     5322222   4.76     1 CENTRAL
+## 89          718053        7 22-MAY-17      279126   3.69     1    EAST
+## 90          798967     1498 15-JUL-17       68594   0.99     1    EAST
+## 91          704762     3865 13-MAY-17        9036   0.63     1    EAST
+## 92          609206     1847 05-MAR-17     1428710  13.49     1    EAST
+## 93          844254     1944 16-AUG-17     6364885   1.00     1 CENTRAL
+## 94          561585     2061 31-JAN-17     5249973   3.49     1    EAST
+## 95          865262     4140 30-AUG-17      102929   0.99     1 CENTRAL
+## 96          815027     3293 28-JUL-17     6495492   0.29     1   SOUTH
+## 97          609551      261 06-MAR-17      714496   4.00     4    EAST
+## 98          103016     2367 27-DEC-17      962407   3.34     1 CENTRAL
+## 99          521124      314 02-JAN-17       96932   2.00     2    EAST
+## 100         979411     3756 21-NOV-17       93547   6.29     1 CENTRAL
+## 101         573688     4960 09-FEB-17     6403056   0.89     1    WEST
+## 102         816885     2430 29-JUL-17     5632506   6.49     1    EAST
+## 103         565558     4939 02-FEB-17     6176562   5.98     2    WEST
+## 104         674865     4979 21-APR-17      102965   0.99     1    EAST
+## 105         577981     4635 11-FEB-17      765613   1.79     1    WEST
+## 106         791334     1824 10-JUL-17       93688   3.99     1 CENTRAL
+## 107         967421      322 13-NOV-17     1343782   5.50     1    EAST
+## 108         671221      622 18-APR-17       90777   3.00     5 CENTRAL
+## 109         781219      729 03-JUL-17      100701   1.79     1 CENTRAL
+## 110         542044     1571 18-JAN-17      101499   1.00     1 CENTRAL
+## 111         720471      952 21-MAY-17       86626   2.25     1 CENTRAL
+##         week_num year
+## 1            101 2017
+## 2             90 2017
+## 3             62 2017
+## 4             77 2017
+## 5             88 2017
+## 6             93 2017
+## 7             74 2017
+## 8             54 2017
+## 9             98 2017
+## 10           104 2017
+## 11            96 2017
+## 12            55 2017
+## 13            64 2017
+## 14            64 2017
+## 15            77 2017
+## 16            57 2017
+## 17            55 2017
+## 18            69 2017
+## 19            53 2017
+## 20            53 2017
+## 21            95 2017
+## 22            58 2017
+## 23           103 2017
+## 24            96 2017
+## 25            73 2017
+## 26            54 2017
+## 27            84 2017
+## 28            69 2017
+## 29            93 2017
+## 30            69 2017
+## 31            72 2017
+## 32            73 2017
+## 33            75 2017
+## 34            93 2017
+## 35            57 2017
+## 36            93 2017
+## 37            72 2017
+## 38            86 2017
+## 39            91 2017
+## 40           100 2017
+## 41            54 2017
+## 42            64 2017
+## 43           101 2017
+## 44            81 2017
+## 45           101 2017
+## 46            84 2017
+## 47            63 2017
+## 48            97 2017
+## 49            70 2017
+## 50            85 2017
+## 51            65 2017
+## 52            59 2017
+## 53            70 2017
+## 54            72 2017
+## 55            83 2017
+## 56            83 2017
+## 57            59 2017
+## 58            53 2017
+## 59            58 2017
+## 60           101 2017
+## 61            94 2017
+## 62            99 2017
+## 63            63 2017
+## 64            60 2017
+## 65            83 2017
+## 66            66 2017
+## 67            83 2017
+## 68            87 2017
+## 69            72 2017
+## 70            76 2017
+## 71            89 2017
+## 72            77 2017
+## 73            62 2017
+## 74            95 2017
+## 75            93 2017
+## 76            53 2017
+## 77            71 2017
+## 78           103 2017
+## 79            59 2017
+## 80           100 2017
+## 81            59 2017
+## 82            65 2017
+## 83            69 2017
+## 84            64 2017
+## 85            88 2017
+## 86            77 2017
+## 87            66 2017
+## 88            94 2017
+## 89            73 2017
+## 90            80 2017
+## 91            71 2017
+## 92            62 2017
+## 93            85 2017
+## 94            57 2017
+## 95            87 2017
+## 96            82 2017
+## 97            62 2017
+## 98           104 2017
+## 99            53 2017
+## 100           99 2017
+## 101           58 2017
+## 102           82 2017
+## 103           57 2017
+## 104           68 2017
+## 105           58 2017
+## 106           80 2017
+## 107           98 2017
+## 108           68 2017
+## 109           79 2017
+## 110           55 2017
+## 111           73 2017
+##  [ reached getOption("max.print") -- omitted 1857456 rows ]
+```
+
+---
+
+# Wait, that looks different...
+
+&lt;img src="images/wait-one-sec.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Tibbles
+
+.scrollable90[
+.pull-left[
+
+### data frame 
+
+
+```r
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE)
+transactions
+##         basket_num hshd_num purchase_ product_num  spend units store_r
+## 1           100369     3708 09-DEC-17       93466   3.18     2   SOUTH
+## 2           891779      719 20-SEP-17       85201   3.49     1 CENTRAL
+## 3           609562     4995 07-MAR-17     2507006   0.89     1 CENTRAL
+## 4           760220       44 19-JUN-17     4819172   8.99     1   SOUTH
+## 5           869525     3937 04-SEP-17     1055355   1.00     1   SOUTH
+## 6           922989     2356 13-OCT-17     4285485   2.87     1    WEST
+## 7           732544      694 31-MAY-17        8511   0.64     1 CENTRAL
+## 8           536185     3728 14-JAN-17       85939   1.00     1   SOUTH
+## 9           967914      887 15-NOV-17     3775301   4.69     1 CENTRAL
+## 10          102995      574 27-DEC-17       72765   1.29     1    EAST
+## 11          948493     4646 31-OCT-17     5941722   4.39     1 CENTRAL
+## 12          543967     1857 19-JAN-17     5322220   4.54     1    EAST
+## 13          632790     2901 23-MAR-17     4010421   8.97     3    WEST
+## 14          632276     3875 22-MAR-17      274694   2.89     1   SOUTH
+## 15          761527     4862 21-JUN-17        8532   4.99     1    EAST
+## 16          557571     1850 29-JAN-17     4700204   1.99     1 CENTRAL
+## 17          544589     3754 20-JAN-17      208860   1.99     1    EAST
+## 18          686032     4431 29-APR-17     6261179   4.00     2 CENTRAL
+## 19          521430      337 03-JAN-17     5817464   2.25     1    EAST
+## 20          518339     2471 01-JAN-17      256239   5.39     1 CENTRAL
+## 21          938012     1432 22-OCT-17     4633778   0.99     1   SOUTH
+## 22          574340     3290 09-FEB-17        8716   2.50     2    WEST
+## 23          101918     3853 20-DEC-17     6176558   5.99     1   SOUTH
+## 24          948817     4586 01-NOV-17      126122   1.67     1    EAST
+## 25          722802     4731 25-MAY-17     4364736   6.99     1    WEST
+## 26          539956     3600 14-JAN-17       77000   2.29     1   SOUTH
+## 27          839259     4054 12-AUG-17     6151924   2.50     1   SOUTH
+## 28          683839     2349 27-APR-17     5554873   3.99     1   SOUTH
+## 29          916652     3356 08-OCT-17       98432   1.00     1   SOUTH
+## 30          678068     2770 24-APR-17      383285   1.89     1    WEST
+## 31          714526     1266 18-MAY-17      792861   4.99     1    EAST
+## 32          723944     3718 24-MAY-17      193624   1.00     1   SOUTH
+## 33          744115      319 07-JUN-17     3759090   1.00     1    EAST
+## 34          925400     1251 14-OCT-17      100321   2.50     1    EAST
+## 35          558376     1318 30-JAN-17     1148446  19.99     1    EAST
+## 36          916776     3205 08-OCT-17     6031005   2.00     2 CENTRAL
+## 37          715530     1716 20-MAY-17      667140   3.49     1    WEST
+## 38          850838     1044 21-AUG-17      553634   3.99     1   SOUTH
+## 39          899382     1288 25-SEP-17      494672   3.98     2    EAST
+## 40          993603     1207 30-NOV-17      516365  10.58     2    EAST
+## 41          528540     4484 09-JAN-17       85888   1.99     1   SOUTH
+## 42          628627     2717 21-MAR-17     5319971   2.50     1    WEST
+## 43          997628     3113 05-DEC-17      894199   4.49     1    EAST
+## 44          801411     3451 19-JUL-17       84667   7.99     1   SOUTH
+## 45          998420     1239 04-DEC-17        8564   1.18     2 CENTRAL
+## 46          837440     1363 11-AUG-17      471144   3.29     1    EAST
+## 47          622685     4677 15-MAR-17        8511   0.82     1   SOUTH
+## 48          964126     2387 11-NOV-17     2690446  27.99     1    WEST
+## 49          686663     1602 30-APR-17     4643198   1.99     1    WEST
+## 50          845333     1617 18-AUG-17     1471041   1.67     1    WEST
+## 51          646242     4471 01-APR-17      101602   1.50     1   SOUTH
+## 52          579719     2951 12-FEB-17       85351   1.49     1    WEST
+## 53          693738     2132 04-MAY-17     4768382   6.99     1   SOUTH
+## 54          712325      558 15-MAY-17      340916   2.00     1    EAST
+## 55          824031      193 03-AUG-17     5976866   2.39     1    EAST
+## 56          821924      117 02-AUG-17        8655   0.58     1    EAST
+## 57          582157     4664 14-FEB-17      926049   5.24     1   SOUTH
+## 58          524577     2973 07-JAN-17      102176   1.49     1    WEST
+## 59          570805     4267 08-FEB-17       85354   1.99     1    WEST
+## 60          997008     4368 03-DEC-17      139549   1.99     1    EAST
+## 61          931928     4459 20-OCT-17     5135955   2.00     1 CENTRAL
+## 62          980534      201 20-NOV-17     5115496   7.89     1 CENTRAL
+## 63          622068     1521 14-MAR-17     6115724   1.77     1    WEST
+## 64          588480     1339 19-FEB-17     5373603   1.00     1    EAST
+## 65          828313     3955 05-AUG-17     2179750   7.98     2    EAST
+## 66          650913     3706 04-APR-17       99994   1.00     1   SOUTH
+## 67          819096     4650 31-JUL-17       86939   2.50     1    WEST
+## 68          862538     1295 30-AUG-17     2186456   2.99     1    EAST
+## 69          714452     2143 18-MAY-17      899148   3.39     1    EAST
+## 70          754851      851 16-JUN-17       94608   1.38     2 CENTRAL
+## 71          885323     1676 16-SEP-17      966252   2.99     1    EAST
+## 72          763834     1535 21-JUN-17       89360   1.89     1    WEST
+## 73          611155     1998 07-MAR-17     3834271   3.49     1    EAST
+## 74          943237     1337 26-OCT-17      100642   1.99     1   SOUTH
+## 75          922342     4234 11-OCT-17     4754169   6.99     1    EAST
+## 76          524581      760 07-JAN-17     5682276   0.99     1 CENTRAL
+## 77          700300      689 08-MAY-17      142441   3.19     1 CENTRAL
+## 78          102310     2098 23-DEC-17     4634392   3.88     1    WEST
+## 79          586198     4873 17-FEB-17     6115591   1.99     1   SOUTH
+## 80          993710     4427 01-DEC-17      403814   1.00     1   SOUTH
+## 81          581242     3998 13-FEB-17     6330732   2.00     2   SOUTH
+## 82          645429     3404 01-APR-17        8511   1.33     1   SOUTH
+## 83          677886     3975 23-APR-17        8511   0.90     1 CENTRAL
+## 84          628825     3470 21-MAR-17     5504753   8.99     1   SOUTH
+## 85          868499     3884 04-SEP-17     1096402   1.79     1 CENTRAL
+## 86          762886     1009 20-JUN-17       90023   1.39     1 CENTRAL
+## 87          652679     3501 06-APR-17     5819719   2.79     1   SOUTH
+## 88          926570       91 15-OCT-17     5322222   4.76     1 CENTRAL
+## 89          718053        7 22-MAY-17      279126   3.69     1    EAST
+## 90          798967     1498 15-JUL-17       68594   0.99     1    EAST
+## 91          704762     3865 13-MAY-17        9036   0.63     1    EAST
+## 92          609206     1847 05-MAR-17     1428710  13.49     1    EAST
+## 93          844254     1944 16-AUG-17     6364885   1.00     1 CENTRAL
+## 94          561585     2061 31-JAN-17     5249973   3.49     1    EAST
+## 95          865262     4140 30-AUG-17      102929   0.99     1 CENTRAL
+## 96          815027     3293 28-JUL-17     6495492   0.29     1   SOUTH
+## 97          609551      261 06-MAR-17      714496   4.00     4    EAST
+## 98          103016     2367 27-DEC-17      962407   3.34     1 CENTRAL
+## 99          521124      314 02-JAN-17       96932   2.00     2    EAST
+## 100         979411     3756 21-NOV-17       93547   6.29     1 CENTRAL
+## 101         573688     4960 09-FEB-17     6403056   0.89     1    WEST
+## 102         816885     2430 29-JUL-17     5632506   6.49     1    EAST
+## 103         565558     4939 02-FEB-17     6176562   5.98     2    WEST
+## 104         674865     4979 21-APR-17      102965   0.99     1    EAST
+## 105         577981     4635 11-FEB-17      765613   1.79     1    WEST
+## 106         791334     1824 10-JUL-17       93688   3.99     1 CENTRAL
+## 107         967421      322 13-NOV-17     1343782   5.50     1    EAST
+## 108         671221      622 18-APR-17       90777   3.00     5 CENTRAL
+## 109         781219      729 03-JUL-17      100701   1.79     1 CENTRAL
+## 110         542044     1571 18-JAN-17      101499   1.00     1 CENTRAL
+## 111         720471      952 21-MAY-17       86626   2.25     1 CENTRAL
+##         week_num year
+## 1            101 2017
+## 2             90 2017
+## 3             62 2017
+## 4             77 2017
+## 5             88 2017
+## 6             93 2017
+## 7             74 2017
+## 8             54 2017
+## 9             98 2017
+## 10           104 2017
+## 11            96 2017
+## 12            55 2017
+## 13            64 2017
+## 14            64 2017
+## 15            77 2017
+## 16            57 2017
+## 17            55 2017
+## 18            69 2017
+## 19            53 2017
+## 20            53 2017
+## 21            95 2017
+## 22            58 2017
+## 23           103 2017
+## 24            96 2017
+## 25            73 2017
+## 26            54 2017
+## 27            84 2017
+## 28            69 2017
+## 29            93 2017
+## 30            69 2017
+## 31            72 2017
+## 32            73 2017
+## 33            75 2017
+## 34            93 2017
+## 35            57 2017
+## 36            93 2017
+## 37            72 2017
+## 38            86 2017
+## 39            91 2017
+## 40           100 2017
+## 41            54 2017
+## 42            64 2017
+## 43           101 2017
+## 44            81 2017
+## 45           101 2017
+## 46            84 2017
+## 47            63 2017
+## 48            97 2017
+## 49            70 2017
+## 50            85 2017
+## 51            65 2017
+## 52            59 2017
+## 53            70 2017
+## 54            72 2017
+## 55            83 2017
+## 56            83 2017
+## 57            59 2017
+## 58            53 2017
+## 59            58 2017
+## 60           101 2017
+## 61            94 2017
+## 62            99 2017
+## 63            63 2017
+## 64            60 2017
+## 65            83 2017
+## 66            66 2017
+## 67            83 2017
+## 68            87 2017
+## 69            72 2017
+## 70            76 2017
+## 71            89 2017
+## 72            77 2017
+## 73            62 2017
+## 74            95 2017
+## 75            93 2017
+## 76            53 2017
+## 77            71 2017
+## 78           103 2017
+## 79            59 2017
+## 80           100 2017
+## 81            59 2017
+## 82            65 2017
+## 83            69 2017
+## 84            64 2017
+## 85            88 2017
+## 86            77 2017
+## 87            66 2017
+## 88            94 2017
+## 89            73 2017
+## 90            80 2017
+## 91            71 2017
+## 92            62 2017
+## 93            85 2017
+## 94            57 2017
+## 95            87 2017
+## 96            82 2017
+## 97            62 2017
+## 98           104 2017
+## 99            53 2017
+## 100           99 2017
+## 101           58 2017
+## 102           82 2017
+## 103           57 2017
+## 104           68 2017
+## 105           58 2017
+## 106           80 2017
+## 107           98 2017
+## 108           68 2017
+## 109           79 2017
+## 110           55 2017
+## 111           73 2017
+##  [ reached getOption("max.print") -- omitted 1857456 rows ]
+```
+
+]
+
+.pull-right[
+
+### tibble 
+
+
+```r
+transactions &lt;- read_csv("data/transactions.csv")
 transactions
 ## # A tibble: 1,857,567 x 9
 ##    basket_num hshd_num purchase_ product_num spend units store_r week_num
@@ -800,9 +1465,83 @@ transactions
 ## # ... with 1,857,557 more rows, and 1 more variable: year &lt;int&gt;
 ```
 
+]
+]
+
 ---
 
-# readxl for Excel files
+# Tibbles
+
+.scrollable90[
+.pull-left[
+
+### data frame `\(\rightarrow\)` tibble 
+
+
+```r
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE)
+*transactions &lt;- as.tibble(transactions)
+
+transactions
+## # A tibble: 1,857,567 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+##  2     891779      719 20-SEP-17       85201  3.49     1 CENTRAL       90
+##  3     609562     4995 07-MAR-17     2507006  0.89     1 CENTRAL       62
+##  4     760220       44 19-JUN-17     4819172  8.99     1 SOUTH         77
+##  5     869525     3937 04-SEP-17     1055355  1        1 SOUTH         88
+##  6     922989     2356 13-OCT-17     4285485  2.87     1 WEST          93
+##  7     732544      694 31-MAY-17        8511  0.64     1 CENTRAL       74
+##  8     536185     3728 14-JAN-17       85939  1        1 SOUTH         54
+##  9     967914      887 15-NOV-17     3775301  4.69     1 CENTRAL       98
+## 10     102995      574 27-DEC-17       72765  1.29     1 EAST         104
+## # ... with 1,857,557 more rows, and 1 more variable: year &lt;int&gt;
+```
+
+]
+
+.pull-right[
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+&lt;img src="images/i-like.gif" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Get to know your data
+
+.font120[Try these functions on your __transactions__ data:]
+
+
+```r
+# dimensions (rows x columns)
+dim(transactions)
+
+# get a quick glimpse of the data
+glimpse(transactions)
+
+# get the names of all the variables
+names(transactions)
+
+# how many missing values exist
+sum(is.na(transactions))
+
+# omit all observations with missing values
+clean_data &lt;- na.omit(transactions)
+
+# view the data in a spreadsheet like viewer
+View(transactions)
+```
+
+--
+&lt;br&gt;
+.center[.content-box-gray[.bold[.red[So we have our data, now what?]]]]
+
+---
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

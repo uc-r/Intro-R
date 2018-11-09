@@ -9,3 +9,4 @@ dplyr
 stringr
 forcats
 bindrcpp
+readxl
