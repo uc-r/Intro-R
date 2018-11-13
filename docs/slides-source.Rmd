@@ -137,14 +137,12 @@ knitr::include_graphics("images/applied-data-science.gif")
 
 # Course objectives!
 
-<br>
-
-.font150[Provide an intensive, hands-on introduction to the `r anicon::faa("r-project", colour = "steelblue", size = 1, animate = FALSE)` programming language:]
+.font110[Provide an intensive, hands-on introduction to the `r anicon::faa("r-project", colour = "steelblue", size = 1, animate = FALSE)` programming language:]
 
 .pull-left[
 
-.center[.bold[.font120[Day 1]]]
- 
+.center[.bold[Day 1]]
+
 | Topic | Time |
 |:------|------|
 | Fundamentals | 9:00 - 10:00 |
@@ -152,20 +150,30 @@ knitr::include_graphics("images/applied-data-science.gif")
 | Break | 10:30 - 10:45 |
 | Data transformation | 10:45 - 12:00 |
 | Lunch | 12:00 - 1:00 |
-| Data visualization | xx-xx |
+| Review | 1:00-1:30 |
+| Data visualization | 1:30-2:30 |
+| Break | 2:30-2:45 |
+| Case study | 2:45-4:00 |
+| Q&A | 4:00-4:30 |
 
 ]
 
 .pull-right[
 
-.center[.bold[.font120[Day 2]]]
+.center[.bold[Day 2]]
  
 | Topic | Time |
 |:------|------|
-| Tidying data | xx-xx |
-| Joining data | xx-xx |
-| Data structures | xx-xx |
-| Exploratory data analysis | xx-xx |
+| Review | 9:00-10:00 |
+| Tidying & cleaning | 10:00-10:45 |
+| Break | 10:45 - 11:00 |
+| Tidying & cleaning | 11:00-12:00 |
+| Lunch | 12:00 - 1:00 |
+| Joining data | 1:00-1:45 |
+| Data structures | 1:45-2:30 |
+| Break | 2:30-2:45 |
+| Exploratory data analysis | 2:45-4:00 |
+| Q&A | 4:00-4:30 |
 
 ]
 
@@ -2047,6 +2055,204 @@ background-size: cover
 
 ---
 
+# Leverage the cheat sheet
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cheatsheet-dplyr.png")
+```
+
+.center[.content-box-gray[.bold[`Help >> Cheatsheets >> Data Transformation with dplyr`]]]
+
+---
+
+# Question 1
+
+.pull-left[
+
+### Challenge
+
+How much total spend did household 3937 have in week 54?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____, _____) %>%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(hshd_num == 3937, week_num == 54) %>%
+  summarize(spend = sum(spend, na.rm = TRUE))
+```
+
+
+]
+
+---
+
+# Question 2
+
+.pull-left[
+
+### Challenge
+
+Compute the total spend for baskets that household 3937 had in week 54.
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____, _____) %>%
+  group_by(_____) %>%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(hshd_num == 3937, week_num == 54) %>%
+  group_by(basket_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE))
+```
+
+
+]
+
+---
+
+# Question 3
+
+.pull-left[
+
+### Challenge
+
+Compute the total units per basket for the central region.  Which basket contained the most units?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____) %>%
+  group_by(_____) %>%
+  summarize(_____) %>%
+  arrange(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(store_r == "CENTRAL") %>%
+  group_by(basket_num) %>%
+  summarize(units = sum(units, na.rm = TRUE)) %>%
+  arrange(desc(units))
+```
+
+
+]
+
+---
+
+# Question 4
+
+.pull-left[
+
+### Challenge
+
+In the east region, compute each household's spend-to-units ratio for each week.  Which household has the largest spend-to-units ratio?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____) %>%
+  group_by(_____, _____) %>%
+  summarize(
+    _____,
+    _____
+    ) %>%
+  mutate(_____) %>%
+  arrange(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(store_r == "EAST") %>%
+  group_by(hshd_num, week_num) %>%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %>%
+  mutate(ratio = spend / units) %>%
+  arrange(desc(ratio))
+```
+
+
+]
+
+---
+
+# Question 5
+
+.pull-left[
+
+### Challenge
+
+Compute total spend by basket for each purchase date.  Can you find the date that has the largest average (mean) total spend? 
+
+```{r, eval=FALSE}
+transactions %>% 
+  ______ %>%
+  ______ %>%
+  ______ %>%
+  ______ %>%
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  group_by(purchase_, basket_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  summarize(avg_spend = mean(spend)) %>%
+  arrange(desc(avg_spend))
+```
+
+
+]
+
+
+---
+
 
 class: clear, center, middle
 
@@ -2453,7 +2659,7 @@ ggplot(data = mpg, aes(x = displ, y = hwy)) +
 
 # Adding a 3<sup>rd</sup> dimension
 
-.bold[By moving the color argument to within aes(), we can map a 3rd variable to our plot]
+.bold[By moving the color argument to within .font120.gray[`aes()`], we can map a 3rd variable to our plot]
 
 .pull-left[
 
@@ -2525,7 +2731,7 @@ gridExtra::grid.arrange(p1, p2, nrow = 1)
 
 # Creating small multiples with .red[facets]
 
-.bold[The `facet_xxx()` functions provide a simple way to create small multiples.]
+.bold[The .font120.gray[`facet_xxx()`] functions provide a simple way to create small multiples.]
 
 --
 .scrollable90[
@@ -2578,7 +2784,7 @@ class: yourturn
 transactions %>%
   group_by(store_r, week_num) %>%
   summarize(spend = sum(spend, na.rm = TRUE)) %>%
-  ggplot(aes(x = week_num, spend)) +
+  ggplot(aes(x = week_num, y = spend)) +
   geom_line() + 
   facet_wrap(~ store_r)
 ```
@@ -2589,7 +2795,7 @@ transactions %>%
 
 # Titles & Axes
 
-.bold[We can add titles with `ggtitle()` or with `labs()`]
+.bold[We can add titles with .font120.gray[`ggtitle()`] or with .font120.gray[`labs()`]]
 
 --
 
@@ -2624,7 +2830,7 @@ ggplot(data = mpg, aes(x = displ, y = hwy)) +
 
 # Titles & Axes
 
-.bold[We can add adjust axes with various `scale_xxxx()` functions]
+.bold[We can add adjust axes with various .font120.gray[`scale_xxxx()`] functions]
 
 --
 
@@ -2671,4 +2877,300 @@ ggplot(data = txhousing, aes(x = volume, y = median)) +
 class: yourturn
 
 # Your Turn!
+
+.pull-left[
+
+### Challenge
+
+Complete this code to plot the relationship between total basket spend and units.  See if you can adjust the x and y axis titles and also add a main title.
+
+```{r, eval=FALSE}
+transactions %>%
+    group_by(basket_num) %>%
+    summarize(
+        spend = sum(spend, na.rm = TRUE),
+        units = sum(units, na.rm = TRUE)
+    ) %>%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point() + 
+  scale_x_log10(______) +
+  scale_y_log10(______) + 
+  ggtitle(______)
+```
+
+
+]
+
+--
+
+.pull-right[
+
+
+```{r, fig.height=3.5}
+transactions %>%
+    group_by(basket_num) %>%
+    summarize(
+        spend = sum(spend, na.rm = TRUE),
+        units = sum(units, na.rm = TRUE)
+    ) %>%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point(alpha = .01) + 
+  scale_x_log10("Total basket units") +
+  scale_y_log10("Total basket spend", labels = scales::dollar) + 
+  ggtitle("Total Spend-to-Units Relationship")
+```
+
+
+]
+
+---
+
+# Overplotting
+
+.bold[Working in a layer mentality allows us to add multiple geoms, which can highlight certain patterns.]
+
+--
+
+.scrollable90[
+
+.pull-left[
+
+```{r eval=FALSE}
+ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .1)  +
+  scale_x_log10() +
+  geom_smooth() #<<
+
+ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .1)  +
+  scale_x_log10() +
+  geom_smooth(method = "lm") #<<
+```
+
+```{r echo=FALSE, fig.height=3}
+p1 <- ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .1)  +
+  scale_x_log10() +
+  geom_smooth() 
+
+p2 <- ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .1)  +
+  scale_x_log10() +
+  geom_smooth(method = "lm")
+
+gridExtra::grid.arrange(p1, p2, nrow = 1)
+```
+
+]
+
+.pull-right[
+
+```{r fig.height=4.25}
+ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .1)  +
+  scale_x_log10() +
+  geom_smooth(method = "lm") + #<<
+  facet_wrap(~ month) #<<
+```
+
+]
+]
+
+---
+
+# Global vs local
+
+.bold[Where we add our mapping aesthetics determines if the information flows through proceeding layers.]
+
+.pull-left[
+
+### Global `r anicon::faa("globe", animate = FALSE)`
+
+```{r, fig.height=3.5}
+ggplot(data = mpg, aes(x = displ, y = hwy, color = drv)) + #<<
+  geom_point() + 
+  geom_smooth()
+```
+
+]
+
+.pull-right[
+
+### Local `r anicon::faa("map-pin", animate = FALSE)`
+
+```{r, fig.height=3.5}
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point() + 
+  geom_smooth(mapping = aes(color = drv)) #<<
+```
+
+]
+
+---
+
+# Is that all?
+
+```{r, echo=FALSE, out.width="65%"}
+knitr::include_graphics("images/anything-else.gif")
+```
+
+
+---
+
+# Coolness is unlimited with ggplot extensions `r emo::ji("smiling face with sunglasses")`
+
+.pull-left[
+
+.center.font130.bold[`ggmap`]
+
+```{r, echo=FALSE, fig.height=5.25}
+library(dplyr)
+library(forcats)
+library(ggmap)
+
+# define helper
+`%notin%` <- function(lhs, rhs) !(lhs %in% rhs)
+
+# reduce crime to violent crimes in downtown houston
+violent_crimes <- crime %>% 
+  filter(
+    offense %notin% c("auto theft", "theft", "burglary"),
+    -95.39681 <= lon & lon <= -95.34188,
+     29.73631 <= lat & lat <=  29.78400
+  ) %>% 
+  mutate(
+    offense = fct_drop(offense),
+    offense = fct_relevel(offense, 
+      c("robbery", "aggravated assault", "rape", "murder")
+    )
+  )
+
+# use qmplot to make a scatterplot on a map
+p <- qmplot(lon, lat, data = violent_crimes, maptype = "toner-lite", color = I("red"))
+p
+```
+
+
+]
+
+
+.pull-left[
+
+.center.font130.bold[`plotly`]
+
+```{r, echo=FALSE, fig.height=5.5}
+plotly::ggplotly(p)
+```
+
+]
+
+
+---
+
+# Coolness is unlimited with ggplot extensions `r emo::ji("smiling face with sunglasses")`
+
+
+.pull-left[
+
+.center.font130.bold[`gganimate`]
+
+```{r, echo=FALSE, fig.height=5.5}
+library(gganimate)
+p <- transactions %>%
+  group_by(store_r, week_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  ggplot(aes(week_num, spend, color = store_r)) +
+  geom_line(show.legend = FALSE) +
+  scale_y_continuous("Total spend", labels = scales::dollar) +
+  xlab("Week") +
+  transition_reveal(id = store_r, along = week_num)
+animate(p, renderer = gifski_renderer(), device = "png")
+```
+
+
+]
+
+
+.pull-left[
+
+.center.font130.bold[And many more!]
+
+<br><br><br><br><br>
+
+.center[https://www.ggplot2-exts.org/]
+
+
+]
+
+---
+
+# Key things to remember
+
+.pull-left[
+
+* .bold[`ggplot()`]: create canvas
+
+* .bold[`aes()`]: map variables to plot aesthetics
+
+* .bold[`geom_xxx()`]: display data with different geometric shapes 
+
+* .bold[`facet_xxx()`]: create small multiples
+
+* .bold[`ggtitle()`, `labs()`, `scale_xxx()`]: adjust titles & axes
+
+<br>
+
+.center[.content-box-gray[Great resource: [ggplot2.tidyverse.org](ggplot2.tidyverse.org)]]
+
+]
+
+.pull-right[
+
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("images/information-overload2.gif")
+```
+
+
+]
+
+---
+
+# Key things to remember
+
+.pull-left[
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cheatsheet-ggplot2.png")
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo=FALSE, out.width="80%"}
+knitr::include_graphics("images/information-overload2.gif")
+```
+
+<br>
+]
+
+.center[.content-box-gray[.bold[`Help >> Cheatsheets >> Data Visualization with ggplot2`]]]
+
+---
+
+# Questions?
+
+<br>
+
+```{r questions-ggplot, echo=FALSE, out.height="450", out.width="450"}
+knitr::include_graphics("images/questions.png")
+```
+
+---
+
+
+
+
+
 

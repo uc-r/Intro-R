@@ -10,3 +10,6 @@ stringr
 forcats
 bindrcpp
 readxl
+ggmap
+gganimate
+ggridges
