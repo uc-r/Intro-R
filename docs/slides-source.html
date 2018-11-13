@@ -1542,6 +1542,1958 @@ View(transactions)
 .center[.content-box-gray[.bold[.red[So we have our data, now what?]]]]
 
 ---
+class: clear, center, middle
+
+background-image: url(images/transformer.gif)
+background-size: cover
+
+.font200.white.bold[Transforming Data]
+
+---
+
+# dplyr
+
+You are going to learn six key .bold[dplyr] functions that allow you to solve the vast majority of your data manipulation challenges:
+
+.pull-left[
+
+* .bold[`filter`]: pick observations based on values
+
+* .bold[`select`]: pick variables
+
+* .bold[`summarize`]: compute statistical summaries 
+
+* .bold[`group_by`]: perform operations at different levels of your data
+
+* .bold[`arrange`]: reorder data
+
+* .bold[`mutate`]: create new variables
+
+]
+
+.pull-right[
+
+&lt;br&gt;
+&lt;img src="images/dplyr.png" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+&lt;br&gt;
+]
+
+---
+
+# Basics
+
+.font130[All functions work similarly:]
+.font120[
+* The first argument is a data frame
+* Subsequent arguments describe what to do
+* Output is a new data frame
+]
+
+&lt;br&gt;
+
+&lt;img src="images/function-in-out.png" width="1343" style="display: block; margin: auto;" /&gt;
+
+---
+# Prerequisites
+
+.pull-left[
+
+### Packages
+
+
+```r
+library(dplyr) # or library(tidyverse)
+```
+
+
+]
+
+.pull-right[
+
+### Data
+
+
+```r
+transactions
+## # A tibble: 1,857,567 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+##  2     891779      719 20-SEP-17       85201  3.49     1 CENTRAL       90
+##  3     609562     4995 07-MAR-17     2507006  0.89     1 CENTRAL       62
+##  4     760220       44 19-JUN-17     4819172  8.99     1 SOUTH         77
+##  5     869525     3937 04-SEP-17     1055355  1        1 SOUTH         88
+##  6     922989     2356 13-OCT-17     4285485  2.87     1 WEST          93
+##  7     732544      694 31-MAY-17        8511  0.64     1 CENTRAL       74
+##  8     536185     3728 14-JAN-17       85939  1        1 SOUTH         54
+##  9     967914      887 15-NOV-17     3775301  4.69     1 CENTRAL       98
+## 10     102995      574 27-DEC-17       72765  1.29     1 EAST         104
+## # ... with 1,857,557 more rows, and 1 more variable: year &lt;int&gt;
+```
+
+]
+
+---
+
+# Filtering variables
+
+.bold[We can filter our data set based on given conditions for one or more variables with .font140.grey[`filter()`]]
+
+&lt;br&gt;&lt;br&gt;
+
+.center[.font200[.grey[`filter(`].blue[`data`]`,` .red[`...`] .grey[`)`]]]
+
+&lt;br&gt;
+
+.white[.center[.content-box-grey-dark[dplyr function] .content-box-blue-dark[data frame to transform] .content-box-red-dark[conditions to filter data]]]
+
+---
+
+# Filtering variables
+
+.bold[We can filter our data set based on given conditions for one or more variables with .font140.grey[`filter()`]]
+
+.scrollable90[
+
+
+```r
+# filter for all observations in month 1 (January)
+filter(transactions, hshd_num == "3708")
+## # A tibble: 565 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+##  2     636498     3708 25-MAR-17     1107634  1.29     1 SOUTH         64
+##  3     546082     3708 21-JAN-17     1107675  1.5      6 SOUTH         55
+##  4     684954     3708 29-APR-17     5972414  2.49     1 SOUTH         69
+##  5     616834     3708 11-MAR-17     3688758  1.49     1 SOUTH         62
+##  6     717587     3708 20-MAY-17       93484  0.99     1 SOUTH         72
+##  7     636498     3708 25-MAR-17     3816309  1.78     2 SOUTH         64
+##  8     963134     3708 11-NOV-17     5867925  8.37     3 SOUTH         97
+##  9     758341     3708 18-JUN-17     6487780  1.99     1 SOUTH         77
+## 10     955303     3708 04-NOV-17     4896971  1        1 SOUTH         96
+## # ... with 555 more rows, and 1 more variable: year &lt;int&gt;
+
+# filter for all observations on January 1st
+filter(transactions, hshd_num == "3708", spend &gt; 3)
+## # A tibble: 197 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+##  2     963134     3708 11-NOV-17     5867925  8.37     3 SOUTH         97
+##  3     973940     3708 18-NOV-17       85383  6.96     8 SOUTH         98
+##  4     955303     3708 04-NOV-17      633008  3.29     1 SOUTH         96
+##  5     896784     3708 23-SEP-17       85383  5.53     7 SOUTH         90
+##  6     564871     3708 04-FEB-17     5510044  3.69     1 SOUTH         57
+##  7     806865     3708 22-JUL-17     5849247  3.79     1 SOUTH         81
+##  8     934452     3708 21-OCT-17       85383  6.09     7 SOUTH         94
+##  9     747396     3708 10-JUN-17      933615  8.99     1 SOUTH         75
+## 10     747396     3708 10-JUN-17     5235072  4.19     1 SOUTH         75
+## # ... with 187 more rows, and 1 more variable: year &lt;int&gt;
+
+# filter for all observations on January 1st with a departure delay
+filter(transactions, hshd_num == "3708", spend &gt; 3, product_num != 85383)
+## # A tibble: 176 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+##  2     963134     3708 11-NOV-17     5867925  8.37     3 SOUTH         97
+##  3     955303     3708 04-NOV-17      633008  3.29     1 SOUTH         96
+##  4     564871     3708 04-FEB-17     5510044  3.69     1 SOUTH         57
+##  5     806865     3708 22-JUL-17     5849247  3.79     1 SOUTH         81
+##  6     747396     3708 10-JUN-17      933615  8.99     1 SOUTH         75
+##  7     747396     3708 10-JUN-17     5235072  4.19     1 SOUTH         75
+##  8     896784     3708 23-SEP-17     6139597  5.99     1 SOUTH         90
+##  9     737913     3708 03-JUN-17      103780 11.0      1 SOUTH         74
+## 10     519995     3708 02-JAN-17     2956277  5        2 SOUTH         53
+## # ... with 166 more rows, and 1 more variable: year &lt;int&gt;
+```
+
+]
+
+---
+
+# Save new data frame
+
+.bold[dplyr functions .red[do not] over-write data; must save to a new data frame object.]
+
+
+```r
+hshd_3708 &lt;- filter(transactions, hshd_num == "3708")
+hshd_3708
+## # A tibble: 565 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+##  2     636498     3708 25-MAR-17     1107634  1.29     1 SOUTH         64
+##  3     546082     3708 21-JAN-17     1107675  1.5      6 SOUTH         55
+##  4     684954     3708 29-APR-17     5972414  2.49     1 SOUTH         69
+##  5     616834     3708 11-MAR-17     3688758  1.49     1 SOUTH         62
+##  6     717587     3708 20-MAY-17       93484  0.99     1 SOUTH         72
+##  7     636498     3708 25-MAR-17     3816309  1.78     2 SOUTH         64
+##  8     963134     3708 11-NOV-17     5867925  8.37     3 SOUTH         97
+##  9     758341     3708 18-JUN-17     6487780  1.99     1 SOUTH         77
+## 10     955303     3708 04-NOV-17     4896971  1        1 SOUTH         96
+## # ... with 555 more rows, and 1 more variable: year &lt;int&gt;
+```
+
+---
+
+# Comparison operators
+
+.bold[We can use multiple comparison operators for our condition statements]
+
+.pull-left[
+
+.center[.font120[.bold[`?Comparison`]]]
+
+.font90[
+Function  | Description
+------- | ------
+`&lt;` | less than
+`&gt;` | greater than
+`==` | equal to
+`&lt;=` | less than or equal to
+`&gt;=` | greater than or equal to
+`!=` | not equal to
+`%in%` | group membership
+`is.na` | is missing
+`!is.na` | is not missing
+]
+]
+
+--
+
+.pull-right[
+
+.center[.font120[.bold[What will these produce?]]]
+
+
+```r
+filter(transactions, week_num == 12)
+filter(transactions, week_num != 12)
+filter(transactions, week_num %in% c(1, 5, 10))
+filter(transactions, spend &lt;= 5)
+filter(transactions, !(spend &lt;= 5))
+filter(transactions, is.na(spend))
+```
+
+]
+
+---
+
+# Multiple comparison operators
+
+.bold[And we can combine multiple comparison operators]
+
+.pull-left-40[
+
+.center[.font120[.bold[`?base::Logic`]]]
+
+Function  | Description
+:------: | ------------
+`&amp;` | boolean and
+&amp;#x7c; | boolean or
+`!` | not
+`any` | any are true
+`all` | all are true
+
+]
+
+--
+
+.pull-right-60[
+
+.center[.font120[.bold[What will these produce?]]]
+
+
+```r
+# set 1
+filter(transactions, week == 1, store_r == "SOUTH")
+filter(transactions, week == 1 &amp; store_r == "SOUTH")
+
+# set 2
+filter(transactions, store_r == "SOUTH" | store_r == "NORTH")
+filter(transactions, store %in% c("SOUTH", "NORTH"))
+
+# set 3 --&gt; are these the same?
+filter(transactions, !(week_num &lt; 50 | spend &gt; 2))
+filter(transactions, week_num &gt;= 50, spend &lt;= 2)
+```
+
+]
+
+---
+
+# Two common mistakes <span>&lt;i class="fas  fa-exclamation-triangle faa-pulse animated faa-slow " style=" color:red;"&gt;&lt;/i&gt;</span>
+
+.pull-left[
+
+.center.font130[Using .red[=] instead of .green[==]]
+
+
+```r
+# wrong
+filter(transactions, store_r = "SOUTH")
+
+# correct
+filter(transactions, store_r == "SOUTH")
+```
+
+
+]
+
+.pull-right[
+
+.center.font130[Forgetting quotes]
+
+
+```r
+# wrong
+filter(transactions, store_r == SOUTH)
+
+# correct
+filter(transactions, store_r == "SOUTH")
+```
+
+]
+
+---
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+.font110[
+1. Import the transactions.csv file.
+
+2. Filter for transactions with greater than 2 units.
+
+3. Filter for transactions with greater than 2 units during week 101 that occurred in the south region.
+
+4. Filter for transactions with greater than 2 units during week 101 that occurred in the south or central regions.
+]
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 1: import the data
+transactions &lt;- read_csv("data/transactions.csv")
+
+# 2: filter for transactions with greater than 2 units
+filter(transactions, units &gt; 2)
+
+# 3: for transactions with greater than 2 units during week 101 that occurred in the south region.
+filter(transactions, units &gt; 2, week_num == 101, store_r == "SOUTH")
+
+# 4: for transactions with greater than 2 units during week 101 that occurred in the south or central regions.
+filter(transactions, units &gt; 2, week_num == 101, store_r %in% c("SOUTH", "CENTRAL"))
+```
+
+]
+
+---
+
+# Selecting variables
+
+.bold[We can select variables of interest with the .font130.grey[`select()`] function]
+
+&lt;br&gt;&lt;br&gt;
+
+.center[.font200[.grey[`select(`].blue[`data`]`,` .red[`...`] .grey[`)`]]]
+
+&lt;br&gt;
+
+.white[.center[.content-box-grey[dplyr function] .content-box-blue[data frame to transform] .content-box-red-dark[names of columns to extract]]]
+
+---
+
+# Selecting variables
+
+.bold[We can select variables of interest with the .font130.grey[`select()`] function]
+
+.scrollable90[
+
+
+```r
+select(transactions, product_num, spend, units, store_r, week_num)
+## # A tibble: 1,857,567 x 5
+##    product_num spend units store_r week_num
+##          &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1       93466  3.18     2 SOUTH        101
+##  2       85201  3.49     1 CENTRAL       90
+##  3     2507006  0.89     1 CENTRAL       62
+##  4     4819172  8.99     1 SOUTH         77
+##  5     1055355  1        1 SOUTH         88
+##  6     4285485  2.87     1 WEST          93
+##  7        8511  0.64     1 CENTRAL       74
+##  8       85939  1        1 SOUTH         54
+##  9     3775301  4.69     1 CENTRAL       98
+## 10       72765  1.29     1 EAST         104
+## # ... with 1,857,557 more rows
+
+# produces same as above
+select(transactions, product_num:week_num)
+## # A tibble: 1,857,567 x 5
+##    product_num spend units store_r week_num
+##          &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1       93466  3.18     2 SOUTH        101
+##  2       85201  3.49     1 CENTRAL       90
+##  3     2507006  0.89     1 CENTRAL       62
+##  4     4819172  8.99     1 SOUTH         77
+##  5     1055355  1        1 SOUTH         88
+##  6     4285485  2.87     1 WEST          93
+##  7        8511  0.64     1 CENTRAL       74
+##  8       85939  1        1 SOUTH         54
+##  9     3775301  4.69     1 CENTRAL       98
+## 10       72765  1.29     1 EAST         104
+## # ... with 1,857,557 more rows
+```
+
+
+.center[.content-box-gray[.bold[You can also deselect variables: `select(transactions -(product_num:week_num))`]]]
+
+]
+
+---
+
+# Select .red[helper] functions
+
+.bold[The real beauty of .font130[`select()`] is in the helper functions.]
+.scrollable90[
+.pull-left[
+
+### Helper functions
+
+Function  | Description
+:------: | ------------
+`starts_with()` | select columns whose name starts with
+`ends_with()` | select columns whose name ends with
+`contains()` | select columns whose name contains with
+`matches()` | select columns whose name matches a regular expression
+
+...and more (see `?tidyselect::select_helpers`)
+
+]
+
+.pull-right[
+
+### Examples
+
+
+```r
+# starts with example
+select(transactions, ends_with("num"))
+## # A tibble: 1,857,567 x 4
+##    basket_num hshd_num product_num week_num
+##         &lt;int&gt;    &lt;int&gt;       &lt;int&gt;    &lt;int&gt;
+##  1     100369     3708       93466      101
+##  2     891779      719       85201       90
+##  3     609562     4995     2507006       62
+##  4     760220       44     4819172       77
+##  5     869525     3937     1055355       88
+##  6     922989     2356     4285485       93
+##  7     732544      694        8511       74
+##  8     536185     3728       85939       54
+##  9     967914      887     3775301       98
+## 10     102995      574       72765      104
+## # ... with 1,857,557 more rows
+
+# ends with example
+select(transactions, contains("_"))
+## # A tibble: 1,857,567 x 6
+##    basket_num hshd_num purchase_ product_num store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466 SOUTH        101
+##  2     891779      719 20-SEP-17       85201 CENTRAL       90
+##  3     609562     4995 07-MAR-17     2507006 CENTRAL       62
+##  4     760220       44 19-JUN-17     4819172 SOUTH         77
+##  5     869525     3937 04-SEP-17     1055355 SOUTH         88
+##  6     922989     2356 13-OCT-17     4285485 WEST          93
+##  7     732544      694 31-MAY-17        8511 CENTRAL       74
+##  8     536185     3728 14-JAN-17       85939 SOUTH         54
+##  9     967914      887 15-NOV-17     3775301 CENTRAL       98
+## 10     102995      574 27-DEC-17       72765 EAST         104
+## # ... with 1,857,557 more rows
+
+# combining different select helpers
+select(transactions, c(year, ends_with("num"), contains("_")))
+## # A tibble: 1,857,567 x 7
+##     year basket_num hshd_num product_num week_num purchase_ store_r
+##    &lt;int&gt;      &lt;int&gt;    &lt;int&gt;       &lt;int&gt;    &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;  
+##  1  2017     100369     3708       93466      101 09-DEC-17 SOUTH  
+##  2  2017     891779      719       85201       90 20-SEP-17 CENTRAL
+##  3  2017     609562     4995     2507006       62 07-MAR-17 CENTRAL
+##  4  2017     760220       44     4819172       77 19-JUN-17 SOUTH  
+##  5  2017     869525     3937     1055355       88 04-SEP-17 SOUTH  
+##  6  2017     922989     2356     4285485       93 13-OCT-17 WEST   
+##  7  2017     732544      694        8511       74 31-MAY-17 CENTRAL
+##  8  2017     536185     3728       85939       54 14-JAN-17 SOUTH  
+##  9  2017     967914      887     3775301       98 15-NOV-17 CENTRAL
+## 10  2017     102995      574       72765      104 27-DEC-17 EAST   
+## # ... with 1,857,557 more rows
+```
+
+
+]
+]
+
+---
+class: yourturn
+
+# Your Turn!
+
+
+.pull-left[
+
+### Challenge
+
+1. Import the __households.csv__ data and...
+
+2. Select all columns that contain "_" and...
+
+3. Filter for those observations that fall in the "75-99K" income range. 
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 1. Import the __households.csv__ data
+households &lt;- read_csv("data/households.csv")
+
+# 2. Select all columns that contain "_"
+reduced_df &lt;- select(households, contains("_"))
+
+#3. Filter for those observations that fall in the "75-99K" income range
+filter(reduced_df, income_range == "75-99K")
+## # A tibble: 594 x 5
+##    hshd_num age_range     income_range hshd_composition hh_size
+##    &lt;chr&gt;    &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;            &lt;chr&gt;  
+##  1 1171     75+           75-99K       &lt;NA&gt;             null   
+##  2 1531     75+           75-99K       &lt;NA&gt;             null   
+##  3 1580     35-44         75-99K       &lt;NA&gt;             null   
+##  4 2902     35-44         75-99K       &lt;NA&gt;             null   
+##  5 1093     45-54         75-99K       &lt;NA&gt;             null   
+##  6 2377     45-54         75-99K       &lt;NA&gt;             null   
+##  7 4402     45-54         75-99K       &lt;NA&gt;             null   
+##  8 4639     45-54         75-99K       &lt;NA&gt;             null   
+##  9 4762     65-74         75-99K       &lt;NA&gt;             null   
+## 10 0269     NOT AVAILABLE 75-99K       &lt;NA&gt;             null   
+## # ... with 584 more rows
+```
+
+]
+
+---
+
+# Arranging data based on values
+
+.bold[We can select variables of interest with the .font130.grey[`arrange()`] function]
+
+&lt;br&gt;&lt;br&gt;
+
+.center[.font200[.grey[`arrange(`].blue[`data`]`,` .red[`...`] .grey[`)`]]]
+
+&lt;br&gt;
+
+.white[.center[.content-box-grey[dplyr function] .content-box-blue[data frame to transform] .content-box-red-dark[one or more columns to order by]]]
+
+---
+
+# Arranging data based on values
+
+.bold[We can select variables of interest with the .font130.grey[`arrange()`] function]
+
+.pull-left[
+
+### Ascending order
+
+
+```r
+arrange(transactions, spend)
+## # A tibble: 1,857,567 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100791     1592 10-DEC-17     5895132 -15.0    -1 WEST         102
+##  2     995139     2215 03-DEC-17     6530599 -15.0    -1 WEST         101
+##  3     809392      511 24-JUL-17     5280421 -15.0    -1 CENTRAL       82
+##  4     543439     3309 18-JAN-17     6476706 -15.0    -1 SOUTH         55
+##  5     844999     2776 18-AUG-17     4353736 -15.0    -1 WEST          85
+##  6     102640     4078 23-DEC-17     6298451 -15.0    -1 EAST         103
+##  7     738866     3293 03-JUN-17     6548638 -15.0    -1 SOUTH         74
+##  8     579085     1346 13-FEB-17     6186554 -15.0    -1 EAST          59
+##  9     101952     4599 18-DEC-17     6634374 -15.0    -1 SOUTH        103
+## 10     545229     2106 19-JAN-17     6148132 -15.0    -1 WEST          55
+## # ... with 1,857,557 more rows, and 1 more variable: year &lt;int&gt;
+```
+
+
+]
+
+.pull-right[
+
+### Descending order
+
+
+```r
+arrange(transactions, desc(spend))
+## # A tibble: 1,857,567 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     526404      985 05-JAN-17     3764235  282.    10 CENTRAL       53
+##  2     101308     3977 17-DEC-17     3319279  276.     4 EAST         103
+##  3     921333     3934 11-OCT-17     5232147  260.     1 EAST          93
+##  4     849384     2775 21-AUG-17     6298353  250.     1 WEST          86
+##  5     646596      985 01-APR-17     3764235  226.     8 CENTRAL       65
+##  6     799338      985 16-JUL-17     3764235  226.     8 CENTRAL       81
+##  7     791836       63 12-JUL-17       86471  210     84 EAST          80
+##  8     985855     1270 26-NOV-17     6659474  210.     1 EAST         100
+##  9     842832     1238 15-AUG-17      153329  204.    24 EAST          85
+## 10     773947     1730 30-JUN-17     1356008  183      7 EAST          78
+## # ... with 1,857,557 more rows, and 1 more variable: year &lt;int&gt;
+```
+
+]
+
+---
+
+# Arrange .red[.bold[always]] places missing values at bottom
+
+.pull-left[
+
+
+```r
+(df &lt;- tibble(x = c(5, 2, 5, NA)))
+## # A tibble: 4 x 1
+##       x
+##   &lt;dbl&gt;
+## 1     5
+## 2     2
+## 3     5
+## 4    NA
+```
+
+]
+
+.pull-right[
+
+
+```r
+arrange(df, x)
+## # A tibble: 4 x 1
+##       x
+##   &lt;dbl&gt;
+## 1     2
+## 2     5
+## 3     5
+## 4    NA
+arrange(df, desc(x))
+## # A tibble: 4 x 1
+##       x
+##   &lt;dbl&gt;
+## 1     5
+## 2     5
+## 3     2
+## 4    NA
+```
+
+]
+
+---
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Arrange __transactions__ by `week_num` in ascending order.
+
+2. Arrange __transactions__ by `week_num` in ascending order and `spend` in descending order.
+
+3. What happens when you arrange an alphabetical variable such as `store_r`?
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 1: arrange transactions by week_num in ascending order
+arrange(transactions, week_num)
+
+# 2: arrange transactions by week_num in ascending order and spend in descending order
+arrange(transactions, week_num, desc(spend))
+
+# 3: What happens when you arrange an alphabetical variable such as store_r?
+arrange(transactions, desc(store_r))
+```
+
+]
+
+---
+
+# Compute summary statistics
+
+.bold[We can compute summary statistics with the .font130.grey[`summarize()`] function]
+
+
+&lt;br&gt;&lt;br&gt;
+
+.center[.font200[.grey[`summarize(`].blue[`data`]`,` .red[`...`] .grey[`)`]]]
+
+&lt;br&gt;
+
+.white[.center[.content-box-grey[dplyr function] .content-box-blue[data frame to transform] .content-box-red-dark[one or more summary statistics to compute]]]
+
+---
+
+# Compute summary statistics
+
+.bold[We can compute summary statistics with the .font130.grey[`summarize()`] function]
+
+.pull-left[
+
+### single statistic
+
+
+```r
+summarize(transactions, avg_spend = mean(spend, na.rm = TRUE))
+## # A tibble: 1 x 1
+##   avg_spend
+##       &lt;dbl&gt;
+## 1      3.61
+```
+
+.center[.content-box-grey[.bold[What does `na.rm` do?]]]
+
+]
+
+--
+
+.pull-right[
+
+### multiple statistics
+
+
+```r
+summarize(transactions, 
+  spend_avg = mean(spend, na.rm = TRUE),
+  spend_sd  = sd(spend, na.rm = TRUE),
+  n = n()
+)
+## # A tibble: 1 x 3
+##   spend_avg spend_sd       n
+##       &lt;dbl&gt;    &lt;dbl&gt;   &lt;int&gt;
+## 1      3.61     3.91 1857567
+```
+
+]
+
+---
+
+# Summarize .red[helper] functions
+
+.bold[There are a wide variety of functions you can use within .font130[`summarize()`]]
+
+
+&lt;br&gt;
+
+.pull-left[
+
+.font80[
+Function  | Description
+------- | ------
+`min()`, `max()` | min, max values in vector
+`mean()` | mean value
+`median()` | median value
+`sum()` | sum of all vector values
+`var()`, `sd()` | variance/std of vector
+`first()`, `last()` | first/last value in vector
+`nth()` | nth value in vector
+`n()` | number of values in vector
+`n_distinct()` | number of distinct values in vector
+
+]
+]
+
+.pull-right[
+&lt;br&gt;
+&lt;img src="images/summarize_functions.png" width="100%" height="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+
+# Summarizing .red[grouped] data
+
+.bold[Summary statistics become more powerful when we can compute and compare at different aggregated levels]
+
+.pull-left[
+
+#### Avg spend by week
+
+
+```r
+# group data
+by_week &lt;- group_by(transactions, week_num)
+
+# compute summary stat
+summarize(by_week, spend_avg = mean(spend, na.rm = TRUE))
+## # A tibble: 52 x 2
+##    week_num spend_avg
+##       &lt;int&gt;     &lt;dbl&gt;
+##  1       53      3.51
+##  2       54      3.49
+##  3       55      3.55
+##  4       56      3.48
+##  5       57      3.54
+##  6       58      3.59
+##  7       59      3.74
+##  8       60      3.58
+##  9       61      3.58
+## 10       62      3.60
+## # ... with 42 more rows
+```
+
+]
+
+.pull-right[
+
+#### Variability of spend by store region
+
+
+```r
+# group data
+by_region &lt;- group_by(transactions, store_r)
+
+# compute summary stat
+summarize(by_region, delay_sd = sd(spend, na.rm = TRUE))
+## # A tibble: 4 x 2
+##   store_r delay_sd
+##   &lt;chr&gt;      &lt;dbl&gt;
+## 1 CENTRAL     3.97
+## 2 EAST        3.83
+## 3 SOUTH       3.91
+## 4 WEST        3.97
+```
+
+]
+
+
+---
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Compute the average `spend` by `hshd_num` and arrange in descending order to find the household with the largest average spend.
+
+2. Find the `product_num`s with the largest median spend.
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 1: Compute the average `spend` by `hshd_num` and arrange in descending order to find the household with the largest average spend.
+hshd_group &lt;- group_by(transactions, hshd_num)
+hshd_spend &lt;- summarize(hshd_group, spend_avg = mean(spend, na.rm = TRUE))
+arrange(hshd_spend, desc(spend_avg))
+
+# 2: Find the `product_num`s with the largest median spend.
+prod_group &lt;- group_by(transactions, product_num)
+prod_spend &lt;- summarize(prod_group, spend_median = median(spend, na.rm = TRUE))
+arrange(prod_spend, desc(spend_median))
+```
+
+]
+
+---
+
+# The pipe operator .red[`%&gt;%`]
+
+Going back to our last problem, our code was doing three things:
+
+.pull-left[
+
+.font120[
+1. .blue[grouping by product number]
+
+2. .orange[summarizing spend]
+
+3. .purple[sorting spend by greatest to least]
+]
+]
+
+.pull-right[
+
+
+
+```r
+# 1 grouping by product number
+prod_group &lt;- group_by(transactions, product_num)
+
+# 2 summarizing spend
+prod_spend &lt;- summarize(prod_group, spend_median = median(spend, na.rm = TRUE))
+
+# 3 sorting spend by greatest to least
+arrange(prod_spend, desc(spend_median))
+```
+
+]
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+.center[.content-box-gray[.bold[Surely we can streamline our code and make it more efficient and legible!]]]
+
+
+---
+
+# The pipe operator .red[`%&gt;%`]
+
+An alternative approach to perform these thing things:
+
+.pull-left[
+
+### Traditional approach
+
+&lt;img src="images/function-traditional.png" width="80%" height="80%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+
+
+```r
+prod_group &lt;- group_by(transactions, product_num)
+prod_spend &lt;- summarize(prod_group, spend_median = median(spend, na.rm = TRUE))
+arrange(prod_spend, desc(spend_median))
+```
+
+]
+
+.pull-right[
+
+### pipe (`%&gt;%`) approach
+
+&lt;img src="images/function-pipe.png" width="90%" height="90%" style="display: block; margin: auto auto auto 0;" /&gt;
+
+
+```r
+transactions %&gt;%
+  group_by(product_num) %&gt;%
+  summarize(spend_median = median(spend, na.rm = TRUE)) %&gt;%
+  arrange(desc(spend_median))
+```
+
+]
+
+---
+
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+.font90[
+Using the pipe operator follow these steps with the __transactions__ data:
+
+1. filter for southern region stores only
+
+2. group by product
+
+3. compute the average spend
+
+4. sort this output to find the product with the largest average spend
+]
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  filter(store_r == "SOUTH") %&gt;%
+  group_by(product_num) %&gt;%
+  summarize(spend_avg = mean(spend, na.rm = TRUE)) %&gt;%
+  arrange(desc(spend_avg))
+## # A tibble: 44,883 x 2
+##    product_num spend_avg
+##          &lt;int&gt;     &lt;dbl&gt;
+##  1     1144005     182. 
+##  2     6482901     150. 
+##  3      343329     143. 
+##  4     6296414     119  
+##  5     3764235      96.4
+##  6     5649118      90.0
+##  7     6138733      90.0
+##  8     1452445      88.4
+##  9     1226570      86.3
+## 10     1367767      85.8
+## # ... with 44,873 more rows
+```
+
+]
+
+---
+
+# Mutate variables
+
+.bold[We can create new variables with the .font130.grey[`mutate()`] function]
+
+
+&lt;br&gt;&lt;br&gt;
+
+.center[.font200[.grey[`mutate(`].blue[`data`]`,` .red[`...`] .grey[`)`]]]
+
+&lt;br&gt;
+
+.white[.center[.content-box-grey[dplyr function] .content-box-blue[data frame to transform] .content-box-red-dark[one or more new variables to create]]]
+
+---
+
+# Mutate variables
+
+.bold[We can create new variables with the .font130.grey[`mutate()`] function]
+
+
+```r
+*mutate(transactions, price_per_unit = spend / units) %&gt;%
+  select(spend, units, price_per_unit, everything())
+## # A tibble: 1,857,567 x 10
+##    spend units price_per_unit basket_num hshd_num purchase_ product_num
+##    &lt;dbl&gt; &lt;int&gt;          &lt;dbl&gt;      &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt;
+##  1  3.18     2           1.59     100369     3708 09-DEC-17       93466
+##  2  3.49     1           3.49     891779      719 20-SEP-17       85201
+##  3  0.89     1           0.89     609562     4995 07-MAR-17     2507006
+##  4  8.99     1           8.99     760220       44 19-JUN-17     4819172
+##  5  1        1           1        869525     3937 04-SEP-17     1055355
+##  6  2.87     1           2.87     922989     2356 13-OCT-17     4285485
+##  7  0.64     1           0.64     732544      694 31-MAY-17        8511
+##  8  1        1           1        536185     3728 14-JAN-17       85939
+##  9  4.69     1           4.69     967914      887 15-NOV-17     3775301
+## 10  1.29     1           1.29     102995      574 27-DEC-17       72765
+## # ... with 1,857,557 more rows, and 3 more variables: store_r &lt;chr&gt;,
+## #   week_num &lt;int&gt;, year &lt;int&gt;
+```
+
+---
+
+# Mutate variables
+
+.bold[We can create .red[multiple] variables within one .font130.grey[`mutate()`] function]
+
+
+```r
+transactions %&gt;%
+  group_by(week_num) %&gt;%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+  ) %&gt;% 
+* mutate(
+*   avg_spend_per_unit = spend / units,
+*   wow_perc_growth    = (avg_spend_per_unit / lag(avg_spend_per_unit)) - 1,
+*   wtd_net_spend      = cumsum(spend),
+*   wtd_net_units      = cumsum(units)
+* )
+## # A tibble: 52 x 7
+##    week_num  spend units avg_spend_per_u… wow_perc_growth wtd_net_spend
+##       &lt;int&gt;  &lt;dbl&gt; &lt;int&gt;            &lt;dbl&gt;           &lt;dbl&gt;         &lt;dbl&gt;
+##  1       53 1.31e5 48538             2.71        NA             131328.
+##  2       54 1.26e5 46761             2.68        -0.00802       256833.
+##  3       55 1.29e5 46961             2.74         0.0203        385436.
+##  4       56 1.22e5 45640             2.67        -0.0234        507492.
+##  5       57 1.35e5 49397             2.73         0.0206        642319.
+##  6       58 1.27e5 45594             2.79         0.0215        769444.
+##  7       59 1.35e5 46514             2.89         0.0378        904042.
+##  8       60 1.22e5 44098             2.78        -0.0410       1026422.
+##  9       61 1.26e5 45549             2.76        -0.00629      1152033.
+## 10       62 1.31e5 47446             2.77         0.00478      1283502.
+## # ... with 42 more rows, and 1 more variable: wtd_net_units &lt;int&gt;
+```
+
+---
+
+# Mutate helper functions
+
+.bold[There are a wide variety of functions you can use within .font130.grey[`mutate()`]]
+
+_.blue[Must be vectorized functions - meaning the function must take a vector of values as input and return the same number of values as output.]_
+.scrollable[
+.pull-left[
+
+.font80[
+Function  | Description
+------- | ------
+`+,-,*,/,^` | arithmetic
+`x / sum(x)` | arithmetic w/aggregation
+`%/%, %%` | modular arithmetic
+`log, exp, sqrt` | transformations
+`lag, lead` | offsets
+`cumsum, cumprod, cum...` | cum/rolling aggregates
+`&gt;, &gt;=, &lt;, &lt;=, !=, ==` | logical comparisons
+`min_rank, dense_rank` | ranking
+`between` | are values between a and b?
+`ntile` | bin values into n buckets
+]
+]
+
+.pull-right[
+
+
+```r
+# mean center data
+transmute(transactions, center_spend = spend / mean(spend, na.rm = TRUE))
+## # A tibble: 1,857,567 x 1
+##    center_spend
+##           &lt;dbl&gt;
+##  1        0.880
+##  2        0.966
+##  3        0.246
+##  4        2.49 
+##  5        0.277
+##  6        0.794
+##  7        0.177
+##  8        0.277
+##  9        1.30 
+## 10        0.357
+## # ... with 1,857,557 more rows
+
+# transform values
+transmute(transactions,
+  log_spend = log(spend),
+  exp_spend = exp(spend))
+## # A tibble: 1,857,567 x 2
+##    log_spend exp_spend
+##        &lt;dbl&gt;     &lt;dbl&gt;
+##  1     1.16      24.0 
+##  2     1.25      32.8 
+##  3    -0.117      2.44
+##  4     2.20    8022.  
+##  5     0          2.72
+##  6     1.05      17.6 
+##  7    -0.446      1.90
+##  8     0          2.72
+##  9     1.55     109.  
+## 10     0.255      3.63
+## # ... with 1,857,557 more rows
+
+# lag and cumsum values
+transmute(transactions,
+  spend     = spend,
+  lag_spend = lag(spend),
+  sum_spend = cumsum(spend))
+## # A tibble: 1,857,567 x 3
+##    spend lag_spend sum_spend
+##    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1  3.18     NA         3.18
+##  2  3.49      3.18      6.67
+##  3  0.89      3.49      7.56
+##  4  8.99      0.89     16.6 
+##  5  1         8.99     17.6 
+##  6  2.87      1        20.4 
+##  7  0.64      2.87     21.1 
+##  8  1         0.64     22.1 
+##  9  4.69      1        26.8 
+## 10  1.29      4.69     28.0 
+## # ... with 1,857,557 more rows
+```
+
+]
+]
+
+---
+
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+.font90[
+Using what you've learned thus far, can you find the store region and week that experienced the greatest week over week growth in the number of units sold?
+
+Hint:
+
+
+```r
+transactions %&gt;%
+  group_by(______, ______) %&gt;%
+  summarize(______) %&gt;%
+  mutate(______) %&gt;%
+  arrange(______)
+```
+
+]
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  group_by(store_r, week_num) %&gt;%
+  summarize(units = sum(units)) %&gt;%
+  mutate(
+    wow_units = units - lag(units),
+    wow_perc  = (units / lag(units) - 1)
+    ) %&gt;%
+  arrange(desc(wow_perc))
+## # A tibble: 208 x 5
+## # Groups:   store_r [4]
+##    store_r week_num units wow_units wow_perc
+##    &lt;chr&gt;      &lt;int&gt; &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt;
+##  1 EAST         103 18806      4008    0.271
+##  2 SOUTH        103 11693      2271    0.241
+##  3 WEST         103 14103      2556    0.221
+##  4 SOUTH         67 10923      1945    0.217
+##  5 CENTRAL       67 12532      2043    0.195
+##  6 CENTRAL      103 13179      2065    0.186
+##  7 EAST          67 16212      2316    0.167
+##  8 SOUTH         88 11275      1591    0.164
+##  9 WEST          61 12508      1643    0.151
+## 10 WEST          57 13389      1610    0.137
+## # ... with 198 more rows
+```
+
+]
+
+---
+
+# Key things to remember
+
+.pull-left[
+
+* .bold[`filter`]: pick observations based on values
+
+* .bold[`select`]: pick variables
+
+* .bold[`summarize`]: compute statistical summaries 
+
+* .bold[`group_by`]: perform operations at different levels of your data
+
+* .bold[`arrange`]: reorder data
+
+* .bold[`mutate`]: create new variables
+
+&lt;br&gt;
+
+.center[.content-box-gray[knit them all together with .bold[%&gt;%]]]
+
+]
+
+.pull-right[
+
+&lt;br&gt;&lt;br&gt;
+&lt;img src="images/information-overload.jpg" width="640" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+# Key things to remember
+
+.pull-left[
+
+&lt;img src="images/cheatsheet-dplyr.png" width="1460" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+.pull-right[
+
+&lt;br&gt;&lt;br&gt;
+&lt;img src="images/information-overload.jpg" width="640" style="display: block; margin: auto;" /&gt;
+
+&lt;br&gt;
+
+]
+
+.center[.content-box-gray[.bold[`Help &gt;&gt; Cheatsheets &gt;&gt; Data Transformation with dplyr`]]]
+
+---
+
+# Questions?
+
+&lt;br&gt;
+
+&lt;img src="images/questions.png" width="450" height="450" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Lunch time <span style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">&lt;img src="https://emojis.slackmojis.com/emojis/images/1450694616/220/bananadance.gif?1450694616" style="height:1em; width:auto; "/&gt;</span>
+
+&lt;img src="images/lunchtime-day1.gif" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear, center, middle
+
+
+background-image: url(images/time-for-review.jpg)
+background-size: cover
+
+---
+
+
+class: clear, center, middle
+
+
+background-image: url(https://raw.githubusercontent.com/bradleyboehmke/Dayton-Weather-2018/master/Dayton_Weather.png)
+background-size: cover
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+.font200.bold[Visualizing Data]
+
+---
+
+# ggplot
+&lt;br&gt;
+.pull-left[
+&lt;br&gt;
+* R has several systems for making graphs
+
+* `ggplot2` is the most elegant and versatile
+
+* Implements the grammar of graphics theory behind data visualization
+]
+
+.pull-right[
+
+&lt;img src="images/ggplot2.png" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Basics
+
+`ggplot2` works with a layer based mentality:
+
+.pull-left[
+
+```r
+ggplot(data, aes(x, y)) +
+  geom_xxx() +
+  scale_xxx() +
+  facet_xxx() +
+  ggtitle()
+```
+]
+
+--
+
+.pull-right[
+
+
+```r
+ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .1) +
+  scale_y_continuous(name = "Median Sales Price", labels = scales::dollar) +
+  scale_x_log10(name = "Total Sales Volume", labels = scales::comma) +
+  ggtitle("Texas Housing Sales", subtitle = "Sales data from 2000-2010 provided by the TAMU real estate center")
+```
+
+&lt;img src="slides-source_files/figure-html/example-ggplot-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+
+# Prerequisites
+
+.pull-left[
+### Packages
+
+
+```r
+library(ggplot2) # or library(tidyverse)
+```
+
+]
+
+.pull-right[
+
+### Example Data
+
+
+```r
+# built-in data set
+mpg
+```
+
+### Exercise Data
+
+
+```r
+transactions
+```
+
+]
+
+---
+
+# Canvas layer
+
+.bold[We can create a "canvas" for our plot with...]
+
+.pull-left[
+
+
+```r
+ggplot(data = mpg)
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-66-1.png" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy))
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-67-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.center[.content-box-gray[.bold[We use .red[aes()] to map attributes to our plot]]]
+
+---
+
+# Plotting our data with .red[geoms]
+
+.pull-left[
+* We display data with geometric shapes
+
+* ~ 30 built-in geoms (with many more offered by other pkgs)
+   - `geom_point()`
+   - `geom_line()`
+   - `geom_histogram()`
+   - `geom_density()`
+   - `geom_freqpoly()`
+   - `geom_boxplot()`
+   - `geom_violin()`
+   - `geom_bar()`
+   - `geom_count()`
+   - `geom_smooth()`
+
+.center[.content-box-gray[.bold[See full list with `geom_` + tab]]]
+]
+
+---
+
+# Plotting our data with .red[geoms]
+
+.pull-left[
+* We display data with geometric shapes
+
+* ~ 30 built-in geoms (with many more offered by other pkgs)
+   - `geom_point()`
+   - `geom_line()`
+   - .blue[.bold[`geom_histogram()`]]
+   - .blue[.bold[`geom_density()`]]
+   - .blue[.bold[`geom_freqpoly()`]]
+   - `geom_boxplot()`
+   - `geom_violin()`
+   - `geom_bar()`
+   - `geom_count()`
+   - `geom_smooth()`
+
+.center[.content-box-gray[.bold[See full list with `geom_` + tab]]]
+]
+
+.pull-right[
+&lt;br&gt;&lt;br&gt;
+
+```r
+ggplot(data = mpg, aes(x = hwy)) +
+  geom_histogram()
+
+ggplot(data = mpg, aes(x = hwy)) +
+  geom_freqpoly()
+
+ggplot(data = mpg, aes(x = hwy)) +
+  geom_density()
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-69-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Plotting our data with .red[geoms]
+
+.pull-left[
+* We display data with geometric shapes
+
+* ~ 30 built-in geoms (with many more offered by other pkgs)
+   - `geom_point()`
+   - `geom_line()`
+   - `geom_histogram()`
+   - `geom_density()`
+   - `geom_freqpoly()`
+   - .blue[.bold[`geom_boxplot()`]]
+   - .blue[.bold[`geom_violin()`]]
+   - .blue[.bold[`geom_bar()`]]
+   - `geom_count()`
+   - `geom_smooth()`
+
+.center[.content-box-gray[.bold[See full list with `geom_` + tab]]]
+]
+
+.pull-right[
+&lt;br&gt;&lt;br&gt;
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point()
+
+ggplot(data = mpg, aes(x = class, y = hwy)) +
+  geom_boxplot()
+
+ggplot(data = mpg, aes(x = class, y = hwy)) +
+  geom_violin()
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-71-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Plotting our data with .red[geoms]
+
+.pull-left[
+* We display data with geometric shapes
+
+* ~ 30 built-in geoms (with many more offered by other pkgs)
+   - .blue[.bold[`geom_point()`]]
+   - `geom_line()`
+   - .blue[.bold[`geom_histogram()`]]
+   - `geom_density()`
+   - `geom_freqpoly()`
+   - `geom_boxplot()`
+   - `geom_violin()`
+   - `geom_bar()`
+   - `geom_count()`
+   - `geom_smooth()`
+
+]
+
+.pull-right[
+&lt;br&gt;&lt;br&gt;
+
+```r
+*ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point()
+
+*ggplot(data = mpg, aes(x = hwy)) +
+  geom_histogram()
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-73-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[.content-box-gray[.bold[Some geoms only require .font130[`x`], others .font130[`x`] &amp; .font130[`y`]]]]
+
+]
+
+---
+
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+Using the __transactions__ data:
+
+1. Create a chart that illustrates the distribution of the spend variable.
+
+2. Create a chart that shows the counts for each store region
+
+3. Create a scatter plot of units vs spend 
+]
+
+--
+
+.pull-right[
+
+### Solutions
+
+
+```r
+#1: distribution of spend variable
+ggplot(data = transactions, aes(x = spend)) +
+    geom_histogram()
+
+#2: distribution of store region variable
+ggplot(data = transactions, aes(x = store_r)) +
+ geom_bar()
+
+#3: scatter plot for units vs spend
+ggplot(data = transactions, aes(x = units, y = spend)) +
+ geom_point()
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-75-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Non-mapping aesthetics
+
+.pull-left[
+
+We can also change other visual aesthetics in our plots:
+
+* .blue[c].orange[o].gray[l].purple[o].red[r]
+
+* .font70[s].font120[i]z.font110[e] 
+
+* sh&amp;#9653;pe (0-25 `?pch`)
+
+* .opacity[opacity]
+]
+
+--
+
+.pull-right[
+&lt;br&gt;
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+  geom_point(color = "blue", size = 2, shape = 17, alpha = .5)
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-76-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[.content-box-gray[.bold[But why are some points darker? 🤔]]]
+
+]
+
+---
+
+# Non-mapping aesthetics
+
+.pull-left[
+
+We can also change other visual aesthetics in our plots:
+
+* .blue[c].orange[o].gray[l].purple[o].red[r]
+
+* .font70[s].font120[i]z.font110[e] 
+
+* sh&amp;#9653;pe (0-25 `?pch`)
+
+* .opacity[opacity]
+]
+
+
+.pull-right[
+&lt;br&gt;
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+* geom_jitter(color = "blue", size = 2, shape = 17, alpha = .5, width = .5)
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-77-1.png" style="display: block; margin: auto;" /&gt;
+
+.center[.content-box-gray[.bold[Ahhhhhh, I see 😎]]]
+
+]
+
+
+---
+
+# Adding a 3&lt;sup&gt;rd&lt;/sup&gt; dimension
+
+.bold[By moving the color argument to within aes(), we can map a 3rd variable to our plot]
+
+.pull-left[
+
+#### Non-mapping color aesthetic
+
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) +
+* geom_point(color = "blue")
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-78-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+#### Mapping color aesthetic to class variable
+
+
+```r
+*ggplot(data = mpg, aes(x = displ, y = hwy, color = class)) +
+  geom_point()
+```
+
+&lt;img src="slides-source_files/figure-html/mapping-ggplot-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Create a scatter plot of `units` vs `spend` and color all points blue.
+
+2. Create a scatter plot of `units` vs `spend` and color all points based on store region.
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+#1 left
+ggplot(transactions, aes(x = units, y = spend)) + 
+  geom_point(color = "blue")
+
+#2 right
+ggplot(transactions, aes(x = units, y = spend, color = store_r)) + 
+  geom_point()
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-80-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Creating small multiples with .red[facets]
+
+.bold[The `facet_xxx()` functions provide a simple way to create small multiples.]
+
+--
+.scrollable90[
+.pull-left[
+
+.bold[`facet_wrap()`]: primarily used to create small multiples based on a single variable
+
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_point() + 
+* facet_wrap(~ class, nrow = 2)
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-81-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+.bold[`facet_grid()`]: primarily used to create small multiples grid based on two variables
+
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_point() + 
+* facet_grid(drv ~ cyl)
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-82-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Compute total spend by store region and week.  Plot the week vs total spend and use facetting to compare store regions.
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  group_by(store_r, week_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
+  ggplot(aes(x = week_num, spend)) +
+  geom_line() + 
+  facet_wrap(~ store_r)
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-83-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Titles &amp; Axes
+
+.bold[We can add titles with `ggtitle()` or with `labs()`]
+
+--
+
+.pull-left[
+
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_jitter() +
+* ggtitle("Displacement vs Highway MPG",
+*         subtitle = "Data from 1999 &amp; 2008")
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-84-1.png" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(data = mpg, aes(x = displ, y = hwy)) + 
+  geom_jitter() +
+* labs(
+*   title = "Displacement vs Highway MPG",
+*   subtitle = "Data from 1999 &amp; 2008",
+*   caption = "http://fueleconomy.gov"
+*   )
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-85-1.png" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+# Titles &amp; Axes
+
+.bold[We can add adjust axes with various `scale_xxxx()` functions]
+
+--
+
+.pull-left[
+
+
+```r
+ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .25) +
+* scale_x_log10()
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-86-1.png" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .25)  +
+* scale_y_continuous(name = "Median Sales Price", labels = scales::dollar) +
+* scale_x_log10(name = "Total Sales Volume", labels = scales::comma)
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-87-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Putting it all together...
+
+
+```r
+ggplot(data = txhousing, aes(x = volume, y = median)) + 
+  geom_point(alpha = .15) +
+  scale_y_continuous(name = "Median Sales Price", labels = scales::dollar) +
+  scale_x_log10(name = "Total Sales Volume", labels = scales::comma) +
+  labs(
+    title = "Texas Housing Sales",
+    subtitle = "Sales data from 2000-2010 provided by the TAMU real estate center",
+    caption = " http://recenter.tamu.edu/"
+    )
+```
+
+&lt;img src="slides-source_files/figure-html/unnamed-chunk-88-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: yourturn
+
+# Your Turn!
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
@@ -1583,7 +3535,7 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
 (function () {
   var script = document.createElement('script');
   script.type = 'text/javascript';
-  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
   if (location.protocol !== 'file:' && /^https?:/.test(script.src))
     script.src  = script.src.replace(/^https?:/, '');
   document.getElementsByTagName('head')[0].appendChild(script);

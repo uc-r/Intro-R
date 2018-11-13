@@ -51,12 +51,15 @@ a, a > code {
 
 
 .content-box-blue,
+.content-box-blue-dark,
 .content-box-gray,
 .content-box-grey,
+.content-box-grey-dark,
 .content-box-army,
 .content-box-green,
 .content-box-purple,
 .content-box-red,
+.content-box-red-dark,
 .content-box-yellow {
     border-radius: 15px;
     margin: 0 0 25px;
@@ -67,6 +70,10 @@ a, a > code {
 
 .content-box-blue {
     background-color: #F0F8FF;
+}
+
+.content-box-blue-dark {
+    background-color: blue;
 
 }
 
@@ -76,6 +83,10 @@ a, a > code {
 
 .content-box-grey {
 	background-color: #F5F5F5;
+}
+
+.content-box-grey-dark {
+	background-color: gray;
 }
 
 .content-box-army {
@@ -92,6 +103,10 @@ a, a > code {
 
 .content-box-red {
 	background-color: #f9dbdb;
+}
+
+.content-box-red-dark {
+	background-color: red;
 }
 
 .content-box-yellow {
