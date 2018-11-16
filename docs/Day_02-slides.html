@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>An .red[Incomplete] Introduction to R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Brad Boehmke" />
+    <meta name="date" content="2018-12-13" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: title-slide   
+&lt;a href="https://github.8451.com/b294776/"&gt;&lt;img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"&gt;&lt;/a&gt;
+
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+# Day <span class=" faa-pulse animated faa-slow " style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">2</span>: An .red[Incomplete] Introduction to <span>&lt;i class="fab  fa-r-project faa-FALSE animated faa-slow " style=" color:steelblue;"&gt;&lt;/i&gt;</span>
+
+## .font70[.italic['If you fall, stand tall and come back for more'] - Tupac Shakur]
+
+### Brad Boehmke
+### Dec 13-14, 2018
+
+### Slides: TBD
+### Script: TBD
+### Data: TBD
+
+---
+
+# Today's schedule <span>&lt;i class="fas  fa-calendar-alt faa-FALSE animated " style=" color:red;"&gt;&lt;/i&gt;</span>
+
+&lt;br&gt;
+
+| Topic | Time |
+|:------|:------:|
+| Review | 9:00-10:00 |
+| Tidying &amp; cleaning | 10:00-10:45 |
+| Break | 10:45 - 11:00 |
+| Tidying &amp; cleaning | 11:00-12:00 |
+| Lunch | 12:00 - 1:00 |
+| Joining data | 1:00-1:45 |
+| Data structures | 1:45-2:30 |
+| Break | 2:30-2:45 |
+| Exploratory data analysis | 2:45-4:00 |
+| Q&amp;A | 4:00-4:30 |
+
+---
+
+class: clear, center, middle
+
+
+background-image: url(images/review-day2.gif)
+background-size: cover
+
+---
+
+# Importing data
+
+&lt;br&gt;&lt;br&gt;
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: Read in a "normal" sized delimited file (i.e. .csv, .tsv, .txt)
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: Read the names of Excel worksheet files
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: Read in the data from a specified Excel worksheet file
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: Read in a large data file
+
+---
+
+# Importing data
+
+&lt;br&gt;&lt;br&gt;
+
+* .blue.bold[`readr::read_csv`]: Read in a "normal" sized delimited file (i.e. .csv, .tsv, .txt)
+
+* .blue.bold[`readxl::excel_sheets`]: Read the names of Excel worksheet files
+
+* .blue.bold[`readxl::read_excel`]: Read in the data from a specified Excel worksheet file
+
+* .blue.bold[`data.table::fread`]: Read in a large data file
+
+---
+class: yourturn
+# Your Turn!
+
+&lt;br&gt;
+
+1. Import the households.csv file using .grey[`readr::read_csv()`]
+
+2. Import the transactions.csv file using .grey[`data.table::fread()`]
+
+--
+&lt;br&gt;&lt;br&gt;
+
+```r
+# 1
+households &lt;- readr::read_csv("data/households.csv")
+
+# 2
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE)
+```
+
+---
+
+# Transforming data
+
+&lt;br&gt;
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: pick observations based on certain conditions
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: pick variables of interest
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: compute statistical summaries 
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: perform operations at different levels of your data
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: reorder data
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: create new variables
+
+---
+
+# Transforming data
+
+&lt;br&gt;
+
+* .blue.bold[`filter`]: pick observations based on certain conditions
+
+* .blue.bold[`select`]: pick variables of interest
+
+* .blue.bold[`summarize`]: compute statistical summaries 
+
+* .blue.bold[`group_by`]: perform operations at different levels of your data
+
+* .blue.bold[`arrange`]: reorder data
+
+* .blue.bold[`mutate`]: create new variables
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #1
+
+How much total spend has household 4124 had throughout the available data?
+
+
+```r
+transactions %&gt;%
+  filter(_____) %&gt;%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  filter(hshd_num == 4124) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE))
+##    spend
+## 1 574.41
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #2
+
+Which week did household 4124 spend the most?
+
+
+```r
+transactions %&gt;%
+  filter(_____) %&gt;%
+  group_by(_____) %&gt;%
+  summarize(_____) %&gt;%
+* top_n(_____)
+```
+
+&lt;br&gt;&lt;br&gt;
+
+.center[.content-box-gray[.bold[try use .grey[`top_n()`] rather than .grey[`arrange()`]]]]
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  filter(hshd_num == 4124) %&gt;% 
+  group_by(week_num) %&gt;% 
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;% 
+  top_n(1, wt = spend)
+## # A tibble: 1 x 2
+##   week_num spend
+##      &lt;int&gt; &lt;dbl&gt;
+## 1      100  35.4
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #3
+
+Compute the average spend per basket for each region.
+
+
+```r
+transactions %&gt;% 
+  group_by(_____, _____) %&gt;% 
+  summarize(_____) %&gt;% 
+  summarize(_____) %&gt;%
+  arrange(_____)
+```
+
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;% 
+  group_by(store_r, basket_num) %&gt;% 
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;% 
+  summarize(avg_spend = mean(spend)) %&gt;%
+  arrange((desc(avg_spend)))
+## # A tibble: 4 x 2
+##   store_r avg_spend
+##   &lt;chr&gt;       &lt;dbl&gt;
+## 1 EAST         18.8
+## 2 CENTRAL      17.1
+## 3 WEST         16.4
+## 4 SOUTH        15.6
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #4
+
+Can you find the date that has the largest spend-to-units ratio? 
+
+
+```r
+transactions %&gt;% 
+  ______ %&gt;%
+  ______ %&gt;%
+  ______ %&gt;%
+  ______ %&gt;%
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  group_by(purchase_) %&gt;%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %&gt;%
+  mutate(spend_to_units = spend / units) %&gt;%
+  arrange(desc(spend_to_units))
+## # A tibble: 363 x 4
+##    purchase_  spend units spend_to_units
+##    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;          &lt;dbl&gt;
+##  1 14-FEB-17 18971.  5372           3.53
+##  2 23-NOV-17  8514.  2669           3.19
+##  3 14-MAY-17 25180.  8070           3.12
+##  4 24-DEC-17 25316.  8138           3.11
+##  5 13-MAY-17 25785.  8303           3.11
+##  6 13-FEB-17 20300.  6619           3.07
+##  7 23-DEC-17 37721. 12312           3.06
+##  8 24-NOV-17 13037.  4311           3.02
+##  9 15-SEP-17 18488.  6129           3.02
+## 10 28-NOV-17 12863.  4285           3.00
+## # ... with 353 more rows
+```
+
+]
+
+---
+
+# Visualizing data
+
+&lt;br&gt;
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: create canvas
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: map variables to plot aesthetics
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: display data with different geometric shapes 
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: create small multiples
+
+* &amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;&amp;lowbar;: adjust titles &amp; axes
+
+---
+
+# Visualizing data
+
+&lt;br&gt;
+
+* .blue.bold[`ggplot()`]: create canvas
+
+* .blue.bold[`aes()`]: map variables to plot aesthetics
+
+* .blue.bold[`geom_xxx()`]: display data with different geometric shapes 
+
+* .blue.bold[`facet_xxx()`]: create small multiples
+
+* .blue.bold[`ggtitle()`, `labs()`, `scale_xxx()`]: adjust titles &amp; axes
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #1
+
+Plot the total spend by weeks
+
+
+```r
+transactions %&gt;%
+  group_by(week_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+]
+
+--
+
+.pull-right[
+
+
+```r
+transactions %&gt;%
+  group_by(week_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
+  ggplot(aes(x = week_num, y = spend)) +
+  geom_line()
+```
+
+&lt;img src="Day_02-slides_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #2
+
+Plot the total spend versus total units for every household.  Facet by store region to see if the pattern differs by region.
+
+
+```r
+transactions %&gt;%
+  group_by(week_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+]
+
+--
+
+.pull-right[
+
+
+```r
+transactions %&gt;%
+  group_by(store_r, hshd_num) %&gt;%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %&gt;%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point() +
+  facet_wrap(~ store_r)
+```
+
+&lt;img src="Day_02-slides_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #3
+
+Plot the total spend versus total units for every household.  Facet by store region to see if the pattern differs by region.
+
+
+```r
+transactions %&gt;%
+  group_by(week_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+.center[.bold.red[Can you add a title and adjust the axes of this plot?]]
+
+]
+
+
+.pull-right[
+
+
+```r
+transactions %&gt;%
+  group_by(store_r, hshd_num) %&gt;%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %&gt;%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point() +
+  facet_wrap(~ store_r)
+```
+
+&lt;img src="Day_02-slides_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+---
+
+class: yourturn
+# Your Turn!
+
+.scrollable90[
+.pull-left[
+
+### Challenge #3
+
+Plot the total spend versus total units for every household.  Facet by store region to see if the pattern differs by region.
+
+
+```r
+transactions %&gt;%
+  group_by(week_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+.center[.bold.red[Can you add a title and adjust the axes of this plot?]]
+
+]
+
+.pull-right[
+
+
+```r
+transactions %&gt;%
+  group_by(store_r, hshd_num) %&gt;%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %&gt;%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point() +
+  facet_wrap(~ store_r) +
+  ggtitle("Total household spend versus units.") +
+  scale_x_continuous("Total units", labels = scales::comma) +
+  scale_y_continuous("Total spend", labels = scales::dollar)
+```
+
+&lt;img src="Day_02-slides_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+]
+
+---
+
+# Questions before <span class=" faa-passing animated faa-slow " style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">moving on?</span>
+
+&lt;br&gt;
+
+&lt;img src="images/questions.png" width="450" height="450" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: clear, center, middle
+
+background-image: url(images/cleaning.gif)
+background-size: cover
+
+.white.font200[Tidying &amp; Cleaning Data]
+
+---
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,532 @@
+---
+title: "An .red[Incomplete] Introduction to R"
+subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
+author: "Brad Boehmke"
+date: "2018-12-13"
+output:
+  xaringan::moon_reader:
+    css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
+    self_contained: false
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false  
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+# Set global R options
+options(htmltools.dir.version = FALSE, servr.daemon = TRUE)
+
+# Set global knitr chunk options
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  cache = TRUE,
+  error = FALSE,
+  message = FALSE, 
+  warning = FALSE, 
+  collapse = TRUE 
+)
+
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw()
+theme_set(thm)
+```
+
+class: title-slide   
+<a href="https://github.8451.com/b294776/"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+
+<br><br><br><br>
+# Day `r anicon::nia("2", animate = "pulse", speed = "slow", size = 1)`: An .red[Incomplete] Introduction to `r anicon::faa("r-project", animate = FALSE, speed = 'slow', color = 'steelblue')`
+
+## .font70[.italic['If you fall, stand tall and come back for more'] - Tupac Shakur]
+
+### Brad Boehmke
+### Dec 13-14, 2018
+
+### Slides: TBD
+### Script: TBD
+### Data: TBD
+
+---
+
+# Today's schedule `r anicon::faa("calendar-alt", animate = FALSE, colour = "red")`
+
+<br>
+
+| Topic | Time |
+|:------|:------:|
+| Review | 9:00-10:00 |
+| Tidying & cleaning | 10:00-10:45 |
+| Break | 10:45 - 11:00 |
+| Tidying & cleaning | 11:00-12:00 |
+| Lunch | 12:00 - 1:00 |
+| Joining data | 1:00-1:45 |
+| Data structures | 1:45-2:30 |
+| Break | 2:30-2:45 |
+| Exploratory data analysis | 2:45-4:00 |
+| Q&A | 4:00-4:30 |
+
+---
+
+class: clear, center, middle
+
+
+background-image: url(images/review-day2.gif)
+background-size: cover
+
+---
+
+# Importing data
+
+<br><br>
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: Read in a "normal" sized delimited file (i.e. .csv, .tsv, .txt)
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: Read the names of Excel worksheet files
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: Read in the data from a specified Excel worksheet file
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: Read in a large data file
+
+---
+
+# Importing data
+
+<br><br>
+
+* .blue.bold[`readr::read_csv`]: Read in a "normal" sized delimited file (i.e. .csv, .tsv, .txt)
+
+* .blue.bold[`readxl::excel_sheets`]: Read the names of Excel worksheet files
+
+* .blue.bold[`readxl::read_excel`]: Read in the data from a specified Excel worksheet file
+
+* .blue.bold[`data.table::fread`]: Read in a large data file
+
+---
+class: yourturn
+# Your Turn!
+
+<br>
+
+1. Import the households.csv file using .grey[`readr::read_csv()`]
+
+2. Import the transactions.csv file using .grey[`data.table::fread()`]
+
+--
+<br><br>
+```{r}
+# 1
+households <- readr::read_csv("data/households.csv")
+
+# 2
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE)
+```
+
+---
+
+# Transforming data
+
+<br>
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: pick observations based on certain conditions
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: pick variables of interest
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: compute statistical summaries 
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: perform operations at different levels of your data
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: reorder data
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: create new variables
+
+---
+
+# Transforming data
+
+<br>
+
+* .blue.bold[`filter`]: pick observations based on certain conditions
+
+* .blue.bold[`select`]: pick variables of interest
+
+* .blue.bold[`summarize`]: compute statistical summaries 
+
+* .blue.bold[`group_by`]: perform operations at different levels of your data
+
+* .blue.bold[`arrange`]: reorder data
+
+* .blue.bold[`mutate`]: create new variables
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #1
+
+How much total spend has household 4124 had throughout the available data?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____) %>%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(hshd_num == 4124) %>%
+  summarize(spend = sum(spend, na.rm = TRUE))
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #2
+
+Which week did household 4124 spend the most?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____) %>%
+  group_by(_____) %>%
+  summarize(_____) %>%
+  top_n(_____) #<< 
+```
+
+<br><br>
+
+.center[.content-box-gray[.bold[try use .grey[`top_n()`] rather than .grey[`arrange()`]]]]
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(hshd_num == 4124) %>% 
+  group_by(week_num) %>% 
+  summarize(spend = sum(spend, na.rm = TRUE)) %>% 
+  top_n(1, wt = spend)
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #3
+
+Compute the average spend per basket for each region.
+
+```{r, eval=FALSE}
+transactions %>% 
+  group_by(_____, _____) %>% 
+  summarize(_____) %>% 
+  summarize(_____) %>%
+  arrange(_____)
+```
+
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>% 
+  group_by(store_r, basket_num) %>% 
+  summarize(spend = sum(spend, na.rm = TRUE)) %>% 
+  summarize(avg_spend = mean(spend)) %>%
+  arrange((desc(avg_spend)))
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #4
+
+Can you find the date that has the largest spend-to-units ratio? 
+
+```{r, eval=FALSE}
+transactions %>% 
+  ______ %>%
+  ______ %>%
+  ______ %>%
+  ______ %>%
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  group_by(purchase_) %>%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %>%
+  mutate(spend_to_units = spend / units) %>%
+  arrange(desc(spend_to_units))
+```
+
+]
+
+---
+
+# Visualizing data
+
+<br>
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: create canvas
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: map variables to plot aesthetics
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: display data with different geometric shapes 
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: create small multiples
+
+* &lowbar;&lowbar;&lowbar;&lowbar;&lowbar;&lowbar;: adjust titles & axes
+
+---
+
+# Visualizing data
+
+<br>
+
+* .blue.bold[`ggplot()`]: create canvas
+
+* .blue.bold[`aes()`]: map variables to plot aesthetics
+
+* .blue.bold[`geom_xxx()`]: display data with different geometric shapes 
+
+* .blue.bold[`facet_xxx()`]: create small multiples
+
+* .blue.bold[`ggtitle()`, `labs()`, `scale_xxx()`]: adjust titles & axes
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #1
+
+Plot the total spend by weeks
+
+```{r, eval=FALSE}
+transactions %>%
+  group_by(week_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+]
+
+--
+
+.pull-right[
+
+```{r, fig.height=4.5}
+transactions %>%
+  group_by(week_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  ggplot(aes(x = week_num, y = spend)) +
+  geom_line()
+```
+
+]
+
+---
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #2
+
+Plot the total spend versus total units for every household.  Facet by store region to see if the pattern differs by region.
+
+```{r, eval=FALSE}
+transactions %>%
+  group_by(week_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+]
+
+--
+
+.pull-right[
+
+```{r, fig.height=4.5}
+transactions %>%
+  group_by(store_r, hshd_num) %>%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %>%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point() +
+  facet_wrap(~ store_r)
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge #3
+
+Plot the total spend versus total units for every household.  Facet by store region to see if the pattern differs by region.
+
+```{r, eval=FALSE}
+transactions %>%
+  group_by(week_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+.center[.bold.red[Can you add a title and adjust the axes of this plot?]]
+
+]
+
+
+.pull-right[
+
+```{r, fig.height=4.5}
+transactions %>%
+  group_by(store_r, hshd_num) %>%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %>%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point() +
+  facet_wrap(~ store_r)
+```
+
+]
+---
+
+class: yourturn
+# Your Turn!
+
+.scrollable90[
+.pull-left[
+
+### Challenge #3
+
+Plot the total spend versus total units for every household.  Facet by store region to see if the pattern differs by region.
+
+```{r, eval=FALSE}
+transactions %>%
+  group_by(week_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  ggplot(aes(________)) +
+  geom_______
+```
+
+
+.center[.bold.red[Can you add a title and adjust the axes of this plot?]]
+
+]
+
+.pull-right[
+
+```{r, fig.height=4}
+transactions %>%
+  group_by(store_r, hshd_num) %>%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %>%
+  ggplot(aes(x = units, y = spend)) +
+  geom_point() +
+  facet_wrap(~ store_r) +
+  ggtitle("Total household spend versus units.") +
+  scale_x_continuous("Total units", labels = scales::comma) +
+  scale_y_continuous("Total spend", labels = scales::dollar)
+```
+
+]
+]
+
+---
+
+# Questions before `r anicon::nia("moving on?", animate = "passing", speed = "slow")`
+
+<br>
+
+```{r questions-ggplot, echo=FALSE, out.height="450", out.width="450"}
+knitr::include_graphics("images/questions.png")
+```
+
+---
+
+class: clear, center, middle
+
+background-image: url(images/cleaning.gif)
+background-size: cover
+
+.white.font200[Tidying & Cleaning Data]
+
+---
+
