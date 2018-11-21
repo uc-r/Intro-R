@@ -36,6 +36,8 @@ knitr::opts_chunk$set(
 library(ggplot2)
 thm <- theme_bw()
 theme_set(thm)
+
+library(tidyverse)
 ```
 
 class: title-slide   
@@ -126,7 +128,7 @@ class: yourturn
 households <- readr::read_csv("data/households.csv")
 
 # 2
-transactions <- data.table::fread("data/transactions.csv", data.table = FALSE)
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
 ```
 
 ---
@@ -191,6 +193,8 @@ transactions %>%
 ### Solution
 
 ```{r}
+library(tidyverse)
+
 transactions %>%
   filter(hshd_num == 4124) %>%
   summarize(spend = sum(spend, na.rm = TRUE))
@@ -529,4 +533,452 @@ background-size: cover
 .white.font200[Tidying & Cleaning Data]
 
 ---
+
+# Non-comprehensive
+<br><br>
+
+.font200[
+
+> *"Tidy datasets are all alike but every messy dataset is messy in its own way"* - Hadley Wickam
+
+]
+
+---
+
+# Requirements
+
+.pull-left[
+
+### Packages
+
+```{r load-pkgs, include=TRUE, results='asis', message=TRUE, warning=TRUE}
+library(tidyverse)
+library(lubridate) # to work with dates
+```
+
+
+]
+
+.pull-right[
+
+### Data sets
+
+```{r load-data}
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
+
+products <- data.table::fread("data/products.csv", data.table = FALSE) %>% as.tibble()
+
+households <- data.table::fread("data/households.csv", data.table = FALSE) %>% as.tibble()
+```
+
+]
+
+---
+
+# Variable names
+
+.pull-left[
+
+Variable names should be:
+
+- meaningful
+
+- concise
+
+- case consistent
+
+- contain no spaces
+
+]
+
+--
+
+.pull-right[
+
+```{r transaction-names}
+data.frame(names = names(transactions))
+```
+
+.center[.content-box-gray[.bold[How could we improve these names? `r emo::ji("thinking")`]]]
+
+]
+
+---
+
+# Making better names
+
+```{r}
+transactions <- transactions %>%
+  rename(
+    basket_id     = basket_num,
+    household_id  = hshd_num,
+    purchase_date = purchase_,
+    product_id    = product_num,
+    store_region  = store_r,
+    week          = week_num
+  )
+
+transactions
+```
+
+---
+
+class: yourturn
+# Your Turn!
+
+.scrollable90[
+.pull-left[
+
+Change the names in your data sets to the following:
+
+* transactions: .grey[*basket_id, household_id, purchase_date, product_id, spend, units, store_region,  week,  year*]
+
+* households: .grey[*household_id, loyal, age, marital_status, income, home_ownership, household_comp, household_size, kids_count*] 
+
+* products: .grey[*product_id, department, commodity, brand, organic*]
+
+]
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.scrollable90[
+.pull-left[
+
+Change the names in your data sets to the following:
+
+* transactions: .grey[*basket_id, household_id, purchase_date, product_id, spend, units, store_region,  week,  year*]
+
+* households: .grey[*household_id, loyal, age, marital_status, income, home_ownership, household_comp, household_size, kids_count*] 
+
+* products: .grey[*product_id, department, commodity, brand, organic*]
+
+]
+
+
+.pull-right[
+
+```{r your-turn-rename, eval=FALSE}
+transactions <- transactions %>%
+  rename(
+    basket_id     = basket_num,
+    household_id  = hshd_num,
+    purchase_date = purchase_,
+    product_id    = product_num,
+    store_region  = store_r,
+    week          = week_num
+  )
+
+households <- households %>%
+  rename(
+    household_id   = hshd_num,
+    loyal          = l,
+    age            = age_range,
+    marital_status = marital,
+    income         = income_range,
+    home_ownership = homeowner,
+    household_comp = hshd_composition,
+    household_size = hh_size,
+    kids_count     = children
+  )
+
+products <- products %>%
+  rename(
+    product_id = product_num,
+    brand      = brand_ty,
+    organic    = x5
+  )
+```
+
+
+```{r hidden-renaming-households-and-products, echo=FALSE}
+households <- households %>%
+  rename(
+    household_id   = hshd_num,
+    loyal          = l,
+    age            = age_range,
+    marital_status = marital,
+    income         = income_range,
+    home_ownership = homeowner,
+    household_comp = hshd_composition,
+    household_size = hh_size,
+    kids_count     = children
+  )
+
+products <- products %>%
+  rename(
+    product_id = product_num,
+    brand      = brand_ty,
+    organic    = x5
+  )
+```
+
+
+]
+]
+
+
+---
+
+# Variable types
+
+.pull-left[
+
+Typically, within R, we work with 5 different types of data:
+
+- Numerics
+   - Integers
+   - Decimals (aka double)
+
+- Characters
+
+- Factors
+
+- Dates
+
+- Logical
+
+]
+
+--
+
+.pull-right[
+
+- Use .blue[`is.`] functions to test
+   - `is.integer()`
+   - `is.double()` (checks for decimal)
+   - `is.numeric()` (checks if either integer ___or___ double)
+   - `is.character()`
+   - `is.factor()`
+   - etc.
+
+- Use .blue[`as.`] functions to coerce
+   - `is.integer()`: coerce to integer
+   - `is.double()`: coerce to double
+   - `is.character()`: coerce to character
+   - etc.
+   
+.center[.content-box-gray[.bold[We can use these right in .grey[`mutate()`]]]]   
+
+]
+
+---
+
+# Changing variable types
+
+.code80[
+
+```{r}
+glimpse(transactions)
+```
+
+]
+
+<br><br>
+.center[.content-box-gray[.bold[What are some issues with our .font120[`transactions`] variable types? `r emo::ji("thinking")`]]]
+
+---
+
+# Changing variable types
+
+.pull-left[
+
+* Characters: variables that have infinite (or highly variable) unique values
+
+* Factors: variables that have finite (or smaller defined) categories
+
+* Dates & timestamps: variables that have any representation of time
+
+
+]
+
+.pull-right[
+
+```{r changing-transactions-data-types}
+transactions <- transactions %>% 
+  mutate(
+    basket_id     = as.character(basket_id),
+    household_id  = as.character(household_id),
+    product_id    = as.character(product_id),
+    store_region  = as.factor(store_region),
+    purchase_date = dmy(purchase_date)
+  )
+
+glimpse(transactions)
+```
+
+]
+
+---
+
+# Working with factors
+
+Categorical variables can be ordered or unordered.  Consider:
+
+.pull-left[
+
+```{r}
+households %>% distinct(marital_status)
+```
+
+
+]
+
+.pull-right[
+
+```{r}
+households %>% distinct(income)
+```
+
+]
+
+<br><br>
+.center[.content-box-gray[.bold[Why would we care about this ordering? `r emo::ji("thinking")`]]]
+
+---
+# Working with factors
+
+Often, we want to adjust the categories or the ordering of categories for a categorical variable.  Consider:
+
+.pull-left[
+
+```{r, fig.height=4.5}
+ggplot(households, aes(marital_status)) +
+  geom_bar()
+```
+
+
+]
+
+.pull-right[
+
+```{r, fig.height=4.5}
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+]
+
+---
+# Working with factors
+
+The __forcats__ package allows us to adjust categories easily:
+
+.pull-left[
+
+.center.font110[Collapse factor levels with .grey[`fct_collapse()`]]
+
+```{r}
+households <- households %>% 
+  mutate(
+    marital_status = fct_collapse(marital_status, Unknown = c("Unknown", "null")),
+    home_ownership = fct_collapse(home_ownership, Unknown = c("Unknown", "null")),
+    age            = fct_collapse(age, Unknown = c("Unknown", "null", "NOT AVAILABLE")),
+    kids_count     = fct_collapse(kids_count, Unknown = c("Unknown", "null", "NOT AVAILABLE"))
+    )
+```
+
+
+]
+
+.pull-right[
+
+.center.font110[Change levels or reorder with .grey[`fct_relevel()`]]
+
+```{r}
+households <- households %>% 
+  mutate(
+    income         = fct_recode(income, Unknown = "null"),
+    household_size = fct_recode(household_size, Unknown = "null"),
+    marital_status = fct_relevel(marital_status, "Unknown", after = Inf),
+    income         = fct_relevel(income, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "null"),
+    household_size = fct_relevel(household_size, "Unknown", after = Inf)
+    )
+```
+
+]
+
+---
+# Working with factors
+
+.pull-left[
+
+```{r}
+households %>% count(income)
+```
+
+
+]
+
+.pull-right[
+
+```{r fig.height=4}
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+]
+
+<br><br>
+.center[.content-box-gray[.bold[__forcats__ is worth getting to know (https://forcats.tidyverse.org/index.html)]]]
+
+
+---
+
+class: yourturn
+# Your Turn!
+
+<br><br>
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the factors in your different data sets.]
+
+---
+
+# Working with characters
+
+- changing certain values
+- normalize to lower case
+- introduce stringr package
+
+---
+
+class: yourturn
+# Your Turn!
+
+<br><br>
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the characters in your different data sets.]
+
+---
+
+# Working with dates
+
+- introduce lubridate package
+- coerce to different dates
+- parse parts of dates
+
+---
+
+class: yourturn
+# Your Turn!
+
+<br><br>
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the dates in your different data sets.]
+
+---
+
+# Missing values
+
+
+
+
+
+
+
+
+
 

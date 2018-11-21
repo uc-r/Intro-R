@@ -106,7 +106,7 @@ class: yourturn
 households &lt;- readr::read_csv("data/households.csv")
 
 # 2
-transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE)
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE) %&gt;% as.tibble()
 ```
 
 ---
@@ -173,11 +173,15 @@ transactions %&gt;%
 
 
 ```r
+library(tidyverse)
+
 transactions %&gt;%
   filter(hshd_num == 4124) %&gt;%
   summarize(spend = sum(spend, na.rm = TRUE))
-##    spend
-## 1 574.41
+## # A tibble: 1 x 1
+##   spend
+##   &lt;dbl&gt;
+## 1  574.
 ```
 
 ]
@@ -558,6 +562,520 @@ background-size: cover
 .white.font200[Tidying &amp; Cleaning Data]
 
 ---
+
+# Non-comprehensive
+&lt;br&gt;&lt;br&gt;
+
+.font200[
+
+&gt; *"Tidy datasets are all alike but every messy dataset is messy in its own way"* - Hadley Wickam
+
+]
+
+---
+
+# Requirements
+
+.pull-left[
+
+### Packages
+
+
+```r
+library(tidyverse)
+library(lubridate) # to work with dates
+```
+
+
+]
+
+.pull-right[
+
+### Data sets
+
+
+```r
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE) %&gt;% as.tibble()
+
+products &lt;- data.table::fread("data/products.csv", data.table = FALSE) %&gt;% as.tibble()
+
+households &lt;- data.table::fread("data/households.csv", data.table = FALSE) %&gt;% as.tibble()
+```
+
+]
+
+---
+
+# Variable names
+
+.pull-left[
+
+Variable names should be:
+
+- meaningful
+
+- concise
+
+- case consistent
+
+- contain no spaces
+
+]
+
+--
+
+.pull-right[
+
+
+```r
+data.frame(names = names(transactions))
+##         names
+## 1  basket_num
+## 2    hshd_num
+## 3   purchase_
+## 4 product_num
+## 5       spend
+## 6       units
+## 7     store_r
+## 8    week_num
+## 9        year
+```
+
+.center[.content-box-gray[.bold[How could we improve these names? 🤔]]]
+
+]
+
+---
+
+# Making better names
+
+
+```r
+transactions &lt;- transactions %&gt;%
+  rename(
+    basket_id     = basket_num,
+    household_id  = hshd_num,
+    purchase_date = purchase_,
+    product_id    = product_num,
+    store_region  = store_r,
+    week          = week_num
+  )
+
+transactions
+## # A tibble: 1,857,567 x 9
+##    basket_id household_id purchase_date product_id spend units store_region
+##        &lt;int&gt;        &lt;int&gt; &lt;chr&gt;              &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;       
+##  1    100369         3708 09-DEC-17          93466  3.18     2 SOUTH       
+##  2    891779          719 20-SEP-17          85201  3.49     1 CENTRAL     
+##  3    609562         4995 07-MAR-17        2507006  0.89     1 CENTRAL     
+##  4    760220           44 19-JUN-17        4819172  8.99     1 SOUTH       
+##  5    869525         3937 04-SEP-17        1055355  1        1 SOUTH       
+##  6    922989         2356 13-OCT-17        4285485  2.87     1 WEST        
+##  7    732544          694 31-MAY-17           8511  0.64     1 CENTRAL     
+##  8    536185         3728 14-JAN-17          85939  1        1 SOUTH       
+##  9    967914          887 15-NOV-17        3775301  4.69     1 CENTRAL     
+## 10    102995          574 27-DEC-17          72765  1.29     1 EAST        
+## # ... with 1,857,557 more rows, and 2 more variables: week &lt;int&gt;,
+## #   year &lt;int&gt;
+```
+
+---
+
+class: yourturn
+# Your Turn!
+
+.scrollable90[
+.pull-left[
+
+Change the names in your data sets to the following:
+
+* transactions: .grey[*basket_id, household_id, purchase_date, product_id, spend, units, store_region,  week,  year*]
+
+* households: .grey[*household_id, loyal, age, marital_status, income, home_ownership, household_comp, household_size, kids_count*] 
+
+* products: .grey[*product_id, department, commodity, brand, organic*]
+
+]
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.scrollable90[
+.pull-left[
+
+Change the names in your data sets to the following:
+
+* transactions: .grey[*basket_id, household_id, purchase_date, product_id, spend, units, store_region,  week,  year*]
+
+* households: .grey[*household_id, loyal, age, marital_status, income, home_ownership, household_comp, household_size, kids_count*] 
+
+* products: .grey[*product_id, department, commodity, brand, organic*]
+
+]
+
+
+.pull-right[
+
+
+```r
+transactions &lt;- transactions %&gt;%
+  rename(
+    basket_id     = basket_num,
+    household_id  = hshd_num,
+    purchase_date = purchase_,
+    product_id    = product_num,
+    store_region  = store_r,
+    week          = week_num
+  )
+
+households &lt;- households %&gt;%
+  rename(
+    household_id   = hshd_num,
+    loyal          = l,
+    age            = age_range,
+    marital_status = marital,
+    income         = income_range,
+    home_ownership = homeowner,
+    household_comp = hshd_composition,
+    household_size = hh_size,
+    kids_count     = children
+  )
+
+products &lt;- products %&gt;%
+  rename(
+    product_id = product_num,
+    brand      = brand_ty,
+    organic    = x5
+  )
+```
+
+
+
+
+
+]
+]
+
+
+---
+
+# Variable types
+
+.pull-left[
+
+Typically, within R, we work with 5 different types of data:
+
+- Numerics
+   - Integers
+   - Decimals (aka double)
+
+- Characters
+
+- Factors
+
+- Dates
+
+- Logical
+
+]
+
+--
+
+.pull-right[
+
+- Use .blue[`is.`] functions to test
+   - `is.integer()`
+   - `is.double()` (checks for decimal)
+   - `is.numeric()` (checks if either integer ___or___ double)
+   - `is.character()`
+   - `is.factor()`
+   - etc.
+
+- Use .blue[`as.`] functions to coerce
+   - `is.integer()`: coerce to integer
+   - `is.double()`: coerce to double
+   - `is.character()`: coerce to character
+   - etc.
+   
+.center[.content-box-gray[.bold[We can use these right in .grey[`mutate()`]]]]   
+
+]
+
+---
+
+# Changing variable types
+
+.code80[
+
+
+```r
+glimpse(transactions)
+## Observations: 1,857,567
+## Variables: 9
+## $ basket_id     &lt;int&gt; 100369, 891779, 609562, 760220, 869525, 922989, ...
+## $ household_id  &lt;int&gt; 3708, 719, 4995, 44, 3937, 2356, 694, 3728, 887,...
+## $ purchase_date &lt;chr&gt; "09-DEC-17", "20-SEP-17", "07-MAR-17", "19-JUN-1...
+## $ product_id    &lt;int&gt; 93466, 85201, 2507006, 4819172, 1055355, 4285485...
+## $ spend         &lt;dbl&gt; 3.18, 3.49, 0.89, 8.99, 1.00, 2.87, 0.64, 1.00, ...
+## $ units         &lt;int&gt; 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, ...
+## $ store_region  &lt;chr&gt; "SOUTH", "CENTRAL", "CENTRAL", "SOUTH", "SOUTH",...
+## $ week          &lt;int&gt; 101, 90, 62, 77, 88, 93, 74, 54, 98, 104, 96, 55...
+## $ year          &lt;int&gt; 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2017, ...
+```
+
+]
+
+&lt;br&gt;&lt;br&gt;
+.center[.content-box-gray[.bold[What are some issues with our .font120[`transactions`] variable types? 🤔]]]
+
+---
+
+# Changing variable types
+
+.pull-left[
+
+* Characters: variables that have infinite (or highly variable) unique values
+
+* Factors: variables that have finite (or smaller defined) categories
+
+* Dates &amp; timestamps: variables that have any representation of time
+
+
+]
+
+.pull-right[
+
+
+```r
+transactions &lt;- transactions %&gt;% 
+  mutate(
+    basket_id     = as.character(basket_id),
+    household_id  = as.character(household_id),
+    product_id    = as.character(product_id),
+    store_region  = as.factor(store_region),
+    purchase_date = dmy(purchase_date)
+  )
+
+glimpse(transactions)
+## Observations: 1,857,567
+## Variables: 9
+## $ basket_id     &lt;chr&gt; "100369", "891779", "609562", "760220", "869525"...
+## $ household_id  &lt;chr&gt; "3708", "719", "4995", "44", "3937", "2356", "69...
+## $ purchase_date &lt;date&gt; 2017-12-09, 2017-09-20, 2017-03-07, 2017-06-19,...
+## $ product_id    &lt;chr&gt; "93466", "85201", "2507006", "4819172", "1055355...
+## $ spend         &lt;dbl&gt; 3.18, 3.49, 0.89, 8.99, 1.00, 2.87, 0.64, 1.00, ...
+## $ units         &lt;int&gt; 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, ...
+## $ store_region  &lt;fct&gt; SOUTH, CENTRAL, CENTRAL, SOUTH, SOUTH, WEST, CEN...
+## $ week          &lt;int&gt; 101, 90, 62, 77, 88, 93, 74, 54, 98, 104, 96, 55...
+## $ year          &lt;int&gt; 2017, 2017, 2017, 2017, 2017, 2017, 2017, 2017, ...
+```
+
+]
+
+---
+
+# Working with factors
+
+Categorical variables can be ordered or unordered.  Consider:
+
+.pull-left[
+
+
+```r
+households %&gt;% distinct(marital_status)
+## # A tibble: 4 x 1
+##   marital_status
+##   &lt;chr&gt;         
+## 1 Unknown       
+## 2 Married       
+## 3 null          
+## 4 Single
+```
+
+
+]
+
+.pull-right[
+
+
+```r
+households %&gt;% distinct(income)
+## # A tibble: 7 x 1
+##   income   
+##   &lt;chr&gt;    
+## 1 35-49K   
+## 2 50-74K   
+## 3 75-99K   
+## 4 UNDER 35K
+## 5 150K+    
+## 6 100-150K 
+## 7 null
+```
+
+]
+
+&lt;br&gt;&lt;br&gt;
+.center[.content-box-gray[.bold[Why would we care about this ordering? 🤔]]]
+
+---
+# Working with factors
+
+Often, we want to adjust the categories or the ordering of categories for a categorical variable.  Consider:
+
+.pull-left[
+
+
+```r
+ggplot(households, aes(marital_status)) +
+  geom_bar()
+```
+
+&lt;img src="Day_02-slides_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+&lt;img src="Day_02-slides_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Working with factors
+
+The __forcats__ package allows us to adjust categories easily:
+
+.pull-left[
+
+.center.font110[Collapse factor levels with .grey[`fct_collapse()`]]
+
+
+```r
+households &lt;- households %&gt;% 
+  mutate(
+    marital_status = fct_collapse(marital_status, Unknown = c("Unknown", "null")),
+    home_ownership = fct_collapse(home_ownership, Unknown = c("Unknown", "null")),
+    age            = fct_collapse(age, Unknown = c("Unknown", "null", "NOT AVAILABLE")),
+    kids_count     = fct_collapse(kids_count, Unknown = c("Unknown", "null", "NOT AVAILABLE"))
+    )
+```
+
+
+]
+
+.pull-right[
+
+.center.font110[Change levels or reorder with .grey[`fct_relevel()`]]
+
+
+```r
+households &lt;- households %&gt;% 
+  mutate(
+    income         = fct_recode(income, Unknown = "null"),
+    household_size = fct_recode(household_size, Unknown = "null"),
+    marital_status = fct_relevel(marital_status, "Unknown", after = Inf),
+    income         = fct_relevel(income, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "null"),
+    household_size = fct_relevel(household_size, "Unknown", after = Inf)
+    )
+```
+
+]
+
+---
+# Working with factors
+
+.pull-left[
+
+
+```r
+households %&gt;% count(income)
+## # A tibble: 7 x 2
+##   income        n
+##   &lt;fct&gt;     &lt;int&gt;
+## 1 UNDER 35K   790
+## 2 35-49K      876
+## 3 50-74K      947
+## 4 75-99K      594
+## 5 100-150K    581
+## 6 150K+       347
+## 7 Unknown     865
+```
+
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+&lt;img src="Day_02-slides_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+&lt;br&gt;&lt;br&gt;
+.center[.content-box-gray[.bold[__forcats__ is worth getting to know (https://forcats.tidyverse.org/index.html)]]]
+
+
+---
+
+class: yourturn
+# Your Turn!
+
+&lt;br&gt;&lt;br&gt;
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the factors in your different data sets.]
+
+---
+
+# Working with characters
+
+- changing certain values
+- normalize to lower case
+- introduce stringr package
+
+---
+
+class: yourturn
+# Your Turn!
+
+&lt;br&gt;&lt;br&gt;
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the characters in your different data sets.]
+
+---
+
+# Working with dates
+
+- introduce lubridate package
+- coerce to different dates
+- parse parts of dates
+
+---
+
+class: yourturn
+# Your Turn!
+
+&lt;br&gt;&lt;br&gt;
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the dates in your different data sets.]
+
+---
+
+# Missing values
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

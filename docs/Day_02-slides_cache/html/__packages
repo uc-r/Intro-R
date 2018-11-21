@@ -1,10 +1,12 @@
 base
 ggplot2
-readr
-readxl
+tidyverse
 tibble
+tidyr
+readr
+purrr
 dplyr
-bindrcpp
+stringr
 forcats
-ggmap
-gganimate
+bindrcpp
+lubridate
