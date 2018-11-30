@@ -1,0 +1,10 @@
+base
+ggplot2
+readr
+readxl
+tibble
+dplyr
+bindrcpp
+forcats
+ggmap
+gganimate

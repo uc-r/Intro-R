@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>An .red[Incomplete] Introduction to R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Brad Boehmke" />
+    <meta name="date" content="2018-12-13" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: clear, center, middle
+
+
+background-image: url(images/time-for-review.jpg)
+background-size: cover
+
+---
+
+# Prerequisites
+
+.pull-left[
+
+### Packages
+
+
+```r
+library(dplyr) # or library(tidyverse)
+```
+
+
+]
+
+.pull-right[
+
+### Data
+
+
+```r
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE) %&gt;% as.tibble()
+transactions
+## # A tibble: 1,857,567 x 9
+##    basket_num hshd_num purchase_ product_num spend units store_r week_num
+##         &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+##  1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+##  2     891779      719 20-SEP-17       85201  3.49     1 CENTRAL       90
+##  3     609562     4995 07-MAR-17     2507006  0.89     1 CENTRAL       62
+##  4     760220       44 19-JUN-17     4819172  8.99     1 SOUTH         77
+##  5     869525     3937 04-SEP-17     1055355  1        1 SOUTH         88
+##  6     922989     2356 13-OCT-17     4285485  2.87     1 WEST          93
+##  7     732544      694 31-MAY-17        8511  0.64     1 CENTRAL       74
+##  8     536185     3728 14-JAN-17       85939  1        1 SOUTH         54
+##  9     967914      887 15-NOV-17     3775301  4.69     1 CENTRAL       98
+## 10     102995      574 27-DEC-17       72765  1.29     1 EAST         104
+## # ... with 1,857,557 more rows, and 1 more variable: year &lt;int&gt;
+```
+
+]
+
+---
+
+# Leverage the cheat sheet
+
+&lt;img src="images/cheatsheet-dplyr.png" width="1460" style="display: block; margin: auto;" /&gt;
+
+.center[.content-box-gray[.bold[`Help &gt;&gt; Cheatsheets &gt;&gt; Data Transformation with dplyr`]]]
+
+---
+
+# Question 1
+
+.pull-left[
+
+### Challenge
+
+How much total spend did household 3937 have in week 54?
+
+
+```r
+transactions %&gt;%
+  filter(_____, _____) %&gt;%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  filter(hshd_num == 3937, week_num == 54) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE))
+## # A tibble: 1 x 1
+##   spend
+##   &lt;dbl&gt;
+## 1  86.2
+```
+
+
+]
+
+---
+
+# Question 2
+
+.pull-left[
+
+### Challenge
+
+Compute the total spend for baskets that household 3937 had in week 54.
+
+
+```r
+transactions %&gt;%
+  filter(_____, _____) %&gt;%
+  group_by(_____) %&gt;%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  filter(hshd_num == 3937, week_num == 54) %&gt;%
+  group_by(basket_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE))
+## # A tibble: 6 x 2
+##   basket_num spend
+##        &lt;int&gt; &lt;dbl&gt;
+## 1     529106  5.59
+## 2     530413  3.99
+## 3     530495 10.3 
+## 4     530607 17.8 
+## 5     533329 29.8 
+## 6     536201 18.8
+```
+
+
+]
+
+---
+
+# Question 3
+
+.pull-left[
+
+### Challenge
+
+Compute the total units per basket for the central region.  Which basket contained the most units?
+
+
+```r
+transactions %&gt;%
+  filter(_____) %&gt;%
+  group_by(_____) %&gt;%
+  summarize(_____) %&gt;%
+  arrange(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  filter(store_r == "CENTRAL") %&gt;%
+  group_by(basket_num) %&gt;%
+  summarize(units = sum(units, na.rm = TRUE)) %&gt;%
+  arrange(desc(units))
+## # A tibble: 90,410 x 2
+##    basket_num units
+##         &lt;int&gt; &lt;int&gt;
+##  1     100268    96
+##  2     101497    96
+##  3     577720    89
+##  4     100466    84
+##  5     101895    84
+##  6     101994    84
+##  7     102184    84
+##  8     101476    83
+##  9     100292    79
+## 10     705629    79
+## # ... with 90,400 more rows
+```
+
+
+]
+
+---
+
+# Question 4
+
+.pull-left[
+
+### Challenge
+
+In the east region, compute each household's spend-to-units ratio for each week.  Which household has the largest spend-to-units ratio?
+
+
+```r
+transactions %&gt;%
+  filter(_____) %&gt;%
+  group_by(_____, _____) %&gt;%
+  summarize(
+    _____,
+    _____
+    ) %&gt;%
+  mutate(_____) %&gt;%
+  arrange(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  filter(store_r == "EAST") %&gt;%
+  group_by(hshd_num, week_num) %&gt;%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %&gt;%
+  mutate(ratio = spend / units) %&gt;%
+  arrange(desc(ratio))
+## # A tibble: 45,865 x 5
+## # Groups:   hshd_num [1,251]
+##    hshd_num week_num spend units ratio
+##       &lt;int&gt;    &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;
+##  1     1324       74  40.3     1  40.3
+##  2     1492       70  40.0     1  40.0
+##  3      144       80  37.0     1  37.0
+##  4      144      104  37.0     1  37.0
+##  5     4912       77  37.0     1  37.0
+##  6     4397       67  35.0     1  35.0
+##  7     4039       88  34.0     1  34.0
+##  8     4429      100  97.6     3  32.5
+##  9       14       93  30.0     1  30.0
+## 10     1050       58  59.9     2  29.9
+## # ... with 45,855 more rows
+```
+
+
+]
+
+---
+
+# Question 5
+
+.pull-left[
+
+### Challenge
+
+Compute total spend by basket for each purchase date.  Can you find the date that has the largest average (mean) total spend? 
+
+
+```r
+transactions %&gt;% 
+  ______ %&gt;%
+  ______ %&gt;%
+  ______ %&gt;%
+  ______ %&gt;%
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;%
+  group_by(purchase_, basket_num) %&gt;%
+  summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
+  summarize(avg_spend = mean(spend)) %&gt;%
+  arrange(desc(avg_spend))
+## # A tibble: 363 x 2
+##    purchase_ avg_spend
+##    &lt;chr&gt;         &lt;dbl&gt;
+##  1 23-DEC-17      165.
+##  2 17-DEC-17      164.
+##  3 22-DEC-17      161.
+##  4 30-DEC-17      158.
+##  5 10-DEC-17      158.
+##  6 16-DEC-17      146.
+##  7 09-DEC-17      132.
+##  8 15-DEC-17      132.
+##  9 24-DEC-17      127.
+## 10 29-DEC-17      127.
+## # ... with 353 more rows
+```
+
+
+]
+
+---
+
+class: clear, center, middle
+
+background-image: url(https://raw.githubusercontent.com/bradleyboehmke/Dayton-Weather-2018/master/Dayton_Weather.png)
+background-size: cover
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+.font200.bold[Next up...[<span class=" faa-flash animated faa-slow " style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">Visualizing Data</span>](https://uc-r.github.io/Intro-R/day-1e-visualization.html)]
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

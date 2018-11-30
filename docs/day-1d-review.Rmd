@@ -1,0 +1,281 @@
+---
+title: "An .red[Incomplete] Introduction to R"
+subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
+author: "Brad Boehmke"
+date: "2018-12-13"
+output:
+  xaringan::moon_reader:
+    css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
+    self_contained: false
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false  
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+# Set global R options
+options(htmltools.dir.version = FALSE, servr.daemon = TRUE)
+
+# Set global knitr chunk options
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  cache = TRUE,
+  error = FALSE,
+  message = FALSE, 
+  warning = FALSE, 
+  collapse = TRUE 
+)
+
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw()
+theme_set(thm)
+```
+
+class: clear, center, middle
+
+
+background-image: url(images/time-for-review.jpg)
+background-size: cover
+
+---
+
+# Prerequisites
+
+.pull-left[
+
+### Packages
+
+```{r}
+library(dplyr) # or library(tidyverse)
+```
+
+
+]
+
+.pull-right[
+
+### Data
+
+```{r}
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
+transactions
+```
+
+]
+
+---
+
+# Leverage the cheat sheet
+
+```{r, echo=FALSE}
+knitr::include_graphics("images/cheatsheet-dplyr.png")
+```
+
+.center[.content-box-gray[.bold[`Help >> Cheatsheets >> Data Transformation with dplyr`]]]
+
+---
+
+# Question 1
+
+.pull-left[
+
+### Challenge
+
+How much total spend did household 3937 have in week 54?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____, _____) %>%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(hshd_num == 3937, week_num == 54) %>%
+  summarize(spend = sum(spend, na.rm = TRUE))
+```
+
+
+]
+
+---
+
+# Question 2
+
+.pull-left[
+
+### Challenge
+
+Compute the total spend for baskets that household 3937 had in week 54.
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____, _____) %>%
+  group_by(_____) %>%
+  summarize(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(hshd_num == 3937, week_num == 54) %>%
+  group_by(basket_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE))
+```
+
+
+]
+
+---
+
+# Question 3
+
+.pull-left[
+
+### Challenge
+
+Compute the total units per basket for the central region.  Which basket contained the most units?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____) %>%
+  group_by(_____) %>%
+  summarize(_____) %>%
+  arrange(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(store_r == "CENTRAL") %>%
+  group_by(basket_num) %>%
+  summarize(units = sum(units, na.rm = TRUE)) %>%
+  arrange(desc(units))
+```
+
+
+]
+
+---
+
+# Question 4
+
+.pull-left[
+
+### Challenge
+
+In the east region, compute each household's spend-to-units ratio for each week.  Which household has the largest spend-to-units ratio?
+
+```{r, eval=FALSE}
+transactions %>%
+  filter(_____) %>%
+  group_by(_____, _____) %>%
+  summarize(
+    _____,
+    _____
+    ) %>%
+  mutate(_____) %>%
+  arrange(_____)
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  filter(store_r == "EAST") %>%
+  group_by(hshd_num, week_num) %>%
+  summarize(
+    spend = sum(spend, na.rm = TRUE),
+    units = sum(units, na.rm = TRUE)
+    ) %>%
+  mutate(ratio = spend / units) %>%
+  arrange(desc(ratio))
+```
+
+
+]
+
+---
+
+# Question 5
+
+.pull-left[
+
+### Challenge
+
+Compute total spend by basket for each purchase date.  Can you find the date that has the largest average (mean) total spend? 
+
+```{r, eval=FALSE}
+transactions %>% 
+  ______ %>%
+  ______ %>%
+  ______ %>%
+  ______ %>%
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r}
+transactions %>%
+  group_by(purchase_, basket_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  summarize(avg_spend = mean(spend)) %>%
+  arrange(desc(avg_spend))
+```
+
+
+]
+
+---
+
+class: clear, center, middle
+
+background-image: url(https://raw.githubusercontent.com/bradleyboehmke/Dayton-Weather-2018/master/Dayton_Weather.png)
+background-size: cover
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+
+.font200.bold[Next up...[`r anicon::nia("Visualizing Data", animate = "flash", speed = "slow")`](https://uc-r.github.io/Intro-R/day-1e-visualization.html)]
+
+
