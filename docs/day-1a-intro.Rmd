@@ -781,3 +781,4 @@ library(forcats)
 knitr::include_graphics("images/questions.png")
 ```
 
+.center[[Back to training repo](https://github.com/uc-r/Intro-R)]

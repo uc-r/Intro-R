@@ -13,9 +13,9 @@ __Day 1__
 | Topic | Time |
 |:------|:------:|
 | [Intro & Fundamentals](https://uc-r.github.io/Intro-R/day-1a-intro.html) | 9:00 - 10:00 |
-| Importing data | 10:00 - 10:30 |
+| [Importing data](https://uc-r.github.io/Intro-R/day-1b-import.html) | 10:00 - 10:30 |
 | Break | 10:30 - 10:45 |
-| Data transformation | 10:45 - 12:00 |
+| [Data transformation](https://uc-r.github.io/Intro-R/day-1c-transform.html) | 10:45 - 12:00 |
 | Lunch | 12:00 - 1:00 |
 | Review | 1:00-1:30 |
 | Data visualization | 1:30-2:30 |
