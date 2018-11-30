@@ -1,8 +1,6 @@
 ---
 title: "Day 1 Case Study Solutions"
-output:
-  html_document:
-    df_print: paged
+output: github_document
 ---
 
 
