@@ -45,8 +45,9 @@ transactions <- transactions %>%
     sales_value, 
     retail_disc, coupon_disc, coupon_match_disc,
     household_id, store_id, basket_id, product_id, 
-    week_no, day, trans_time
-  )
+    week, transaction_timestamp
+  ) %>%
+  mutate(date = lubridate::as_date(transaction_timestamp))
 ```
 
 -----
@@ -78,7 +79,7 @@ in `transactions`.
 
 -----
 
-**Question 3**: `transactions` includes 92,339 unique product IDs. How
+**Question 3**: `transactions` includes 68,509 unique product IDs. How
 many of these products (not transactions\!) had a regular price of one
 dollar or less? What does this count equal when loyalty price is one
 dollar or less? How about when coupon price is one dollar or less?
@@ -135,8 +136,8 @@ This question is designed to strengthen your ability to use
 
 -----
 
-**Question 2**: Use a line graph to plot total sales value by day. What,
-if anything, do you find unusual about this visualization?
+**Question 2**: Use a line graph to plot total sales value by `date`.
+What kind of patterns do you find?
 
 This question is designed to strengthen your ability to use `dplyr`
 verbs in combination with `geom_line()`.
@@ -170,8 +171,8 @@ private-label brands for soft drinks and cheeses.
 **Hint**: Follow these three steps to create your plot:
 
   - Filter `my_transaction_data` to include only transactions with
-    `commodity_desc` equal to “SOFT DRINKS” or “CHEESE”
-  - Calculate total sales value by `commodity_desc` and `brand`
+    `product_category` equal to “SOFT DRINKS” or “CHEESE”
+  - Calculate total sales value by `product_category` and `brand`
   - Create the bars using `geom_col` and include `fill = brand` within
     `aes()`
 
@@ -179,7 +180,7 @@ private-label brands for soft drinks and cheeses.
 
 **Question 5**: The code below filters `my_transaction_data` to include
 only peanut better, jelly, and jam transactions. Then it creates a new
-variable named `product_size` equal to product size in ounces. Create a
+variable named `package_size` equal to product size in ounces. Create a
 bar graph with `pb_and_j_data` to visualize the distribution of the
 retailer’s PB\&J transactions by product size. Which two product sizes
 are the most popular?
