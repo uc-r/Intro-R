@@ -813,10 +813,31 @@ glimpse(transactions)
 ]
 
 ---
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
 
-# Working with factors
+.pull-left[
 
-Categorical variables can be ordered or unordered.  Consider:
+* Factors are a useful data structure; particularly for modeling and visualizations because they control the order of levels
+
+* Working with factors in base R can be a little frustrating because of syntax inconsistencies and a handful of missing tools
+
+* The [__forcats__](https://forcats.tidyverse.org/index.html) package allows you to modify factors with minimal pain
+
+]
+
+.pull-right[
+
+```{r forcats, echo=FALSE, out.width="80%", out.height="80%"}
+knitr::include_graphics("images/forcats-large.png")
+```
+
+]
+
+---
+
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+Categorical variables can have levels that are ordered, unordered, collapsable, etc.  Consider:
 
 .pull-left[
 
@@ -836,10 +857,10 @@ households %>% distinct(income)
 ]
 
 <br><br>
-.center[.content-box-gray[.bold[Why would we care about this ordering? `r emo::ji("thinking")`]]]
+.center[.content-box-gray[.bold[Why would we care about changeing these levels? `r emo::ji("thinking")`]]]
 
 ---
-# Working with factors
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
 
 Often, we want to adjust the categories or the ordering of categories for a categorical variable.  Consider:
 
@@ -863,13 +884,13 @@ ggplot(households, aes(income)) +
 ]
 
 ---
-# Working with factors
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
 
 The __forcats__ package allows us to adjust categories easily:
 
 .pull-left[
 
-.center.font110[Collapse factor levels with .grey[`fct_collapse()`]]
+.center.font110[Collapse factor levels with .grey[`fct_collapse()`]]<br>
 
 ```{r}
 households <- households %>% 
@@ -886,7 +907,7 @@ households <- households %>%
 
 .pull-right[
 
-.center.font110[Change levels or reorder with .grey[`fct_relevel()`]]
+.center.font110[Change levels or reorder with .grey[`fct_recode()`] & .grey[`fct_relevel()`]]
 
 ```{r}
 households <- households %>% 
@@ -894,15 +915,18 @@ households <- households %>%
     income         = fct_recode(income, Unknown = "null"),
     household_size = fct_recode(household_size, Unknown = "null"),
     marital_status = fct_relevel(marital_status, "Unknown", after = Inf),
-    income         = fct_relevel(income, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "null"),
+    income         = fct_relevel(income, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "Unknown"),
     household_size = fct_relevel(household_size, "Unknown", after = Inf)
     )
 ```
 
 ]
 
+
+.center[.content-box-gray[.bold[There are many other options to adjust levels (`forcats::fct_ + tab`)]]]
+
 ---
-# Working with factors
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
 
 .pull-left[
 
@@ -927,6 +951,32 @@ ggplot(households, aes(income)) +
 
 
 ---
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+Sometimes you just want to .blue[reorder a factor for plotting purposes] rather than to permanently change the factor.
+
+--
+
+.pull-left[
+
+```{r, fig.height=4}
+ggplot(households, aes(fct_infreq(home_ownership))) + #<<
+  geom_bar()
+```
+
+
+]
+
+.pull-right[
+
+```{r, fig.height=4}
+ggplot(households, aes(fct_rev(home_ownership))) + #<<
+  geom_bar()
+```
+
+]
+
+---
 
 class: yourturn
 # Your Turn!
@@ -937,11 +987,29 @@ class: yourturn
 
 ---
 
-# Working with characters
+# Working with character strings <a href="https://stringr.tidyverse.org/"><img src="images/stringr.png" class="stringr-hex", align="right"></a>
 
-- changing certain values
-- normalize to lower case
-- introduce stringr package
+.pull-left[
+
+* Often, we have character strings in our data that are long (i.e. description fields), messy (i.e. manual user input), and/or inconsistent
+
+* Working with strings in base R can be a little frustrating primarily because of syntax inconsistencies
+
+* The [__stringr__](https://stringr.tidyverse.org/index.html) package allows you to work with strings easily
+
+]
+
+.pull-right[
+
+```{r stringr, echo=FALSE, out.width="80%", out.height="80%"}
+knitr::include_graphics("images/stringr-large.png")
+```
+
+]
+
+---
+
+# Working with character strings <a href="https://stringr.tidyverse.org/"><img src="images/stringr.png" class="stringr-hex", align="right"></a>
 
 ---
 
@@ -954,7 +1022,7 @@ class: yourturn
 
 ---
 
-# Working with dates
+# Working with dates <a href="https://lubridate.tidyverse.org/"><img src="images/lubridate.png" class="lubridate-hex", align="right"></a>
 
 - introduce lubridate package
 - coerce to different dates
@@ -972,6 +1040,25 @@ class: yourturn
 ---
 
 # Missing values
+
+
+---
+
+# Questions?
+
+<br>
+
+```{r questions-dplyr, echo=FALSE, out.height="450", out.width="450"}
+knitr::include_graphics("images/questions.png")
+```
+
+---
+
+# Lunch time `r anicon::cia("https://emojis.slackmojis.com/emojis/images/1450694616/220/bananadance.gif?1450694616", animate = FALSE)`
+
+```{r lunchtime-day1, echo=FALSE, out.width="90%"}
+knitr::include_graphics("images/lunchtime-day1.gif")
+```
 
 
 
