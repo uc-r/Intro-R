@@ -1,0 +1,609 @@
+---
+title: "An .red[Incomplete] Introduction to R"
+subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
+author: "Brad Boehmke"
+date: "2018-12-13"
+output:
+  xaringan::moon_reader:
+    css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
+    self_contained: false
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false  
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+# Set global R options
+options(htmltools.dir.version = FALSE, servr.daemon = TRUE)
+
+# Set global knitr chunk options
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  cache = TRUE,
+  error = FALSE,
+  message = FALSE, 
+  warning = FALSE, 
+  collapse = TRUE 
+)
+
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw()
+theme_set(thm)
+```
+
+class: clear, center, middle
+
+background-image: url(images/data-types-icon.png)
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+.font200.bold[Data Types]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130.bold.blue[What types of data are in this data set?]
+
+
+```{r types-of-data, echo=FALSE}
+library(tidyverse)
+
+completejourney::transactions %>%
+  sample_n(1000) %>%
+  inner_join(completejourney::products) %>%
+  select(household_id, basket_id, brand, product_category, transaction_timestamp, quantity) %>%
+  mutate(multi_items = quantity > 1) %>%
+  as.data.frame() %>%
+  slice(1:15) %>%
+  kableExtra::kable() %>%
+  kableExtra::kable_styling()
+```
+
+---
+
+# Packages to work with these data types
+
+.pull-left[
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+
+.bold[does the equivalent of...]
+
+```{r, eval=FALSE}
+install.packages("ggplot2")
+install.packages("tibble")
+install.packages("tidyr")
+install.packages("readr")
+install.packages("purrr")
+install.packages("dplyr")
+install.packages("stringr") #<<
+install.packages("forcats") #<<
+install.packages("lubridate") #<<
+install.packages("hms") #<<
+install.packages("DBI")
+install.packages("haven")
+install.packages("httr")
+install.packages("jsonlite")
+install.packages("readxl")
+install.packages("rvest")
+install.packages("xml2")
+install.packages("modelr")
+install.packages("broom")
+```
+
+]
+
+.pull-right[
+
+```{r, eval=FALSE}
+library(tidyverse)
+```
+
+.bold[does the equivalent of...]
+
+```{r, eval=FALSE}
+library(ggplot2) 
+library(tibble) 
+library(tidyr) 
+library(readr) 
+library(purrr) 
+library(dplyr) 
+library(stringr) #<<
+library(forcats) #<<
+```
+
+]
+
+
+---
+
+# Requirements
+
+.pull-left[
+
+### Packages
+
+```{r load-pkgs}
+library(tidyverse)
+library(lubridate) # to work with dates
+library(hms)       # to work with dates
+```
+
+
+]
+
+.pull-right[
+
+### Data sets
+
+```{r load-data}
+transactions <- completejourney::transactions
+
+products <- completejourney::products
+
+demographics <- completejourney::demographics
+```
+
+]
+
+---
+
+class: clear, center, middle
+
+
+background-image: url(images/logical-icon.jpg)
+background-size: cover
+
+.font300.bold[Logicals]
+
+---
+
+# Logicals
+
+R's data type for .blue[boolean values] (i.e. TRUE and FALSE)
+
+.pull-left[
+
+```{r booleans}
+typeof(TRUE)
+
+typeof(FALSE)
+
+typeof(c(TRUE, TRUE, FALSE))
+```
+
+]
+
+.pull-right[
+
+```{r compute-boolean}
+transactions %>%
+  select(basket_id, coupon_disc) %>% 
+  mutate(used_coupon = coupon_disc > 0) #<<
+```
+
+]
+
+---
+
+# Most useful skill... .red[math with logicals]
+
+When you do math with logicals, .blue[TRUE becomes 1] and .blue[FALSE becomes 0.]
+
+--
+
+.pull-left[
+
+The .bold[sum] of a logical vector is the .bold[count of TRUEs]
+<br><br>
+
+```{r sum-trues}
+# logical comparison
+x <- c(1, 2, 3, 4) < 4
+x
+
+# sum of elements that meet that condition
+sum(x)
+```
+
+]
+
+.pull-right[
+
+The .bold[mean] of a logical vector is the .bold[proportion of TRUEs]
+
+```{r mean-trues}
+# proportion of elements that meet that condition
+mean(x)
+```
+
+]
+
+---
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+Using the __completejourney::transactions__ data and the `coupon_disc` variable
+
+1. How many transactions used a coupon?
+2. What proportion of transactions used a coupon?
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r yourturn-logicals}
+transactions %>% 
+  mutate(coupon_used = coupon_disc > 0) %>%
+  summarise(
+    count = sum(coupon_used),
+    prop  = mean(coupon_used)
+    )
+```
+
+
+]
+
+---
+
+class: clear, center, middle
+
+
+background-image: url(images/character_string.png)
+background-size: cover
+
+.font300.bold.grey[Character Strings]
+
+---
+
+# Working with character strings <a href="https://stringr.tidyverse.org/"><img src="images/stringr.png" class="stringr-hex", align="right"></a>
+
+.pull-left[
+
+* Often, we have character strings in our data that are long (i.e. description fields), messy (i.e. manual user input), and/or inconsistent
+
+* Working with strings in base R can be a little frustrating primarily because of syntax inconsistencies
+
+* The [__stringr__](https://stringr.tidyverse.org/index.html) package allows you to work with strings easily
+
+]
+
+.pull-right[
+
+```{r stringr, echo=FALSE, out.width="80%", out.height="80%"}
+knitr::include_graphics("images/stringr-large.png")
+```
+
+]
+
+---
+
+# Most useful skills <a href="https://stringr.tidyverse.org/"><img src="images/stringr.png" class="stringr-hex", align="right"></a>
+
+<br>
+
+.font200[
+
+1. How to extract/ replace substrings
+
+2. How to find matches for patterns
+
+3. Regular expressions
+
+]
+
+<br>
+.center[.content-box-grey[.bold[We will only hit the basics here, I cover this more thoroughly in Intermediate R]]]
+
+---
+
+# Extract/ replace substrings
+
+---
+
+# Find matches for patterns
+
+---
+
+# Regular expressions
+
+---
+
+
+class: yourturn
+# Your Turn!
+
+<br><br>
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the characters in your different data sets.]
+
+---
+
+# Working with dates <a href="https://lubridate.tidyverse.org/"><img src="images/lubridate.png" class="lubridate-hex", align="right"></a>
+
+- introduce lubridate package
+- coerce to different dates
+- parse parts of dates
+
+---
+
+class: yourturn
+# Your Turn!
+
+<br><br>
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the dates in your different data sets.]
+
+---
+
+.pull-right[
+
+- Use .blue[`is.`] functions to test
+   - `is.integer()`
+   - `is.double()` (checks for decimal)
+   - `is.numeric()` (checks if either integer ___or___ double)
+   - `is.character()`
+   - `is.factor()`
+   - etc.
+
+- Use .blue[`as.`] functions to coerce
+   - `is.integer()`: coerce to integer
+   - `is.double()`: coerce to double
+   - `is.character()`: coerce to character
+   - etc.
+   
+.center[.content-box-gray[.bold[We can use these right in .grey[`mutate()`]]]]   
+
+]
+
+---
+
+# Changing variable types
+
+.code80[
+
+```{r}
+glimpse(transactions)
+```
+
+]
+
+<br><br>
+.center[.content-box-gray[.bold[What are some issues with our .font120[`transactions`] variable types? `r emo::ji("thinking")`]]]
+
+---
+
+# Changing variable types
+
+.pull-left[
+
+* Characters: variables that have infinite (or highly variable) unique values
+
+* Factors: variables that have finite (or smaller defined) categories
+
+* Dates & timestamps: variables that have any representation of time
+
+
+]
+
+.pull-right[
+
+```{r changing-transactions-data-types, eval=FALSE}
+transactions <- transactions %>% 
+  mutate(
+    basket_id     = as.character(basket_id),
+    household_id  = as.character(household_id),
+    product_id    = as.character(product_id),
+    store_region  = as.factor(store_region),
+    purchase_date = dmy(purchase_date)
+  )
+
+glimpse(transactions)
+```
+
+]
+
+---
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+.pull-left[
+
+* Factors are a useful data structure; particularly for modeling and visualizations because they control the order of levels
+
+* Working with factors in base R can be a little frustrating because of syntax inconsistencies and a handful of missing tools
+
+* The [__forcats__](https://forcats.tidyverse.org/index.html) package allows you to modify factors with minimal pain
+
+]
+
+.pull-right[
+
+```{r forcats, echo=FALSE, out.width="80%", out.height="80%"}
+knitr::include_graphics("images/forcats-large.png")
+```
+
+]
+
+---
+
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+Categorical variables can have levels that are ordered, unordered, collapsable, etc.  Consider:
+
+.pull-left[
+
+```{r, eval=FALSE}
+households %>% distinct(marital_status)
+```
+
+
+]
+
+.pull-right[
+
+```{r, eval=FALSE}
+households %>% distinct(income)
+```
+
+]
+
+<br><br>
+.center[.content-box-gray[.bold[Why would we care about changeing these levels? `r emo::ji("thinking")`]]]
+
+---
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+Often, we want to adjust the categories or the ordering of categories for a categorical variable.  Consider:
+
+.pull-left[
+
+```{r, fig.height=4.5, eval=FALSE}
+ggplot(households, aes(marital_status)) +
+  geom_bar()
+```
+
+
+]
+
+.pull-right[
+
+```{r, fig.height=4.5, eval=FALSE}
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+]
+
+---
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+The __forcats__ package allows us to adjust categories easily:
+
+.pull-left[
+
+.center.font110[Collapse factor levels with .grey[`fct_collapse()`]]<br>
+
+```{r, eval=FALSE}
+households <- households %>% 
+  mutate(
+    marital_status = fct_collapse(marital_status, Unknown = c("Unknown", "null")),
+    home_ownership = fct_collapse(home_ownership, Unknown = c("Unknown", "null")),
+    age            = fct_collapse(age, Unknown = c("Unknown", "null", "NOT AVAILABLE")),
+    kids_count     = fct_collapse(kids_count, Unknown = c("Unknown", "null", "NOT AVAILABLE"))
+    )
+```
+
+
+]
+
+.pull-right[
+
+.center.font110[Change levels or reorder with .grey[`fct_recode()`] & .grey[`fct_relevel()`]]
+
+```{r, eval=FALSE}
+households <- households %>% 
+  mutate(
+    income         = fct_recode(income, Unknown = "null"),
+    household_size = fct_recode(household_size, Unknown = "null"),
+    marital_status = fct_relevel(marital_status, "Unknown", after = Inf),
+    income         = fct_relevel(income, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "Unknown"),
+    household_size = fct_relevel(household_size, "Unknown", after = Inf)
+    )
+```
+
+]
+
+
+.center[.content-box-gray[.bold[There are many other options to adjust levels (`forcats::fct_ + tab`)]]]
+
+---
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+.pull-left[
+
+```{r, eval=FALSE}
+households %>% count(income)
+```
+
+
+]
+
+.pull-right[
+
+```{r fig.height=4, eval=FALSE}
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+]
+
+<br><br>
+.center[.content-box-gray[.bold[__forcats__ is worth getting to know (https://forcats.tidyverse.org/index.html)]]]
+
+
+---
+# Working with factors <a href="https://forcats.tidyverse.org/"><img src="images/forcats.png" class="forcats-hex", align="right"></a>
+
+Sometimes you just want to .blue[reorder a factor for plotting purposes] rather than to permanently change the factor.
+
+--
+
+.pull-left[
+
+```{r, fig.height=4, eval=FALSE}
+ggplot(households, aes(fct_infreq(home_ownership))) + #<<
+  geom_bar()
+```
+
+
+]
+
+.pull-right[
+
+```{r, fig.height=4, eval=FALSE}
+ggplot(households, aes(fct_rev(home_ownership))) + #<<
+  geom_bar()
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+<br><br>
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the factors in your different data sets.]
+
+
+
+---
+
+# Questions?
+
+<br>
+
+```{r questions-dplyr, echo=FALSE, out.height="450", out.width="450", eval=FALSE}
+knitr::include_graphics("images/questions.png")
+```
+
+

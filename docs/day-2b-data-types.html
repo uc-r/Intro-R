@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>An .red[Incomplete] Introduction to R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Brad Boehmke" />
+    <meta name="date" content="2018-12-13" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: clear, center, middle
+
+background-image: url(images/data-types-icon.png)
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font200.bold[Data Types]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130.bold.blue[What types of data are in this data set?]
+
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; household_id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; basket_id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; brand &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; product_category &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; transaction_timestamp &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; quantity &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; multi_items &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2076 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 33655133880 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CHEESES &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-06-11 21:04:48 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2366 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 33655836532 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MEAT - MISC &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-06-12 20:00:19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2373 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 34105440952 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; UNKNOWN &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-07-15 11:39:31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 982 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 32760636924 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Private &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SHORTENING/OIL &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-04-16 14:14:14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 761 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 35891900893 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Private &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; MILK BY-PRODUCTS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-09-12 11:15:55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2319 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 35891407347 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; LUNCHMEAT &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-09-12 19:10:28 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2412 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 32137545147 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; DELI MEATS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-03-07 09:12:28 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 121 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 32556675589 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; BROCCOLI/CAULIFLOWER &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-04-01 09:58:53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; TRUE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1344 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 40969122208 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Private &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; BAKED BREAD/BUNS/ROLLS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-12-02 19:21:04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2203 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 32305165520 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Private &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FLUID MILK PRODUCTS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-03-20 08:43:12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 502 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 31969196175 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CANDY - CHECKLANE &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-02-21 16:43:45 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1421 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 34009827641 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; COCOA MIXES &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-07-07 19:28:24 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 113 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 41125076928 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CRACKERS/MISC BKD FD &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-12-09 13:03:16 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 781 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 40341621963 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; BAKING NEEDS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-10-14 13:24:37 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 979 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 32873041721 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; National &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ISOTONIC DRINKS &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2017-04-24 18:13:12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Packages to work with these data types
+
+.pull-left[
+
+
+```r
+install.packages("tidyverse")
+```
+
+.bold[does the equivalent of...]
+
+
+```r
+install.packages("ggplot2")
+install.packages("tibble")
+install.packages("tidyr")
+install.packages("readr")
+install.packages("purrr")
+install.packages("dplyr")
+*install.packages("stringr")
+*install.packages("forcats")
+*install.packages("lubridate")
+*install.packages("hms")
+install.packages("DBI")
+install.packages("haven")
+install.packages("httr")
+install.packages("jsonlite")
+install.packages("readxl")
+install.packages("rvest")
+install.packages("xml2")
+install.packages("modelr")
+install.packages("broom")
+```
+
+]
+
+.pull-right[
+
+
+```r
+library(tidyverse)
+```
+
+.bold[does the equivalent of...]
+
+
+```r
+library(ggplot2) 
+library(tibble) 
+library(tidyr) 
+library(readr) 
+library(purrr) 
+library(dplyr) 
+*library(stringr)
+*library(forcats)
+```
+
+]
+
+
+---
+
+# Requirements
+
+.pull-left[
+
+### Packages
+
+
+```r
+library(tidyverse)
+library(lubridate) # to work with dates
+library(hms)       # to work with dates
+```
+
+
+]
+
+.pull-right[
+
+### Data sets
+
+
+```r
+transactions &lt;- completejourney::transactions
+
+products &lt;- completejourney::products
+
+demographics &lt;- completejourney::demographics
+```
+
+]
+
+---
+
+class: clear, center, middle
+
+
+background-image: url(images/logical-icon.jpg)
+background-size: cover
+
+.font300.bold[Logicals]
+
+---
+
+# Logicals
+
+R's data type for .blue[boolean values] (i.e. TRUE and FALSE)
+
+.pull-left[
+
+
+```r
+typeof(TRUE)
+## [1] "logical"
+
+typeof(FALSE)
+## [1] "logical"
+
+typeof(c(TRUE, TRUE, FALSE))
+## [1] "logical"
+```
+
+]
+
+.pull-right[
+
+
+```r
+transactions %&gt;%
+  select(basket_id, coupon_disc) %&gt;% 
+* mutate(used_coupon = coupon_disc &gt; 0)
+## # A tibble: 1,469,307 x 3
+##    basket_id   coupon_disc used_coupon
+##    &lt;chr&gt;             &lt;dbl&gt; &lt;lgl&gt;      
+##  1 31198570044           0 FALSE      
+##  2 31198570047           0 FALSE      
+##  3 31198655051           0 FALSE      
+##  4 31198705046           0 FALSE      
+##  5 31198705046           0 FALSE      
+##  6 31198705046           0 FALSE      
+##  7 31198705046           0 FALSE      
+##  8 31198676055           0 FALSE      
+##  9 31198676055           0 FALSE      
+## 10 31198676055           0 FALSE      
+## # ... with 1,469,297 more rows
+```
+
+]
+
+---
+
+# Most useful skill... .red[math with logicals]
+
+When you do math with logicals, .blue[TRUE becomes 1] and .blue[FALSE becomes 0.]
+
+--
+
+.pull-left[
+
+The .bold[sum] of a logical vector is the .bold[count of TRUEs]
+&lt;br&gt;&lt;br&gt;
+
+
+```r
+# logical comparison
+x &lt;- c(1, 2, 3, 4) &lt; 4
+x
+## [1]  TRUE  TRUE  TRUE FALSE
+
+# sum of elements that meet that condition
+sum(x)
+## [1] 3
+```
+
+]
+
+.pull-right[
+
+The .bold[mean] of a logical vector is the .bold[proportion of TRUEs]
+
+
+```r
+# proportion of elements that meet that condition
+mean(x)
+## [1] 0.75
+```
+
+]
+
+---
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+Using the __completejourney::transactions__ data and the `coupon_disc` variable
+
+1. How many transactions used a coupon?
+2. What proportion of transactions used a coupon?
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+transactions %&gt;% 
+  mutate(coupon_used = coupon_disc &gt; 0) %&gt;%
+  summarise(
+    count = sum(coupon_used),
+    prop  = mean(coupon_used)
+    )
+## # A tibble: 1 x 2
+##   count   prop
+##   &lt;int&gt;  &lt;dbl&gt;
+## 1 21889 0.0149
+```
+
+
+]
+
+---
+
+class: clear, center, middle
+
+
+background-image: url(images/character_string.png)
+background-size: cover
+
+.font300.bold.grey[Character Strings]
+
+---
+
+# Working with character strings &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
+
+.pull-left[
+
+* Often, we have character strings in our data that are long (i.e. description fields), messy (i.e. manual user input), and/or inconsistent
+
+* Working with strings in base R can be a little frustrating primarily because of syntax inconsistencies
+
+* The [__stringr__](https://stringr.tidyverse.org/index.html) package allows you to work with strings easily
+
+]
+
+.pull-right[
+
+&lt;img src="images/stringr-large.png" width="80%" height="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Most useful skills &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
+
+&lt;br&gt;
+
+.font200[
+
+1. How to extract/ replace substrings
+
+2. How to find matches for patterns
+
+3. Regular expressions
+
+]
+
+&lt;br&gt;
+.center[.content-box-grey[.bold[We will only hit the basics here, I cover this more thoroughly in Intermediate R]]]
+
+---
+
+# Extract/ replace substrings
+
+---
+
+# Find matches for patterns
+
+---
+
+# Regular expressions
+
+---
+
+
+class: yourturn
+# Your Turn!
+
+&lt;br&gt;&lt;br&gt;
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the characters in your different data sets.]
+
+---
+
+# Working with dates &lt;a href="https://lubridate.tidyverse.org/"&gt;&lt;img src="images/lubridate.png" class="lubridate-hex", align="right"&gt;&lt;/a&gt;
+
+- introduce lubridate package
+- coerce to different dates
+- parse parts of dates
+
+---
+
+class: yourturn
+# Your Turn!
+
+&lt;br&gt;&lt;br&gt;
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the dates in your different data sets.]
+
+---
+
+.pull-right[
+
+- Use .blue[`is.`] functions to test
+   - `is.integer()`
+   - `is.double()` (checks for decimal)
+   - `is.numeric()` (checks if either integer ___or___ double)
+   - `is.character()`
+   - `is.factor()`
+   - etc.
+
+- Use .blue[`as.`] functions to coerce
+   - `is.integer()`: coerce to integer
+   - `is.double()`: coerce to double
+   - `is.character()`: coerce to character
+   - etc.
+   
+.center[.content-box-gray[.bold[We can use these right in .grey[`mutate()`]]]]   
+
+]
+
+---
+
+# Changing variable types
+
+.code80[
+
+
+```r
+glimpse(transactions)
+## Observations: 1,469,307
+## Variables: 11
+## $ household_id          &lt;chr&gt; "900", "900", "1228", "906", "906", "906...
+## $ store_id              &lt;chr&gt; "330", "330", "406", "319", "319", "319"...
+## $ basket_id             &lt;chr&gt; "31198570044", "31198570047", "311986550...
+## $ product_id            &lt;chr&gt; "1095275", "9878513", "1041453", "102015...
+## $ quantity              &lt;int&gt; 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1...
+## $ sales_value           &lt;dbl&gt; 0.50, 0.99, 1.43, 1.50, 2.78, 5.49, 1.50...
+## $ retail_disc           &lt;dbl&gt; 0.00, 0.10, 0.15, 0.29, 0.80, 0.50, 0.29...
+## $ coupon_disc           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...
+## $ coupon_match_disc     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...
+## $ week                  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
+## $ transaction_timestamp &lt;dttm&gt; 2017-01-01 06:53:26, 2017-01-01 07:10:2...
+```
+
+]
+
+&lt;br&gt;&lt;br&gt;
+.center[.content-box-gray[.bold[What are some issues with our .font120[`transactions`] variable types? 🤔]]]
+
+---
+
+# Changing variable types
+
+.pull-left[
+
+* Characters: variables that have infinite (or highly variable) unique values
+
+* Factors: variables that have finite (or smaller defined) categories
+
+* Dates &amp; timestamps: variables that have any representation of time
+
+
+]
+
+.pull-right[
+
+
+```r
+transactions &lt;- transactions %&gt;% 
+  mutate(
+    basket_id     = as.character(basket_id),
+    household_id  = as.character(household_id),
+    product_id    = as.character(product_id),
+    store_region  = as.factor(store_region),
+    purchase_date = dmy(purchase_date)
+  )
+
+glimpse(transactions)
+```
+
+]
+
+---
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+.pull-left[
+
+* Factors are a useful data structure; particularly for modeling and visualizations because they control the order of levels
+
+* Working with factors in base R can be a little frustrating because of syntax inconsistencies and a handful of missing tools
+
+* The [__forcats__](https://forcats.tidyverse.org/index.html) package allows you to modify factors with minimal pain
+
+]
+
+.pull-right[
+
+&lt;img src="images/forcats-large.png" width="80%" height="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+Categorical variables can have levels that are ordered, unordered, collapsable, etc.  Consider:
+
+.pull-left[
+
+
+```r
+households %&gt;% distinct(marital_status)
+```
+
+
+]
+
+.pull-right[
+
+
+```r
+households %&gt;% distinct(income)
+```
+
+]
+
+&lt;br&gt;&lt;br&gt;
+.center[.content-box-gray[.bold[Why would we care about changeing these levels? 🤔]]]
+
+---
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+Often, we want to adjust the categories or the ordering of categories for a categorical variable.  Consider:
+
+.pull-left[
+
+
+```r
+ggplot(households, aes(marital_status)) +
+  geom_bar()
+```
+
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+]
+
+---
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+The __forcats__ package allows us to adjust categories easily:
+
+.pull-left[
+
+.center.font110[Collapse factor levels with .grey[`fct_collapse()`]]&lt;br&gt;
+
+
+```r
+households &lt;- households %&gt;% 
+  mutate(
+    marital_status = fct_collapse(marital_status, Unknown = c("Unknown", "null")),
+    home_ownership = fct_collapse(home_ownership, Unknown = c("Unknown", "null")),
+    age            = fct_collapse(age, Unknown = c("Unknown", "null", "NOT AVAILABLE")),
+    kids_count     = fct_collapse(kids_count, Unknown = c("Unknown", "null", "NOT AVAILABLE"))
+    )
+```
+
+
+]
+
+.pull-right[
+
+.center.font110[Change levels or reorder with .grey[`fct_recode()`] &amp; .grey[`fct_relevel()`]]
+
+
+```r
+households &lt;- households %&gt;% 
+  mutate(
+    income         = fct_recode(income, Unknown = "null"),
+    household_size = fct_recode(household_size, Unknown = "null"),
+    marital_status = fct_relevel(marital_status, "Unknown", after = Inf),
+    income         = fct_relevel(income, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "Unknown"),
+    household_size = fct_relevel(household_size, "Unknown", after = Inf)
+    )
+```
+
+]
+
+
+.center[.content-box-gray[.bold[There are many other options to adjust levels (`forcats::fct_ + tab`)]]]
+
+---
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+.pull-left[
+
+
+```r
+households %&gt;% count(income)
+```
+
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(households, aes(income)) +
+  geom_bar()
+```
+
+]
+
+&lt;br&gt;&lt;br&gt;
+.center[.content-box-gray[.bold[__forcats__ is worth getting to know (https://forcats.tidyverse.org/index.html)]]]
+
+
+---
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+Sometimes you just want to .blue[reorder a factor for plotting purposes] rather than to permanently change the factor.
+
+--
+
+.pull-left[
+
+
+```r
+*ggplot(households, aes(fct_infreq(home_ownership))) +
+  geom_bar()
+```
+
+
+]
+
+.pull-right[
+
+
+```r
+*ggplot(households, aes(fct_rev(home_ownership))) +
+  geom_bar()
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+&lt;br&gt;&lt;br&gt;
+
+.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the factors in your different data sets.]
+
+
+
+---
+
+# Questions?
+
+&lt;br&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
