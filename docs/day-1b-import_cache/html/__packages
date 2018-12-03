@@ -3,3 +3,13 @@ ggplot2
 readr
 readxl
 tibble
+tidyverse
+tidyr
+purrr
+dplyr
+stringr
+forcats
+lubridate
+hms
+bindrcpp
+completejourney

@@ -783,6 +783,44 @@ transactions
 
 ---
 
+# Alternative approaches to be aware of
+
+.center.font120[
+<span>&lt;i class="fas  fa-exclamation-triangle faa-flash animated faa-slow " style=" color:red;"&gt;&lt;/i&gt;</span><span>&lt;i class="fas  fa-exclamation-triangle faa-flash animated faa-slow " style=" color:red;"&gt;&lt;/i&gt;</span><span>&lt;i class="fas  fa-exclamation-triangle faa-flash animated faa-slow " style=" color:red;"&gt;&lt;/i&gt;</span>  
+These methods do not incoporate the code to import the data. Unless you remember to add the code, your script will not be reproducible!  
+<span>&lt;i class="fas  fa-exclamation-triangle faa-flash animated faa-slow " style=" color:red;"&gt;&lt;/i&gt;</span><span>&lt;i class="fas  fa-exclamation-triangle faa-flash animated faa-slow " style=" color:red;"&gt;&lt;/i&gt;</span><span>&lt;i class="fas  fa-exclamation-triangle faa-flash animated faa-slow " style=" color:red;"&gt;&lt;/i&gt;</span>
+]
+
+.pull-left[
+
+.center.bold.font120[`file.choose()`]
+
+- allows interactive file selction
+
+- Try:
+
+
+```r
+read_csv(file.choose())
+```
+
+]
+
+.pull-left[
+
+.center.bold.font120[RStudio Option]
+
+- allows interactive file selction
+- allows importing options
+- provides code used for importing
+
+
+&lt;img src="images/rstudio-import-option.png" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
 # Get to know your data
 
 .font120[Try these functions on your __transactions__ data:]

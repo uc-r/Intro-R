@@ -298,6 +298,45 @@ knitr::include_graphics("images/i-like.gif")
 
 ---
 
+# Alternative approaches to be aware of
+
+.center.font120[
+`r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")`  
+These methods do not incoporate the code to import the data. Unless you remember to add the code, your script will not be reproducible!  
+`r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")`
+]
+
+.pull-left[
+
+.center.bold.font120[`file.choose()`]
+
+- allows interactive file selction
+
+- Try:
+
+```{r file-choose, eval=FALSE}
+read_csv(file.choose())
+```
+
+]
+
+.pull-left[
+
+.center.bold.font120[RStudio Option]
+
+- allows interactive file selction
+- allows importing options
+- provides code used for importing
+
+
+```{r rstudio-import-option, echo=FALSE, out.height="50%", out.width="50%"}
+knitr::include_graphics("images/rstudio-import-option.png")
+```
+
+]
+
+---
+
 # Get to know your data
 
 .font120[Try these functions on your __transactions__ data:]
