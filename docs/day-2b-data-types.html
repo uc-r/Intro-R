@@ -255,6 +255,7 @@ library(dplyr)
 
 ```r
 library(tidyverse)
+library(forcats)   # to work with factors
 library(lubridate) # to work with dates
 library(hms)       # to work with dates
 ```
@@ -268,11 +269,12 @@ library(hms)       # to work with dates
 
 
 ```r
+# complete journey data
 transactions &lt;- completejourney::transactions
-
 products &lt;- completejourney::products
 
-demographics &lt;- completejourney::demographics
+# imported data
+households &lt;- data.table::fread("data/households.csv", data.table = FALSE) %&gt;% as_tibble()
 ```
 
 ]
@@ -428,6 +430,8 @@ background-size: cover
 
 .pull-left[
 
+&lt;br&gt;
+
 * Often, we have character strings in our data that are long (i.e. description fields), messy (i.e. manual user input), and/or inconsistent
 
 * Working with strings in base R can be a little frustrating primarily because of syntax inconsistencies
@@ -444,15 +448,127 @@ background-size: cover
 
 ---
 
+# stringr functions &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
+
+.center[
+
+.font200[All __stringr__ functions start with .bold.grey[`str_`]]
+
+.font130[.grey[`str_`].blue[`sub()`]]
+
+.font130[.grey[`str_`].blue[`count()`]]
+
+.font130[.grey[`str_`].blue[`replace()`]]
+
+.font130[.grey[`str_`].blue[`detect()`]]
+
+.font130[.grey[`str_`].blue[`remove()`]]
+
+.font130[...]
+
+.content-box-grey[.bold[Check out all the options with `stringr::str_ + tab`]]
+
+]
+
+---
+
+# stringr functions &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
+
+.scrollable90[
+
+.pull-left[
+
+Let's look at the variety of meat products:
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; product_category &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN MEAT &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN MEAT/MEAT DINNERS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; MEAT - SHELF STABLE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; MEAT - MISC &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; LUNCHMEAT &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; DELI MEATS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; SMOKED MEATS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; RW FRESH PROCESSED MEAT &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; MEAT SUPPLIES &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN PACKAGE MEAT &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+.pull-right[
+
+
+```r
+# character string vector
+x &lt;- c("FROZEN MEAT", "FRZN MEAT/MEAT DINNERS", "MEAT - MISC", "CEREAL")
+
+# force to lower case
+str_to_lower(x)
+## [1] "frozen meat"            "frzn meat/meat dinners"
+## [3] "meat - misc"            "cereal"
+
+# extract first 4 characters
+str_sub(x, start = 1, end = 4)
+## [1] "FROZ" "FRZN" "MEAT" "CERE"
+
+# detect if "meat" is in each element
+str_detect(x, pattern = "MEAT")
+## [1]  TRUE  TRUE  TRUE FALSE
+
+# replace first "MEAT" in each element with "NON-VEGGIE
+str_replace(x, pattern = "MEAT", replacement = "NON-VEGGIE")
+## [1] "FROZEN NON-VEGGIE"            "FRZN NON-VEGGIE/MEAT DINNERS"
+## [3] "NON-VEGGIE - MISC"            "CEREAL"
+
+# replace all "MEAT" in each element with "NON-VEGGIE
+str_replace_all(x, pattern = "MEAT", replacement = "NON-VEGGIE")
+## [1] "FROZEN NON-VEGGIE"                 
+## [2] "FRZN NON-VEGGIE/NON-VEGGIE DINNERS"
+## [3] "NON-VEGGIE - MISC"                 
+## [4] "CEREAL"
+```
+
+]
+]
+
+---
+
 # Most useful skills &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
 
 &lt;br&gt;
 
 .font200[
 
-1. How to extract/ replace substrings
+1. How to find matches for patterns
 
-2. How to find matches for patterns
+2. How to extract / replace substrings
 
 3. Regular expressions
 
@@ -463,131 +579,286 @@ background-size: cover
 
 ---
 
-# Extract/ replace substrings
+# Find matches for patterns &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
 
----
-
-# Find matches for patterns
-
----
-
-# Regular expressions
-
----
-
-
-class: yourturn
-# Your Turn!
-
-&lt;br&gt;&lt;br&gt;
-
-.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the characters in your different data sets.]
-
----
-
-# Working with dates &lt;a href="https://lubridate.tidyverse.org/"&gt;&lt;img src="images/lubridate.png" class="lubridate-hex", align="right"&gt;&lt;/a&gt;
-
-- introduce lubridate package
-- coerce to different dates
-- parse parts of dates
-
----
-
-class: yourturn
-# Your Turn!
-
-&lt;br&gt;&lt;br&gt;
-
-.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the dates in your different data sets.]
-
----
-
-.pull-right[
-
-- Use .blue[`is.`] functions to test
-   - `is.integer()`
-   - `is.double()` (checks for decimal)
-   - `is.numeric()` (checks if either integer ___or___ double)
-   - `is.character()`
-   - `is.factor()`
-   - etc.
-
-- Use .blue[`as.`] functions to coerce
-   - `is.integer()`: coerce to integer
-   - `is.double()`: coerce to double
-   - `is.character()`: coerce to character
-   - etc.
-   
-.center[.content-box-gray[.bold[We can use these right in .grey[`mutate()`]]]]   
-
-]
-
----
-
-# Changing variable types
-
-.code80[
-
-
-```r
-glimpse(transactions)
-## Observations: 1,469,307
-## Variables: 11
-## $ household_id          &lt;chr&gt; "900", "900", "1228", "906", "906", "906...
-## $ store_id              &lt;chr&gt; "330", "330", "406", "319", "319", "319"...
-## $ basket_id             &lt;chr&gt; "31198570044", "31198570047", "311986550...
-## $ product_id            &lt;chr&gt; "1095275", "9878513", "1041453", "102015...
-## $ quantity              &lt;int&gt; 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1...
-## $ sales_value           &lt;dbl&gt; 0.50, 0.99, 1.43, 1.50, 2.78, 5.49, 1.50...
-## $ retail_disc           &lt;dbl&gt; 0.00, 0.10, 0.15, 0.29, 0.80, 0.50, 0.29...
-## $ coupon_disc           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...
-## $ coupon_match_disc     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0...
-## $ week                  &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
-## $ transaction_timestamp &lt;dttm&gt; 2017-01-01 06:53:26, 2017-01-01 07:10:2...
-```
-
-]
-
-&lt;br&gt;&lt;br&gt;
-.center[.content-box-gray[.bold[What are some issues with our .font120[`transactions`] variable types? 🤔]]]
-
----
-
-# Changing variable types
+What if we wanted to analyze transactions for all .bold[meat] products?
 
 .pull-left[
 
-* Characters: variables that have infinite (or highly variable) unique values
+- `str_detect()` returns TRUE/FALSE
+- use with `filter()` to return only TRUEs
 
-* Factors: variables that have finite (or smaller defined) categories
 
-* Dates &amp; timestamps: variables that have any representation of time
+```r
+products %&gt;% 
+  select(product_id, product_category) %&gt;%
+* filter(str_detect(product_category, "MEAT"))
+## # A tibble: 3,607 x 2
+##    product_id product_category      
+##    &lt;chr&gt;      &lt;chr&gt;                 
+##  1 30003      FROZEN MEAT           
+##  2 31493      FRZN MEAT/MEAT DINNERS
+##  3 34997      FRZN MEAT/MEAT DINNERS
+##  4 36406      FRZN MEAT/MEAT DINNERS
+##  5 36561      FRZN MEAT/MEAT DINNERS
+##  6 36618      MEAT - SHELF STABLE   
+##  7 36722      MEAT - MISC           
+##  8 37220      LUNCHMEAT             
+##  9 38412      LUNCHMEAT             
+## 10 39376      FRZN MEAT/MEAT DINNERS
+## # ... with 3,597 more rows
+```
 
+]
+
+--
+
+.pull-right[
+
+How many products are meat products?
+
+
+```r
+products %&gt;%
+  distinct(product_id, product_category) %&gt;%
+* mutate(meat_product = str_detect(product_category, "MEAT")) %&gt;%
+  summarize(
+    count = sum(meat_product, na.rm = TRUE),
+    prop  = mean(meat_product, na.rm = TRUE)
+  )
+## # A tibble: 1 x 2
+##   count   prop
+##   &lt;int&gt;  &lt;dbl&gt;
+## 1  3607 0.0391
+```
+
+
+]
+
+---
+
+# Extract/ replace substrings &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
+
+What if we wanted to analyze transactions for all .bold[frozen food] products?
+
+.pull-left[
+
+Notice that we have products categorized as .bold.blue["FROZEN"] and .bold.blue["FRZN"]
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; product_category &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN ICE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN VEGETABLE/VEG DSH &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN FRUITS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; SEAFOOD - FROZEN &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN PIZZA &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN MEAT &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN MEAT/MEAT DINNERS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN BREAKFAST FOODS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN JCE CONC/DRNKS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN PIE/DESSERTS &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN BREAD/DOUGH &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN NOVELTIES/WTR ICE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN POTATOES &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN CHICKEN &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN - BOXED(GROCERY) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FRZN SEAFOOD &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; FROZEN PACKAGE MEAT &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 ]
 
 .pull-right[
 
+- We can .blue[replace] all "FRZN" instances with .blue[`str_replace`]
+- Often, we want to replace ___all___ instances, not just the first
+
 
 ```r
-transactions &lt;- transactions %&gt;% 
-  mutate(
-    basket_id     = as.character(basket_id),
-    household_id  = as.character(household_id),
-    product_id    = as.character(product_id),
-    store_region  = as.factor(store_region),
-    purchase_date = dmy(purchase_date)
-  )
-
-glimpse(transactions)
+products %&gt;%
+* mutate(product_category = str_replace_all(product_category, pattern = "FRZN", replacement = "FROZEN")) %&gt;%
+  filter(str_detect(product_category, "FROZEN")) %&gt;%
+  distinct(product_category)
+## # A tibble: 18 x 1
+##    product_category        
+##    &lt;chr&gt;                   
+##  1 FROZEN ICE              
+##  2 FROZEN VEGETABLE/VEG DSH
+##  3 FROZEN FRUITS           
+##  4 SEAFOOD - FROZEN        
+##  5 FROZEN PIZZA            
+##  6 FROZEN MEAT             
+##  7 FROZEN MEAT/MEAT DINNERS
+##  8 FROZEN BREAKFAST FOODS  
+##  9 FROZEN JCE CONC/DRNKS   
+## 10 FROZEN PIE/DESSERTS     
+## 11 FROZEN BREAD/DOUGH      
+## 12 FROZEN NOVELTIES/WTR ICE
+## 13 FROZEN POTATOES         
+## 14 FROZEN                  
+## 15 FROZEN CHICKEN          
+## 16 FROZEN - BOXED(GROCERY) 
+## 17 FROZEN SEAFOOD          
+## 18 FROZEN PACKAGE MEAT
 ```
 
 ]
 
 ---
+
+# Regular expressions &lt;a href="https://stringr.tidyverse.org/"&gt;&lt;img src="images/stringr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
+
+- What we have been doing is finding very simple .blue[___regular expressions___]
+
+- REGEX provides a concise way to identify patterns within character strings
+
+- We cover this more in-depth in the Intermediate R course
+
+
+```r
+# all products the start with "FROZEN", "FRZN", or end with the word "ICE"
+products %&gt;%
+  filter(str_detect(product_category, regex("(^FROZEN|FRZN|//bICE$)"))) %&gt;%
+  distinct(product_category)
+## # A tibble: 17 x 1
+##    product_category       
+##    &lt;chr&gt;                  
+##  1 FRZN ICE               
+##  2 FRZN VEGETABLE/VEG DSH 
+##  3 FRZN FRUITS            
+##  4 FROZEN PIZZA           
+##  5 FROZEN MEAT            
+##  6 FRZN MEAT/MEAT DINNERS 
+##  7 FRZN BREAKFAST FOODS   
+##  8 FRZN JCE CONC/DRNKS    
+##  9 FROZEN PIE/DESSERTS    
+## 10 FROZEN BREAD/DOUGH     
+## 11 FRZN NOVELTIES/WTR ICE 
+## 12 FRZN POTATOES          
+## 13 FROZEN                 
+## 14 FROZEN CHICKEN         
+## 15 FROZEN - BOXED(GROCERY)
+## 16 FRZN SEAFOOD           
+## 17 FROZEN PACKAGE MEAT
+```
+
+
+---
+
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+Using the __completejourney::products__ data and `product_category` variable
+
+1. How many products contain "SEAFOOD"
+2. What is the proportion of products that contain "SEAFOOD"
+
+__Hint:__
+
+
+```r
+products %&gt;%
+  distinct(product_category) %&gt;%
+  mutate(seafood = _____) %&gt;%
+  summarise(
+    count = _____,
+    prop  = _____
+    )
+```
+
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+products %&gt;%
+  distinct(product_category) %&gt;%
+  mutate(seafood = str_detect(product_category, pattern = "SEAFOOD")) %&gt;%
+  summarise(
+    count = sum(seafood, na.rm = TRUE),
+    prop  = mean(seafood, na.rm = TRUE)
+    )
+## # A tibble: 1 x 2
+##   count   prop
+##   &lt;int&gt;  &lt;dbl&gt;
+## 1     6 0.0195
+```
+
+
+]
+
+---
+
+class: clear, center, middle
+
+
+background-image: url(images/factor-icon.jpg)
+background-size: cover
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font300.bold.grey[Factors]
+
+---
+
 # Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
 
 .pull-left[
+
+&lt;br&gt;
 
 * Factors are a useful data structure; particularly for modeling and visualizations because they control the order of levels
 
@@ -607,13 +878,50 @@ glimpse(transactions)
 
 # Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
 
+R’s representation of categorical data. Consists of:
+
+- A set of discrete values
+- An ordered set of valid levels
+
+
+```r
+eyes &lt;- factor(x = c("blue", "green", "green"), levels = c("blue", "brown", "green"))
+eyes
+## [1] blue  green green
+## Levels: blue brown green
+```
+
+--
+
+Stored as an integer vector with a levels attribute
+
+
+```r
+unclass(eyes)
+## [1] 1 3 3
+## attr(,"levels")
+## [1] "blue"  "brown" "green"
+```
+
+
+---
+
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
 Categorical variables can have levels that are ordered, unordered, collapsable, etc.  Consider:
 
 .pull-left[
 
 
 ```r
-households %&gt;% distinct(marital_status)
+households %&gt;% distinct(marital)
+## # A tibble: 4 x 1
+##   marital
+##   &lt;chr&gt;  
+## 1 Unknown
+## 2 Married
+## 3 null   
+## 4 Single
 ```
 
 
@@ -623,7 +931,17 @@ households %&gt;% distinct(marital_status)
 
 
 ```r
-households %&gt;% distinct(income)
+households %&gt;% distinct(income_range)
+## # A tibble: 7 x 1
+##   income_range
+##   &lt;chr&gt;       
+## 1 35-49K      
+## 2 50-74K      
+## 3 75-99K      
+## 4 UNDER 35K   
+## 5 150K+       
+## 6 100-150K    
+## 7 null
 ```
 
 ]
@@ -640,9 +958,11 @@ Often, we want to adjust the categories or the ordering of categories for a cate
 
 
 ```r
-ggplot(households, aes(marital_status)) +
+ggplot(households, aes(marital)) +
   geom_bar()
 ```
+
+&lt;img src="day-2b-data-types_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ]
@@ -651,64 +971,109 @@ ggplot(households, aes(marital_status)) +
 
 
 ```r
-ggplot(households, aes(income)) +
+ggplot(households, aes(income_range)) +
   geom_bar()
 ```
+
+&lt;img src="day-2b-data-types_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 ]
 
 ---
-# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
-
-The __forcats__ package allows us to adjust categories easily:
+# Most useful skills... &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
 
 .pull-left[
+.font150[
 
-.center.font110[Collapse factor levels with .grey[`fct_collapse()`]]&lt;br&gt;
+&lt;br&gt;
 
+- Reorder the levels
 
-```r
-households &lt;- households %&gt;% 
-  mutate(
-    marital_status = fct_collapse(marital_status, Unknown = c("Unknown", "null")),
-    home_ownership = fct_collapse(home_ownership, Unknown = c("Unknown", "null")),
-    age            = fct_collapse(age, Unknown = c("Unknown", "null", "NOT AVAILABLE")),
-    kids_count     = fct_collapse(kids_count, Unknown = c("Unknown", "null", "NOT AVAILABLE"))
-    )
-```
+- Recode the levels
 
+- Collapse levels
 
+]
 ]
 
 .pull-right[
 
-.center.font110[Change levels or reorder with .grey[`fct_recode()`] &amp; .grey[`fct_relevel()`]]
+.font150[
 
+&lt;br&gt;
 
-```r
-households &lt;- households %&gt;% 
-  mutate(
-    income         = fct_recode(income, Unknown = "null"),
-    household_size = fct_recode(household_size, Unknown = "null"),
-    marital_status = fct_relevel(marital_status, "Unknown", after = Inf),
-    income         = fct_relevel(income, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "Unknown"),
-    household_size = fct_relevel(household_size, "Unknown", after = Inf)
-    )
-```
+All __forcats__ functions start with .grey[`fct_`]
+
+- .grey[`fct_`].blue[`relevel()`]
+- .grey[`fct_`].blue[`recode()`]
+- .grey[`fct_`].blue[`collapse()`]
+- .grey[`fct_`].blue[`unique()`]
 
 ]
-
-
-.center[.content-box-gray[.bold[There are many other options to adjust levels (`forcats::fct_ + tab`)]]]
+]
 
 ---
-# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+# Reorder the levels &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+We can .blue[reorder] factor levels with .blue[`fct_relevel()`]
 
 .pull-left[
 
 
 ```r
-households %&gt;% count(income)
+households &lt;- households %&gt;% 
+* mutate(income_range = fct_relevel(income_range, "UNDER 35K", "35-49K", "50-74K", "75-99K", "100-150K", "150K+", "null"))
+
+households %&gt;% count(income_range)
+## # A tibble: 7 x 2
+##   income_range     n
+##   &lt;fct&gt;        &lt;int&gt;
+## 1 UNDER 35K      790
+## 2 35-49K         876
+## 3 50-74K         947
+## 4 75-99K         594
+## 5 100-150K       581
+## 6 150K+          347
+## 7 null           865
+```
+
+]
+
+.pull-right[
+
+
+```r
+ggplot(households, aes(income_range)) +
+  geom_bar()
+```
+
+&lt;img src="day-2b-data-types_files/figure-html/plot-releveled-income-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Recode the levels &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+We can .blue[recode] factor levels with .blue[`fct_recode()`]
+
+.pull-left[
+
+
+```r
+households &lt;- households %&gt;%
+* mutate(income_range = fct_recode(income_range, Unknown = "null"))
+
+households %&gt;% count(income_range)
+## # A tibble: 7 x 2
+##   income_range     n
+##   &lt;fct&gt;        &lt;int&gt;
+## 1 UNDER 35K      790
+## 2 35-49K         876
+## 3 50-74K         947
+## 4 75-99K         594
+## 5 100-150K       581
+## 6 150K+          347
+## 7 Unknown        865
 ```
 
 
@@ -718,20 +1083,57 @@ households %&gt;% count(income)
 
 
 ```r
-ggplot(households, aes(income)) +
+ggplot(households, aes(income_range)) +
   geom_bar()
+```
+
+&lt;img src="day-2b-data-types_files/figure-html/recode-income-plot-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+# Collapse the levels &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+We can .blue[collapse] factor levels with .blue[`fct_collapse()`]
+
+.pull-left[
+
+
+```r
+households &lt;- households %&gt;%
+  mutate(
+*   marital = fct_collapse(marital, Unknown = c("null", "Unknown")),
+    marital = fct_relevel(marital, "Unknown", after = Inf)
+    )
+
+households %&gt;% count(marital)
+## # A tibble: 3 x 2
+##   marital     n
+##   &lt;fct&gt;   &lt;int&gt;
+## 1 Married  2405
+## 2 Single   1388
+## 3 Unknown  1207
 ```
 
 ]
 
-&lt;br&gt;&lt;br&gt;
-.center[.content-box-gray[.bold[__forcats__ is worth getting to know (https://forcats.tidyverse.org/index.html)]]]
+.pull-right[
 
+
+```r
+ggplot(households, aes(marital)) +
+  geom_bar()
+```
+
+&lt;img src="day-2b-data-types_files/figure-html/collapse-marital-status-plot-1.png" style="display: block; margin: auto;" /&gt;
+
+]
 
 ---
+
 # Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
 
-Sometimes you just want to .blue[reorder a factor for plotting purposes] rather than to permanently change the factor.
+Sometimes you just want to .blue[reorder a factor for plotting purposes] rather than to permanently change the factor.  .blue[`fct_infreq()`], .blue[`fct_rev()`], and .blue[`fct_reorder()`] can be helpful.
 
 --
 
@@ -739,9 +1141,13 @@ Sometimes you just want to .blue[reorder a factor for plotting purposes] rather 
 
 
 ```r
-*ggplot(households, aes(fct_infreq(home_ownership))) +
+households %&gt;%
+  mutate(homeowner = fct_collapse(homeowner, Unknown = c("Unknown", "null"))) %&gt;%
+* ggplot(aes(fct_infreq(homeowner))) +
   geom_bar()
 ```
+
+&lt;img src="day-2b-data-types_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ]
@@ -750,9 +1156,60 @@ Sometimes you just want to .blue[reorder a factor for plotting purposes] rather 
 
 
 ```r
-*ggplot(households, aes(fct_rev(home_ownership))) +
+households %&gt;%
+  mutate(homeowner = fct_collapse(homeowner, Unknown = c("Unknown", "null"))) %&gt;%
+* ggplot(aes(fct_rev(homeowner))) +
   geom_bar()
 ```
+
+&lt;img src="day-2b-data-types_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+
+# Working with factors &lt;a href="https://forcats.tidyverse.org/"&gt;&lt;img src="images/forcats.png" class="forcats-hex", align="right"&gt;&lt;/a&gt;
+
+Sometimes you just want to .blue[reorder a factor for plotting purposes] rather than to permanently change the factor.  .blue[`fct_infreq()`], .blue[`fct_rev()`], and .blue[`fct_reorder()`] can be helpful.
+
+.pull-left[
+
+
+```r
+prod_count &lt;- products %&gt;% 
+  count(department) %&gt;%
+  drop_na()
+
+prod_count
+## # A tibble: 32 x 2
+##    department          n
+##    &lt;chr&gt;           &lt;int&gt;
+##  1 AUTOMOTIVE          2
+##  2 CHARITABLE CONT     2
+##  3 CHEF SHOPPE        14
+##  4 CNTRL/STORE SUP     4
+##  5 COSMETICS        3011
+##  6 COUPON             39
+##  7 DELI             2359
+##  8 DRUG GM         31540
+##  9 ELECT &amp;PLUMBING     1
+## 10 FLORAL            938
+## # ... with 22 more rows
+```
+
+]
+
+.pull-right[
+
+
+```r
+*ggplot(prod_count, aes(n, fct_reorder(department, n))) +
+  geom_point()
+```
+
+&lt;img src="day-2b-data-types_files/figure-html/fct-reorder-plot-1.png" style="display: block; margin: auto;" /&gt;
+
 
 ]
 
@@ -761,9 +1218,72 @@ Sometimes you just want to .blue[reorder a factor for plotting purposes] rather 
 class: yourturn
 # Your Turn!
 
-&lt;br&gt;&lt;br&gt;
+.pull-left[
 
-.center.font150[Spend 5 minutes working through lines of code XX-XX to clean up the factors in your different data sets.]
+### Challenge
+
+Using the __households__ data
+
+1. Recode the `hh_size` factor so that "null" is now "Unknown"
+
+2. Relevel the `hh_size` factor so that "Unknown" is at the end
+
+3. Use a bar chart to illustrate the distribution of `hh_size` in our data
+
+]
+
+.pull-right[
+
+### Solution
+
+
+```r
+households %&gt;% 
+  mutate(
+    hh_size = fct_recode(hh_size, Unknown = "null"),
+    hh_size = fct_relevel(hh_size, "Unknown", after = Inf)
+    ) %&gt;%
+  ggplot(aes(hh_size)) +
+  geom_bar()
+```
+
+&lt;img src="day-2b-data-types_files/figure-html/yourturn-factors-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+background-image: url(images/date-time-icon.jpg)
+background-size: cover
+
+# Dates &amp; Times
+
+---
+
+# Working with dates &amp; times &lt;a href="https://lubridate.tidyverse.org/"&gt;&lt;img src="images/lubridate.png" class="lubridate-hex", align="right"&gt;&lt;/a&gt;
+
+.pull-left[
+
+&lt;br&gt;
+
+* Factors are a useful data structure; particularly for modeling and visualizations because they control the order of levels
+
+* Working with factors in base R can be a little frustrating because of syntax inconsistencies and a handful of missing tools
+
+* The [__forcats__](https://forcats.tidyverse.org/index.html) package allows you to modify factors with minimal pain
+
+]
+
+.pull-right[
+
+&lt;img src="images/lubridate-large.png" width="80%" height="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
 
 
 
