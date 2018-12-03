@@ -1266,11 +1266,14 @@ background-size: cover
 
 &lt;br&gt;
 
-* Factors are a useful data structure; particularly for modeling and visualizations because they control the order of levels
+* Dates come in many different forms:
+   - 2017/02/03
+   - February 3, 2017
+   - 03-Feb-2017
 
-* Working with factors in base R can be a little frustrating because of syntax inconsistencies and a handful of missing tools
+* Working with dates in R can be a bit convoluted and cumbersome
 
-* The [__forcats__](https://forcats.tidyverse.org/index.html) package allows you to modify factors with minimal pain
+* The [__lubridate__](https://lubridate.tidyverse.org/index.html) package allows us to easily handle/manipulate date-time variables
 
 ]
 
@@ -1282,16 +1285,251 @@ background-size: cover
 
 ---
 
+# Most useful skills... &lt;a href="https://lubridate.tidyverse.org/"&gt;&lt;img src="images/lubridate.png" class="lubridate-hex", align="right"&gt;&lt;/a&gt;
+
+.font200[
+
+- Creating dates/times (i.e. parsing)
+
+- Access and change parts of a date
+
+- .opacity20[Deal with time zones]
+
+- .opacity20[Do math with instants and time spans]
+
+]
+
+---
+
+# Creating dates/times &lt;a href="https://lubridate.tidyverse.org/"&gt;&lt;img src="images/lubridate.png" class="lubridate-hex", align="right"&gt;&lt;/a&gt;
+
+__lubridate__ has a series of parsing functions that will .blue[create dates] based on the existence and order of the date-time components
+
+.pull-left[
+
+.font130[
+- `ymd_hms()`, `ymd_hm()`, `ymd_h()`, `ymd()`
+- `ydm_hms()`, `ydm_hm()`, `ydm_h()`, `ydm()`
+- `dmy_hms()`, `dmy_hm()`, `dmy_h()`, `dmy()`
+- `mdy_hms()`, `mdy_hm()`, `mdy_h()`, `mdy()`
+- and more!
+
+]
+]
+
+.pull-right[
+
+
+```r
+# year, month, day
+ymd("2018-12-02")
+## [1] "2018-12-02"
+
+# year, month, day, hour
+ymd_h("2018-12-02 01")
+## [1] "2018-12-02 01:00:00 UTC"
+
+# year, month, day, timestamp
+ymd_hms("2018-12-02 01:31:27")
+## [1] "2018-12-02 01:31:27 UTC"
+```
+
+and __lubridate__ does not care about format
+
+
+```r
+ymd("2018-12-02")
+## [1] "2018-12-02"
+ymd("2018/12/02")
+## [1] "2018-12-02"
+mdy("February 02, 2018")
+## [1] "2018-02-02"
+```
+
+]
+
+---
+# Accessing components &lt;a href="https://lubridate.tidyverse.org/"&gt;&lt;img src="images/lubridate.png" class="lubridate-hex", align="right"&gt;&lt;/a&gt;
+
+__lubridate__ has a series of functions to .blue[extract components] of dates
+
+.pull-left[
+
+.font130[
+- `year()`
+- `quarter()`
+- `month()`
+- `week()`
+- `wday()`
+- `hour()`
+- and more!
+
+]
+]
+
+.pull-right[
+
+
+```r
+# get year
+year("2018-12-02 01:31:27")
+## [1] 2018
+
+# get quarter
+quarter("2018-12-02 01:31:27")
+## [1] 4
+
+# get month
+month("2018-12-02 01:31:27", label = TRUE)
+## [1] Dec
+## 12 Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; Sep &lt; ... &lt; Dec
+
+# get weekday
+wday("2018-12-02 01:31:27", label = TRUE, abbr = FALSE)
+## [1] Sunday
+## 7 Levels: Sunday &lt; Monday &lt; Tuesday &lt; Wednesday &lt; Thursday &lt; ... &lt; Saturday
+```
+
+]
+
+---
+
+# Accessing components &lt;a href="https://lubridate.tidyverse.org/"&gt;&lt;img src="images/lubridate.png" class="lubridate-hex", align="right"&gt;&lt;/a&gt;
+
+- Just like __stringr__, we can use the __lubridate__ functions inside `filter()` and `mutate()`
+
+.pull-left[
+
+Use `filter()` to get all transactions that occur on weekends
+
+
+```r
+transactions %&gt;%
+* filter(wday(transaction_timestamp) %in% 6:7) %&gt;%
+  select(basket_id, transaction_timestamp)
+## # A tibble: 442,370 x 2
+##    basket_id   transaction_timestamp
+##    &lt;chr&gt;       &lt;dttm&gt;               
+##  1 31269173695 2017-01-06 00:15:57  
+##  2 31269173695 2017-01-06 00:15:57  
+##  3 31269173696 2017-01-06 00:16:57  
+##  4 31268902157 2017-01-06 00:40:34  
+##  5 31268902157 2017-01-06 00:40:34  
+##  6 31268902157 2017-01-06 00:40:34  
+##  7 31268902157 2017-01-06 00:40:34  
+##  8 31268902157 2017-01-06 00:40:34  
+##  9 31268902157 2017-01-06 00:40:34  
+## 10 31268902157 2017-01-06 00:40:34  
+## # ... with 442,360 more rows
+```
+
+]
+
+.pull-right[
+
+Use `mutate()` to create a new variable for the day of week
+
+
+```r
+transactions %&gt;%
+* mutate(weekday = wday(transaction_timestamp, label = TRUE)) %&gt;%
+  select(basket_id, transaction_timestamp, weekday)
+## # A tibble: 1,469,307 x 3
+##    basket_id   transaction_timestamp weekday
+##    &lt;chr&gt;       &lt;dttm&gt;                &lt;ord&gt;  
+##  1 31198570044 2017-01-01 06:53:26   Sun    
+##  2 31198570047 2017-01-01 07:10:28   Sun    
+##  3 31198655051 2017-01-01 07:26:30   Sun    
+##  4 31198705046 2017-01-01 07:30:27   Sun    
+##  5 31198705046 2017-01-01 07:30:27   Sun    
+##  6 31198705046 2017-01-01 07:30:27   Sun    
+##  7 31198705046 2017-01-01 07:30:27   Sun    
+##  8 31198676055 2017-01-01 07:56:33   Sun    
+##  9 31198676055 2017-01-01 07:56:33   Sun    
+## 10 31198676055 2017-01-01 07:56:33   Sun    
+## # ... with 1,469,297 more rows
+```
+
+]
+
+---
+
 class: yourturn
 # Your Turn!
 
+.pull-left[
 
+### Challenge
+
+Using the __completejourney::transactions__ data set
+
+1. Make a bar chart showing the total number of transactions by weekday. Which weekday experiences the most traffic?
+
+2. Make a line chart showing the total daily sales value (`sum(sales_value)`) for each day of the year (hint: use `yday()`).  Is there any obvious trend in the daily total sales value?
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 1
+transactions %&gt;%
+  mutate(weekday = wday(transaction_timestamp, label = TRUE)) %&gt;% 
+  ggplot(aes(weekday)) +
+  geom_bar()
+```
+
+&lt;img src="day-2b-data-types_files/figure-html/yourturn-lubridate-1-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+Using the __completejourney::transactions__ data set
+
+1. Make a bar chart showing the total number of transactions by weekday. Which weekday experiences the most traffic?
+
+2. Make a line chart showing the total daily sales value (`sum(sales_value)`) for each day of the year (hint: use `yday()`).  Is there any obvious trend in the daily total sales value?
+
+]
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 2
+transactions %&gt;%
+  mutate(day = yday(transaction_timestamp)) %&gt;% 
+  group_by(day) %&gt;%
+  summarise(total_sales = sum(sales_value, na.rm = TRUE)) %&gt;%
+  ggplot(aes(x = day, y = total_sales)) +
+  geom_line()
+```
+
+&lt;img src="day-2b-data-types_files/figure-html/yourturn-lubridate-2-1.png" style="display: block; margin: auto;" /&gt;
+
+]
 
 ---
 
 # Questions?
 
-&lt;br&gt;
+.font120.center[We can do a lot with data types, and the packages reviewed here can do much more than what we covered; however, this gets you started with manipulating data types for analytic purposes.]
+
+&lt;img src="images/questions.png" width="400" height="400" style="display: block; margin: auto;" /&gt;
     </textarea>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

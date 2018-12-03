@@ -858,11 +858,14 @@ background-size: cover
 
 <br>
 
-* Factors are a useful data structure; particularly for modeling and visualizations because they control the order of levels
+* Dates come in many different forms:
+   - 2017/02/03
+   - February 3, 2017
+   - 03-Feb-2017
 
-* Working with factors in base R can be a little frustrating because of syntax inconsistencies and a handful of missing tools
+* Working with dates in R can be a bit convoluted and cumbersome
 
-* The [__forcats__](https://forcats.tidyverse.org/index.html) package allows you to modify factors with minimal pain
+* The [__lubridate__](https://lubridate.tidyverse.org/index.html) package allows us to easily handle/manipulate date-time variables
 
 ]
 
@@ -876,18 +879,200 @@ knitr::include_graphics("images/lubridate-large.png")
 
 ---
 
+# Most useful skills... <a href="https://lubridate.tidyverse.org/"><img src="images/lubridate.png" class="lubridate-hex", align="right"></a>
+
+.font200[
+
+- Creating dates/times (i.e. parsing)
+
+- Access and change parts of a date
+
+- .opacity20[Deal with time zones]
+
+- .opacity20[Do math with instants and time spans]
+
+]
+
+---
+
+# Creating dates/times <a href="https://lubridate.tidyverse.org/"><img src="images/lubridate.png" class="lubridate-hex", align="right"></a>
+
+__lubridate__ has a series of parsing functions that will .blue[create dates] based on the existence and order of the date-time components
+
+.pull-left[
+
+.font130[
+- `ymd_hms()`, `ymd_hm()`, `ymd_h()`, `ymd()`
+- `ydm_hms()`, `ydm_hm()`, `ydm_h()`, `ydm()`
+- `dmy_hms()`, `dmy_hm()`, `dmy_h()`, `dmy()`
+- `mdy_hms()`, `mdy_hm()`, `mdy_h()`, `mdy()`
+- and more!
+
+]
+]
+
+.pull-right[
+
+```{r}
+# year, month, day
+ymd("2018-12-02")
+
+# year, month, day, hour
+ymd_h("2018-12-02 01")
+
+# year, month, day, timestamp
+ymd_hms("2018-12-02 01:31:27")
+```
+
+and __lubridate__ does not care about format
+
+```{r}
+ymd("2018-12-02")
+ymd("2018/12/02")
+mdy("February 02, 2018")
+```
+
+]
+
+---
+# Accessing components <a href="https://lubridate.tidyverse.org/"><img src="images/lubridate.png" class="lubridate-hex", align="right"></a>
+
+__lubridate__ has a series of functions to .blue[extract components] of dates
+
+.pull-left[
+
+.font130[
+- `year()`
+- `quarter()`
+- `month()`
+- `week()`
+- `wday()`
+- `hour()`
+- and more!
+
+]
+]
+
+.pull-right[
+
+```{r}
+# get year
+year("2018-12-02 01:31:27")
+
+# get quarter
+quarter("2018-12-02 01:31:27")
+
+# get month
+month("2018-12-02 01:31:27", label = TRUE)
+
+# get weekday
+wday("2018-12-02 01:31:27", label = TRUE, abbr = FALSE)
+```
+
+]
+
+---
+
+# Accessing components <a href="https://lubridate.tidyverse.org/"><img src="images/lubridate.png" class="lubridate-hex", align="right"></a>
+
+- Just like __stringr__, we can use the __lubridate__ functions inside `filter()` and `mutate()`
+
+.pull-left[
+
+Use `filter()` to get all transactions that occur on weekends
+
+```{r get-weekend-transactions}
+transactions %>%
+  filter(wday(transaction_timestamp) %in% 6:7) %>% #<<
+  select(basket_id, transaction_timestamp)
+```
+
+]
+
+.pull-right[
+
+Use `mutate()` to create a new variable for the day of week
+
+```{r make-weekday-variable}
+transactions %>%
+  mutate(weekday = wday(transaction_timestamp, label = TRUE)) %>% #<<
+  select(basket_id, transaction_timestamp, weekday)
+```
+
+]
+
+---
+
 class: yourturn
 # Your Turn!
 
+.pull-left[
 
+### Challenge
+
+Using the __completejourney::transactions__ data set
+
+1. Make a bar chart showing the total number of transactions by weekday. Which weekday experiences the most traffic?
+
+2. Make a line chart showing the total daily sales value (`sum(sales_value)`) for each day of the year (hint: use `yday()`).  Is there any obvious trend in the daily total sales value?
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r yourturn-lubridate-1, fig.height=4}
+# 1
+transactions %>%
+  mutate(weekday = wday(transaction_timestamp, label = TRUE)) %>% 
+  ggplot(aes(weekday)) +
+  geom_bar()
+```
+
+]
+
+---
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+Using the __completejourney::transactions__ data set
+
+1. Make a bar chart showing the total number of transactions by weekday. Which weekday experiences the most traffic?
+
+2. Make a line chart showing the total daily sales value (`sum(sales_value)`) for each day of the year (hint: use `yday()`).  Is there any obvious trend in the daily total sales value?
+
+]
+
+.pull-right[
+
+### Solution
+
+```{r yourturn-lubridate-2, fig.height=3}
+# 2
+transactions %>%
+  mutate(day = yday(transaction_timestamp)) %>% 
+  group_by(day) %>%
+  summarise(total_sales = sum(sales_value, na.rm = TRUE)) %>%
+  ggplot(aes(x = day, y = total_sales)) +
+  geom_line()
+```
+
+]
 
 ---
 
 # Questions?
 
-<br>
+.font120.center[We can do a lot with data types, and the packages reviewed here can do much more than what we covered; however, this gets you started with manipulating data types for analytic purposes.]
 
-```{r questions-dplyr, echo=FALSE, out.height="450", out.width="450", eval=FALSE}
+```{r questions-data-types, echo=FALSE, out.height="400", out.width="400"}
 knitr::include_graphics("images/questions.png")
 ```
 
