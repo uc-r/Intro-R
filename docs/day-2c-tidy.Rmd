@@ -1,0 +1,586 @@
+---
+title: "An .red[Incomplete] Introduction to R"
+subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
+author: "Brad Boehmke"
+date: "2018-12-13"
+output:
+  xaringan::moon_reader:
+    css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
+    self_contained: false
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false  
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+# Set global R options
+options(htmltools.dir.version = FALSE, servr.daemon = TRUE)
+
+# Set global knitr chunk options
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  cache = TRUE,
+  error = FALSE,
+  message = FALSE, 
+  warning = FALSE, 
+  collapse = TRUE 
+)
+
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw()
+theme_set(thm)
+```
+
+class: clear, center, middle
+
+background-image: url(images/cleaning.gif)
+background-size: cover
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+.font300.bold.white[Tidy Data]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+```{r your-turn-1, echo=FALSE}
+library(tidyverse)
+
+read_rds("data/bomber_wide.rds") %>%
+  gather(Year, Flying_Hours, -c(Type, MD)) %>%
+  kableExtra::kable() %>%
+  kableExtra::kable_styling()
+```
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+```{r your-turn-2, echo=FALSE}
+read_rds("data/bomber_wide.rds") %>%
+  kableExtra::kable() %>%
+  kableExtra::kable_styling()
+```
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+```{r your-turn-3, echo=FALSE}
+read_rds("data/bomber_long.rds") %>%
+  arrange(MD, FY) %>%
+  kableExtra::kable() %>%
+  kableExtra::kable_styling()
+```
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+```{r your-turn-4, echo=FALSE}
+read_rds("data/bomber_mess.rds") %>%
+  kableExtra::kable() %>%
+  kableExtra::kable_styling()
+```
+
+---
+
+# Tidy data simplifies life
+
+.pull-left[
+
+<br><br>
+.font130[
+
+A data set is tidy if:
+
+1. Each .blue[__variable__] in in its own .blue[__column__]
+
+2. Each .red[__observation__] is in its own .red[__row__]
+
+3. Each .grey[__value__] is in its own .grey[__cell__]
+
+]
+]
+
+.pull-right[
+<br><br>
+
+```{r tidy-data-example, echo=FALSE}
+knitr::include_graphics("images/tidy-data-example.png")
+```
+
+]
+
+---
+
+# tidyr <a href="https://tidyr.tidyverse.org/"><img src="images/tidyr.png" class="stringr-hex", align="right"></a>
+
+.pull-left[
+
+You are going to learn four key __tidyr__ functions that allow you to solve the vast majority of your data tidying challenges:
+
+- `gather`: transforms data from wide to long
+
+- `spread`:  transforms data from long to wide
+
+- `separate`:  splits a single column into multiple columns
+
+- `unite`:  combines multiple columns into a single column
+
+]
+
+.pull-right[
+
+<br>
+
+```{r tidyr-hex, echo=FALSE, out.width="50%", out.height="50%"}
+knitr::include_graphics("images/tidyr-large.png")
+```
+
+]
+
+---
+
+# Prerequisites
+
+.pull-left[
+
+### Packages
+
+```{r eval=FALSE}
+library(tidyverse) # or directly w/library(tidyr)
+```
+
+
+]
+
+.pull-right[
+
+### Data
+
+Follow along in examples:
+
+```{r}
+load("data/tidy_data.RData")
+```
+
+Your turn exercises:
+
+```{r}
+bomber_wide <- read_rds("data/bomber_wide.rds")
+bomber_long <- read_rds("data/bomber_long.rds")
+bomber_prefix <- read_rds("data/bomber_prefix.rds")
+bomber_mess <- read_rds("data/bomber_mess.rds")
+```
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+```{r gather1-plot, echo=FALSE, out.height="40%", out.width="40%"}
+knitr::include_graphics("images/tidyr-01.png")
+```
+
+]
+
+--
+
+.center[
+
+.blue[cases] %>% gather(key = Year, value = n, 2:4)
+.white.font80[
+.content-box-blue-dark[data frame to transform].content-box-white[name of new key colum] .content-box-white[name of new value column].content-box-white[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+```{r gather2-plot, echo=FALSE, out.height="40%", out.width="40%"}
+knitr::include_graphics("images/tidyr-02.png")
+```
+
+cases %>% gather(key = .green[Year], value = n, 2:4)
+.white.font80[
+.content-box-blue[data frame to transform].content-box-green-dark[name of new key colum] .content-box-white[name of new value column].content-box-white[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+```{r gather3-plot, echo=FALSE, out.height="40%", out.width="40%"}
+knitr::include_graphics("images/tidyr-03.png")
+```
+
+cases %>% gather(key = Year, value = .red[n], 2:4)
+.white.font80[
+.content-box-blue[data frame to transform].content-box-green[name of new key colum] .content-box-red-dark[name of new value column].content-box-white[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+```{r gather4-plot, echo=FALSE, out.height="40%", out.width="40%"}
+knitr::include_graphics("images/tidyr-04.png")
+```
+
+cases %>% gather(key = Year, value = n, .grey[2:4])
+.white.font80[
+.content-box-blue[data frame to transform].content-box-green[name of new key colum] .content-box-red[name of new value column].content-box-grey-dark[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+
+.pull-left[
+
+.center.font120.bold[Cod Alternatives]
+
+```{r, eval=FALSE}
+# These all produce the same results:
+cases %>% gather(Year, n, 2:4)
+cases %>% gather(Year, n, `2011`:`2013`)
+cases %>% gather(Year, n, `2011`, `2012`, `2013`)
+cases %>% gather(Year, n, starts_with("20"))
+cases %>% gather(Year, n, -country)
+```
+
+]
+
+.pull-right[
+
+```{r gather5-plot, echo=FALSE}
+knitr::include_graphics("images/tidyr-04.png")
+```
+
+]
+
+---
+
+# .red.font120[`spread`]: long to wide
+
+.bold[We can transform long data to wide with .font140.grey[`spread()`]]
+
+.center[
+
+```{r spread-1-plot, echo=FALSE, out.height="40%", out.width="40%"}
+knitr::include_graphics("images/tidyr-spread.png")
+```
+
+]
+
+--
+
+.center[
+
+cases %>% spread(key = .purple[Year], value = .red[n])
+.white.font80[
+.content-box-purple-dark[column to use as new column names] .content-box-red-dark[column to use as values]
+]
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Reshape the `bomber_wide` data from ___wide to long___ and name the new value column "Flying_Hrs"
+
+2. Reshape the `bomber_long` data from ___long to wide___ using the "Output" variable for the new column names and the "Value" variable to fill in values
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r your-turn-gather}
+# 1
+bomber_wide %>%
+  gather(Year, Flying_Hrs, -c(Type, MD))
+
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Reshape the `bomber_wide` data from ___wide to long___ and name the new value column "Flying_Hrs"
+
+2. Reshape the `bomber_long` data from ___long to wide___ using the "Output" variable for the new column names and the "Value" variable to fill in values
+
+]
+
+.pull-right[
+
+### Solution
+
+```{r your-turn-spread}
+# 2
+bomber_long %>%
+  spread(Output, Value)
+
+```
+
+]
+
+---
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+```{r separate-1-plot, echo=FALSE, out.height="90%", out.width="90%"}
+knitr::include_graphics("images/tidyr-separate-1.png")
+```
+
+]
+
+---
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+```{r separate-2-plot, echo=FALSE, out.height="90%", out.width="90%"}
+knitr::include_graphics("images/tidyr-separate-2.png")
+```
+
+]
+
+
+.center[
+
+storms %>% separate(col = .purple[date], into = c("year", "month", "day"), sep = "-")
+.white.font80[
+.content-box-purple-dark[column to split] .content-box-white[names of new columns] .content-box-white[separator to split by]
+]
+
+]
+
+---
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+```{r separate-3-plot, echo=FALSE, out.height="90%", out.width="90%"}
+knitr::include_graphics("images/tidyr-separate-3.png")
+```
+
+]
+
+
+.center[
+
+storms %>% separate(col = date, into = .red[c("year", "month", "day")], sep = "-")
+.white.font80[
+.content-box-purple[column to split] .content-box-red-dark[names of new columns] .content-box-white[separator to split by]
+]
+
+]
+---
+
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+```{r separate-4-plot, echo=FALSE, out.height="90%", out.width="90%"}
+knitr::include_graphics("images/tidyr-separate-4.png")
+```
+
+]
+
+
+.center[
+
+storms %>% separate(col = date, into = c("year", "month", "day"), sep = .grey["-"])
+.white.font80[
+.content-box-purple[column to split] .content-box-red[names of new columns] .content-box-grey-dark[separator to split by]
+]
+
+]
+
+---
+
+# .red.font120[`unite`]: multiple to one
+
+.bold[We can combine multiple columns into one using .grey[unite()`]]
+
+.center[
+
+```{r unite-plot, echo=FALSE, out.height="90%", out.width="90%"}
+knitr::include_graphics("images/tidyr-unite.png")
+```
+
+]
+
+
+.center[
+
+storms %>% unite(col = .purple[date], .red[c("year", "month", "day")], sep = "-")
+.white.font80[
+.content-box-purple-dark[new column name] .content-box-red-dark[colums to combine] .content-box-grey-dark[separator to use]
+]
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Reshape the `bomber_prefix` data so that the "prefix" and "number" columns are combined into a “MD” variable with “-“ separator
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r your-turn-unite}
+bomber_prefix %>%
+  unite(col = MD, prefix, number, sep = "-")
+
+```
+
+]
+
+---
+
+class: clear, center, middle
+
+background-image: url(images/please-no-more.gif)
+background-size: cover
+
+<br><br><br><br><br><br><br><br><br><br><br><br>
+.font300.bold.white[One last challenge!]
+
+---
+
+class: yourturn
+
+# Big Challenge
+
+.pull-left[
+
+### Challenge
+
+.font120[Reshape the __bomber_mess__ data so it looks like:]
+
+```{r big-challenge, echo=FALSE}
+bomber_mess %>%
+  unite(col = MD, prefix:number, sep = "-") %>%
+  separate(Metric, into = c("FY", "Output")) %>%
+  spread(Output, Value) %>%
+  as_tibble()
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+```{r big-challenge-solution}
+bomber_mess %>%
+  unite(col = MD, prefix:number, sep = "-") %>%
+  separate(Metric, into = c("FY", "Output")) %>%
+  spread(Output, Value) %>%
+  as_tibble()
+```
+
+]
+
+---
+
+# Questions?
+
+<br>
+
+```{r questions-tidyr, echo=FALSE, out.height="450", out.width="450"}
+knitr::include_graphics("images/questions.png")
+```

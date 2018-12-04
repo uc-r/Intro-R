@@ -30,7 +30,7 @@ of the material covered in this training:
 | [Review](https://uc-r.github.io/Intro-R/day-2a-intro.html)          |  9:00-10:00   |
 | [Data types](https://uc-r.github.io/Intro-R/day-2b-data-types.html) |  10:00-10:45  |
 | Break                                                               | 10:45 - 11:00 |
-| Tidying data                                                        |  11:00-12:00  |
+| [Tidy data](https://uc-r.github.io/Intro-R/day-2b-tidy.html)        |  11:00-12:00  |
 | Lunch                                                               | 12:00 - 1:00  |
 | Joining data                                                        |   1:00-1:45   |
 | Data structures                                                     |   1:45-2:30   |

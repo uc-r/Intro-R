@@ -57,7 +57,9 @@ a, a > code {
 .content-box-grey-dark,
 .content-box-army,
 .content-box-green,
+.content-box-green-dark,
 .content-box-purple,
+.content-box-purple-dark,
 .content-box-red,
 .content-box-red-dark,
 .content-box-yellow {
@@ -97,8 +99,16 @@ a, a > code {
 	background-color: #d9edc2;
 }
 
+.content-box-green-dark {
+	background-color: #006400;
+}
+
 .content-box-purple {
 	background-color: #e2e2f9;
+}
+
+.content-box-purple-dark {
+	background-color: #800080;
 }
 
 .content-box-red {

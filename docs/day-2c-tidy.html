@@ -1,0 +1,3750 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>An .red[Incomplete] Introduction to R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Brad Boehmke" />
+    <meta name="date" content="2018-12-13" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: clear, center, middle
+
+background-image: url(images/cleaning.gif)
+background-size: cover
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font300.bold.white[Tidy Data]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; MD &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Year &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Flying_Hours &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26914 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2364 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28511 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25219 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2776 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26034 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24205 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2166 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25639 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23306 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3672 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24500 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25013 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4543 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24387 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25059 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4754 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24813 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26581 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5969 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36687 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21491 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6801 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30230 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28118 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5677 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25493 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21859 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5228 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27838 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20163 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6100 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28206 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24629 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6266 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22484 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23024 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4074 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20284 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23065 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4567 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18765 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23398 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4638 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18250 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24166 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4873 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21727 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29292 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4955 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21748 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25253 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4076 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19309 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22204 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5070 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21297 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; MD &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 1996 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 1997 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 1998 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 1999 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2000 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2001 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2002 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2003 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2004 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2005 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2006 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2007 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2008 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2009 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2010 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2011 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2012 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2013 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2014 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26914 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25219 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24205 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23306 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25013 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25059 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26581 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21491 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28118 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21859 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20163 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24629 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23024 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23065 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23398 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24166 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29292 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25253 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22204 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2364 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2776 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2166 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3672 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4543 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4754 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5969 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6801 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5677 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5228 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6100 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6266 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4074 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4567 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4638 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4873 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4955 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4076 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5070 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28511 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26034 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25639 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24500 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24387 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24813 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36687 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30230 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25493 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27838 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28206 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22484 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20284 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18765 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18250 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21727 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21748 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19309 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21297 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; MD &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; FY &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Output &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26914 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 88594449 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72753781 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25219 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85484074 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71297263 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24205 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85259038 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 84026805 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23306 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79323816 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71848336 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25013 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86230284 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58439777 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25059 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86892432 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94946077 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26581 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89198262 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 96458536 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21491 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74485788 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 68650070 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28118 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 101397707 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 101895634 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21859 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78410415 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 124816690 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20163 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 69984142 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 174627869 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24629 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85112485 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 204486404 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23024 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78084791 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 266109848 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23065 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81030579 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 185902082 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23398 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81253214 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 237413270 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24166 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82471246 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 299215343 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29292 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 101238385 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 374028795 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25253 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85970844 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 346054359 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22204 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 73145048 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 289357667 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2364 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3098498 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5863355 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2776 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4323992 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6866121 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2166 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4352750 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7891851 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3672 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7325932 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9801821 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4543 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10192466 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9618219 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4754 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9693145 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13949654 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5969 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11753559 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15938278 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6801 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13877997 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15401463 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5677 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11237771 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14158041 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5228 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10770041 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21637940 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6100 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12843899 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36500436 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6266 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12683783 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35775133 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4074 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8472438 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36623261 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4567 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9299978 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27095024 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4638 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9269549 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33674977 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4873 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9553217 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 43326111 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4955 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9370581 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 43322482 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4076 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7925422 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41433404 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5070 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9638853 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46326775 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28511 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 99014843 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1996 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71051283 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26034 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 88483438 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1997 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63767578 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25639 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85983307 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1998 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72563957 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24500 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82023136 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1999 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63267336 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24387 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 80046278 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2000 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46983727 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24813 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81077269 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2001 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74897262 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36687 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 117879809 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2002 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112111826 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30230 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 108126138 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2003 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86410724 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25493 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86288229 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2004 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72806150 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27838 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 99083069 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2005 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 139059663 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28206 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 100297373 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2006 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 201736741 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22484 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 80940424 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2007 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 161218235 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20284 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71592012 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2008 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 196858812 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18765 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66665854 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2009 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 123246431 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18250 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65486545 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2010 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 152292780 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21727 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74623498 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2011 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 221528055 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21748 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 73356234 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2012 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 222391448 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19309 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64933573 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2013 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 209017819 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21297 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 70891306 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B-52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2014 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 224248841 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: yourturn
+# Your Turn!
+
+.center.font130[What are the variables in this data set?]
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; prefix &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; number &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Metric &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26914 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25219 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24205 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23306 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25013 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25059 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26581 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21491 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28118 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21859 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20163 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24629 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23024 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23065 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23398 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24166 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29292 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25253 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22204 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2364 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2776 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2166 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3672 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4543 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4754 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5969 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6801 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5677 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5228 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6100 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6266 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4074 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4567 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4638 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4873 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4955 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4076 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5070 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28511 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26034 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25639 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24500 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24387 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24813 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36687 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30230 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25493 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27838 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28206 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22484 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20284 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18765 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18250 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21727 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21748 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19309 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_FH &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21297 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 88594449 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85484074 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85259038 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79323816 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86230284 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86892432 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 89198262 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74485788 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 101397707 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78410415 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 69984142 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85112485 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78084791 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81030579 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81253214 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82471246 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 101238385 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85970844 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 73145048 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3098498 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4323992 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4352750 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7325932 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10192466 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9693145 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11753559 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13877997 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11237771 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10770041 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12843899 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12683783 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8472438 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9299978 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9269549 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9553217 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9370581 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7925422 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9638853 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 99014843 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 88483438 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85983307 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82023136 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 80046278 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81077269 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 117879809 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 108126138 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86288229 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 99083069 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 100297373 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 80940424 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71592012 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66665854 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65486545 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74623498 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 73356234 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64933573 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_Gallons &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 70891306 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72753781 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71297263 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 84026805 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71848336 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58439777 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94946077 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 96458536 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 68650070 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 101895634 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 124816690 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 174627869 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 204486404 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 266109848 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 185902082 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 237413270 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 299215343 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 374028795 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 346054359 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 289357667 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5863355 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6866121 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7891851 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9801821 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9618219 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13949654 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15938278 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15401463 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14158041 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21637940 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36500436 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35775133 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36623261 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27095024 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33674977 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 43326111 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 43322482 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41433404 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46326775 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1996_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 71051283 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1997_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63767578 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1998_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72563957 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1999_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63267336 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2000_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46983727 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2001_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74897262 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2002_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 112111826 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2003_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86410724 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2004_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 72806150 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2005_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 139059663 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2006_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 201736741 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2007_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 161218235 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2008_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 196858812 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2009_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 123246431 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2010_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 152292780 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2011_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 221528055 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2012_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 222391448 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2013_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 209017819 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bomber &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; B &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2014_Cost &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 224248841 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# Tidy data simplifies life
+
+.pull-left[
+
+&lt;br&gt;&lt;br&gt;
+.font130[
+
+A data set is tidy if:
+
+1. Each .blue[__variable__] in in its own .blue[__column__]
+
+2. Each .red[__observation__] is in its own .red[__row__]
+
+3. Each .grey[__value__] is in its own .grey[__cell__]
+
+]
+]
+
+.pull-right[
+&lt;br&gt;&lt;br&gt;
+
+&lt;img src="images/tidy-data-example.png" width="984" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# tidyr &lt;a href="https://tidyr.tidyverse.org/"&gt;&lt;img src="images/tidyr.png" class="stringr-hex", align="right"&gt;&lt;/a&gt;
+
+.pull-left[
+
+You are going to learn four key __tidyr__ functions that allow you to solve the vast majority of your data tidying challenges:
+
+- `gather`: transforms data from wide to long
+
+- `spread`:  transforms data from long to wide
+
+- `separate`:  splits a single column into multiple columns
+
+- `unite`:  combines multiple columns into a single column
+
+]
+
+.pull-right[
+
+&lt;br&gt;
+
+&lt;img src="images/tidyr-large.png" width="50%" height="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Prerequisites
+
+.pull-left[
+
+### Packages
+
+
+```r
+library(tidyverse) # or directly w/library(tidyr)
+```
+
+
+]
+
+.pull-right[
+
+### Data
+
+Follow along in examples:
+
+
+```r
+load("data/tidy_data.RData")
+```
+
+Your turn exercises:
+
+
+```r
+bomber_wide &lt;- read_rds("data/bomber_wide.rds")
+bomber_long &lt;- read_rds("data/bomber_long.rds")
+bomber_prefix &lt;- read_rds("data/bomber_prefix.rds")
+bomber_mess &lt;- read_rds("data/bomber_mess.rds")
+```
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+&lt;img src="images/tidyr-01.png" width="40%" height="40%" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.center[
+
+.blue[cases] %&gt;% gather(key = Year, value = n, 2:4)
+.white.font80[
+.content-box-blue-dark[data frame to transform].content-box-white[name of new key colum] .content-box-white[name of new value column].content-box-white[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+&lt;img src="images/tidyr-02.png" width="40%" height="40%" style="display: block; margin: auto;" /&gt;
+
+cases %&gt;% gather(key = .green[Year], value = n, 2:4)
+.white.font80[
+.content-box-blue[data frame to transform].content-box-green-dark[name of new key colum] .content-box-white[name of new value column].content-box-white[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+&lt;img src="images/tidyr-03.png" width="40%" height="40%" style="display: block; margin: auto;" /&gt;
+
+cases %&gt;% gather(key = Year, value = .red[n], 2:4)
+.white.font80[
+.content-box-blue[data frame to transform].content-box-green[name of new key colum] .content-box-red-dark[name of new value column].content-box-white[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+.center[
+
+&lt;img src="images/tidyr-04.png" width="40%" height="40%" style="display: block; margin: auto;" /&gt;
+
+cases %&gt;% gather(key = Year, value = n, .grey[2:4])
+.white.font80[
+.content-box-blue[data frame to transform].content-box-green[name of new key colum] .content-box-red[name of new value column].content-box-grey-dark[columns to collapse]
+]
+
+]
+
+---
+
+# .red.font120[`gather`]: wide to long
+
+.bold[We can transform wide data to long with .font140.grey[`gather()`]]
+
+
+.pull-left[
+
+.center.font120.bold[Cod Alternatives]
+
+
+```r
+# These all produce the same results:
+cases %&gt;% gather(Year, n, 2:4)
+cases %&gt;% gather(Year, n, `2011`:`2013`)
+cases %&gt;% gather(Year, n, `2011`, `2012`, `2013`)
+cases %&gt;% gather(Year, n, starts_with("20"))
+cases %&gt;% gather(Year, n, -country)
+```
+
+]
+
+.pull-right[
+
+&lt;img src="images/tidyr-04.png" width="1077" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# .red.font120[`spread`]: long to wide
+
+.bold[We can transform long data to wide with .font140.grey[`spread()`]]
+
+.center[
+
+&lt;img src="images/tidyr-spread.png" width="40%" height="40%" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.center[
+
+cases %&gt;% spread(key = .purple[Year], value = .red[n])
+.white.font80[
+.content-box-purple-dark[column to use as new column names] .content-box-red-dark[column to use as values]
+]
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Reshape the `bomber_wide` data from ___wide to long___ and name the new value column "Flying_Hrs"
+
+2. Reshape the `bomber_long` data from ___long to wide___ using the "Output" variable for the new column names and the "Value" variable to fill in values
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 1
+bomber_wide %&gt;%
+  gather(Year, Flying_Hrs, -c(Type, MD))
+##      Type   MD Year Flying_Hrs
+## 1  Bomber  B-1 1996      26914
+## 2  Bomber  B-2 1996       2364
+## 3  Bomber B-52 1996      28511
+## 4  Bomber  B-1 1997      25219
+## 5  Bomber  B-2 1997       2776
+## 6  Bomber B-52 1997      26034
+## 7  Bomber  B-1 1998      24205
+## 8  Bomber  B-2 1998       2166
+## 9  Bomber B-52 1998      25639
+## 10 Bomber  B-1 1999      23306
+## 11 Bomber  B-2 1999       3672
+## 12 Bomber B-52 1999      24500
+## 13 Bomber  B-1 2000      25013
+## 14 Bomber  B-2 2000       4543
+## 15 Bomber B-52 2000      24387
+## 16 Bomber  B-1 2001      25059
+## 17 Bomber  B-2 2001       4754
+## 18 Bomber B-52 2001      24813
+## 19 Bomber  B-1 2002      26581
+## 20 Bomber  B-2 2002       5969
+## 21 Bomber B-52 2002      36687
+## 22 Bomber  B-1 2003      21491
+## 23 Bomber  B-2 2003       6801
+## 24 Bomber B-52 2003      30230
+## 25 Bomber  B-1 2004      28118
+## 26 Bomber  B-2 2004       5677
+## 27 Bomber B-52 2004      25493
+## 28 Bomber  B-1 2005      21859
+## 29 Bomber  B-2 2005       5228
+## 30 Bomber B-52 2005      27838
+## 31 Bomber  B-1 2006      20163
+## 32 Bomber  B-2 2006       6100
+## 33 Bomber B-52 2006      28206
+## 34 Bomber  B-1 2007      24629
+## 35 Bomber  B-2 2007       6266
+## 36 Bomber B-52 2007      22484
+## 37 Bomber  B-1 2008      23024
+## 38 Bomber  B-2 2008       4074
+## 39 Bomber B-52 2008      20284
+## 40 Bomber  B-1 2009      23065
+## 41 Bomber  B-2 2009       4567
+## 42 Bomber B-52 2009      18765
+## 43 Bomber  B-1 2010      23398
+## 44 Bomber  B-2 2010       4638
+## 45 Bomber B-52 2010      18250
+## 46 Bomber  B-1 2011      24166
+## 47 Bomber  B-2 2011       4873
+## 48 Bomber B-52 2011      21727
+## 49 Bomber  B-1 2012      29292
+## 50 Bomber  B-2 2012       4955
+## 51 Bomber B-52 2012      21748
+## 52 Bomber  B-1 2013      25253
+## 53 Bomber  B-2 2013       4076
+## 54 Bomber B-52 2013      19309
+## 55 Bomber  B-1 2014      22204
+## 56 Bomber  B-2 2014       5070
+## 57 Bomber B-52 2014      21297
+```
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Reshape the `bomber_wide` data from ___wide to long___ and name the new value column "Flying_Hrs"
+
+2. Reshape the `bomber_long` data from ___long to wide___ using the "Output" variable for the new column names and the "Value" variable to fill in values
+
+]
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 2
+bomber_long %&gt;%
+  spread(Output, Value)
+##      Type   MD   FY      Cost    FH   Gallons
+## 1  Bomber  B-1 1996  72753781 26914  88594449
+## 2  Bomber  B-1 1997  71297263 25219  85484074
+## 3  Bomber  B-1 1998  84026805 24205  85259038
+## 4  Bomber  B-1 1999  71848336 23306  79323816
+## 5  Bomber  B-1 2000  58439777 25013  86230284
+## 6  Bomber  B-1 2001  94946077 25059  86892432
+## 7  Bomber  B-1 2002  96458536 26581  89198262
+## 8  Bomber  B-1 2003  68650070 21491  74485788
+## 9  Bomber  B-1 2004 101895634 28118 101397707
+## 10 Bomber  B-1 2005 124816690 21859  78410415
+## 11 Bomber  B-1 2006 174627869 20163  69984142
+## 12 Bomber  B-1 2007 204486404 24629  85112485
+## 13 Bomber  B-1 2008 266109848 23024  78084791
+## 14 Bomber  B-1 2009 185902082 23065  81030579
+## 15 Bomber  B-1 2010 237413270 23398  81253214
+## 16 Bomber  B-1 2011 299215343 24166  82471246
+## 17 Bomber  B-1 2012 374028795 29292 101238385
+## 18 Bomber  B-1 2013 346054359 25253  85970844
+## 19 Bomber  B-1 2014 289357667 22204  73145048
+## 20 Bomber  B-2 1996   5863355  2364   3098498
+## 21 Bomber  B-2 1997   6866121  2776   4323992
+## 22 Bomber  B-2 1998   7891851  2166   4352750
+## 23 Bomber  B-2 1999   9801821  3672   7325932
+## 24 Bomber  B-2 2000   9618219  4543  10192466
+## 25 Bomber  B-2 2001  13949654  4754   9693145
+## 26 Bomber  B-2 2002  15938278  5969  11753559
+## 27 Bomber  B-2 2003  15401463  6801  13877997
+## 28 Bomber  B-2 2004  14158041  5677  11237771
+## 29 Bomber  B-2 2005  21637940  5228  10770041
+## 30 Bomber  B-2 2006  36500436  6100  12843899
+## 31 Bomber  B-2 2007  35775133  6266  12683783
+## 32 Bomber  B-2 2008  36623261  4074   8472438
+## 33 Bomber  B-2 2009  27095024  4567   9299978
+## 34 Bomber  B-2 2010  33674977  4638   9269549
+## 35 Bomber  B-2 2011  43326111  4873   9553217
+## 36 Bomber  B-2 2012  43322482  4955   9370581
+## 37 Bomber  B-2 2013  41433404  4076   7925422
+## 38 Bomber  B-2 2014  46326775  5070   9638853
+## 39 Bomber B-52 1996  71051283 28511  99014843
+## 40 Bomber B-52 1997  63767578 26034  88483438
+## 41 Bomber B-52 1998  72563957 25639  85983307
+## 42 Bomber B-52 1999  63267336 24500  82023136
+## 43 Bomber B-52 2000  46983727 24387  80046278
+## 44 Bomber B-52 2001  74897262 24813  81077269
+## 45 Bomber B-52 2002 112111826 36687 117879809
+## 46 Bomber B-52 2003  86410724 30230 108126138
+## 47 Bomber B-52 2004  72806150 25493  86288229
+## 48 Bomber B-52 2005 139059663 27838  99083069
+## 49 Bomber B-52 2006 201736741 28206 100297373
+## 50 Bomber B-52 2007 161218235 22484  80940424
+## 51 Bomber B-52 2008 196858812 20284  71592012
+## 52 Bomber B-52 2009 123246431 18765  66665854
+## 53 Bomber B-52 2010 152292780 18250  65486545
+## 54 Bomber B-52 2011 221528055 21727  74623498
+## 55 Bomber B-52 2012 222391448 21748  73356234
+## 56 Bomber B-52 2013 209017819 19309  64933573
+## 57 Bomber B-52 2014 224248841 21297  70891306
+```
+
+]
+
+---
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+&lt;img src="images/tidyr-separate-1.png" width="90%" height="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+&lt;img src="images/tidyr-separate-2.png" width="90%" height="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.center[
+
+storms %&gt;% separate(col = .purple[date], into = c("year", "month", "day"), sep = "-")
+.white.font80[
+.content-box-purple-dark[column to split] .content-box-white[names of new columns] .content-box-white[separator to split by]
+]
+
+]
+
+---
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+&lt;img src="images/tidyr-separate-3.png" width="90%" height="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.center[
+
+storms %&gt;% separate(col = date, into = .red[c("year", "month", "day")], sep = "-")
+.white.font80[
+.content-box-purple[column to split] .content-box-red-dark[names of new columns] .content-box-white[separator to split by]
+]
+
+]
+---
+
+
+# .red.font120[`separate`]: one to multiple
+
+.bold[We can split a single column into multiple columns using .grey[`separate()`]]
+
+.center[
+
+&lt;img src="images/tidyr-separate-4.png" width="90%" height="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.center[
+
+storms %&gt;% separate(col = date, into = c("year", "month", "day"), sep = .grey["-"])
+.white.font80[
+.content-box-purple[column to split] .content-box-red[names of new columns] .content-box-grey-dark[separator to split by]
+]
+
+]
+
+---
+
+# .red.font120[`unite`]: multiple to one
+
+.bold[We can combine multiple columns into one using .grey[unite()`]]
+
+.center[
+
+&lt;img src="images/tidyr-unite.png" width="90%" height="90%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.center[
+
+storms %&gt;% unite(col = .purple[date], .red[c("year", "month", "day")], sep = "-")
+.white.font80[
+.content-box-purple-dark[new column name] .content-box-red-dark[colums to combine] .content-box-grey-dark[separator to use]
+]
+
+]
+
+---
+
+class: yourturn
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Reshape the `bomber_prefix` data so that the "prefix" and "number" columns are combined into a “MD” variable with “-“ separator
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+bomber_prefix %&gt;%
+  unite(col = MD, prefix, number, sep = "-")
+##       Type   MD   FY  Output     Value
+## 1   Bomber  B-1 1996      FH     26914
+## 2   Bomber  B-1 1997      FH     25219
+## 3   Bomber  B-1 1998      FH     24205
+## 4   Bomber  B-1 1999      FH     23306
+## 5   Bomber  B-1 2000      FH     25013
+## 6   Bomber  B-1 2001      FH     25059
+## 7   Bomber  B-1 2002      FH     26581
+## 8   Bomber  B-1 2003      FH     21491
+## 9   Bomber  B-1 2004      FH     28118
+## 10  Bomber  B-1 2005      FH     21859
+## 11  Bomber  B-1 2006      FH     20163
+## 12  Bomber  B-1 2007      FH     24629
+## 13  Bomber  B-1 2008      FH     23024
+## 14  Bomber  B-1 2009      FH     23065
+## 15  Bomber  B-1 2010      FH     23398
+## 16  Bomber  B-1 2011      FH     24166
+## 17  Bomber  B-1 2012      FH     29292
+## 18  Bomber  B-1 2013      FH     25253
+## 19  Bomber  B-1 2014      FH     22204
+## 20  Bomber  B-2 1996      FH      2364
+## 21  Bomber  B-2 1997      FH      2776
+## 22  Bomber  B-2 1998      FH      2166
+## 23  Bomber  B-2 1999      FH      3672
+## 24  Bomber  B-2 2000      FH      4543
+## 25  Bomber  B-2 2001      FH      4754
+## 26  Bomber  B-2 2002      FH      5969
+## 27  Bomber  B-2 2003      FH      6801
+## 28  Bomber  B-2 2004      FH      5677
+## 29  Bomber  B-2 2005      FH      5228
+## 30  Bomber  B-2 2006      FH      6100
+## 31  Bomber  B-2 2007      FH      6266
+## 32  Bomber  B-2 2008      FH      4074
+## 33  Bomber  B-2 2009      FH      4567
+## 34  Bomber  B-2 2010      FH      4638
+## 35  Bomber  B-2 2011      FH      4873
+## 36  Bomber  B-2 2012      FH      4955
+## 37  Bomber  B-2 2013      FH      4076
+## 38  Bomber  B-2 2014      FH      5070
+## 39  Bomber B-52 1996      FH     28511
+## 40  Bomber B-52 1997      FH     26034
+## 41  Bomber B-52 1998      FH     25639
+## 42  Bomber B-52 1999      FH     24500
+## 43  Bomber B-52 2000      FH     24387
+## 44  Bomber B-52 2001      FH     24813
+## 45  Bomber B-52 2002      FH     36687
+## 46  Bomber B-52 2003      FH     30230
+## 47  Bomber B-52 2004      FH     25493
+## 48  Bomber B-52 2005      FH     27838
+## 49  Bomber B-52 2006      FH     28206
+## 50  Bomber B-52 2007      FH     22484
+## 51  Bomber B-52 2008      FH     20284
+## 52  Bomber B-52 2009      FH     18765
+## 53  Bomber B-52 2010      FH     18250
+## 54  Bomber B-52 2011      FH     21727
+## 55  Bomber B-52 2012      FH     21748
+## 56  Bomber B-52 2013      FH     19309
+## 57  Bomber B-52 2014      FH     21297
+## 58  Bomber  B-1 1996 Gallons  88594449
+## 59  Bomber  B-1 1997 Gallons  85484074
+## 60  Bomber  B-1 1998 Gallons  85259038
+## 61  Bomber  B-1 1999 Gallons  79323816
+## 62  Bomber  B-1 2000 Gallons  86230284
+## 63  Bomber  B-1 2001 Gallons  86892432
+## 64  Bomber  B-1 2002 Gallons  89198262
+## 65  Bomber  B-1 2003 Gallons  74485788
+## 66  Bomber  B-1 2004 Gallons 101397707
+## 67  Bomber  B-1 2005 Gallons  78410415
+## 68  Bomber  B-1 2006 Gallons  69984142
+## 69  Bomber  B-1 2007 Gallons  85112485
+## 70  Bomber  B-1 2008 Gallons  78084791
+## 71  Bomber  B-1 2009 Gallons  81030579
+## 72  Bomber  B-1 2010 Gallons  81253214
+## 73  Bomber  B-1 2011 Gallons  82471246
+## 74  Bomber  B-1 2012 Gallons 101238385
+## 75  Bomber  B-1 2013 Gallons  85970844
+## 76  Bomber  B-1 2014 Gallons  73145048
+## 77  Bomber  B-2 1996 Gallons   3098498
+## 78  Bomber  B-2 1997 Gallons   4323992
+## 79  Bomber  B-2 1998 Gallons   4352750
+## 80  Bomber  B-2 1999 Gallons   7325932
+## 81  Bomber  B-2 2000 Gallons  10192466
+## 82  Bomber  B-2 2001 Gallons   9693145
+## 83  Bomber  B-2 2002 Gallons  11753559
+## 84  Bomber  B-2 2003 Gallons  13877997
+## 85  Bomber  B-2 2004 Gallons  11237771
+## 86  Bomber  B-2 2005 Gallons  10770041
+## 87  Bomber  B-2 2006 Gallons  12843899
+## 88  Bomber  B-2 2007 Gallons  12683783
+## 89  Bomber  B-2 2008 Gallons   8472438
+## 90  Bomber  B-2 2009 Gallons   9299978
+## 91  Bomber  B-2 2010 Gallons   9269549
+## 92  Bomber  B-2 2011 Gallons   9553217
+## 93  Bomber  B-2 2012 Gallons   9370581
+## 94  Bomber  B-2 2013 Gallons   7925422
+## 95  Bomber  B-2 2014 Gallons   9638853
+## 96  Bomber B-52 1996 Gallons  99014843
+## 97  Bomber B-52 1997 Gallons  88483438
+## 98  Bomber B-52 1998 Gallons  85983307
+## 99  Bomber B-52 1999 Gallons  82023136
+## 100 Bomber B-52 2000 Gallons  80046278
+## 101 Bomber B-52 2001 Gallons  81077269
+## 102 Bomber B-52 2002 Gallons 117879809
+## 103 Bomber B-52 2003 Gallons 108126138
+## 104 Bomber B-52 2004 Gallons  86288229
+## 105 Bomber B-52 2005 Gallons  99083069
+## 106 Bomber B-52 2006 Gallons 100297373
+## 107 Bomber B-52 2007 Gallons  80940424
+## 108 Bomber B-52 2008 Gallons  71592012
+## 109 Bomber B-52 2009 Gallons  66665854
+## 110 Bomber B-52 2010 Gallons  65486545
+## 111 Bomber B-52 2011 Gallons  74623498
+## 112 Bomber B-52 2012 Gallons  73356234
+## 113 Bomber B-52 2013 Gallons  64933573
+## 114 Bomber B-52 2014 Gallons  70891306
+## 115 Bomber  B-1 1996    Cost  72753781
+## 116 Bomber  B-1 1997    Cost  71297263
+## 117 Bomber  B-1 1998    Cost  84026805
+## 118 Bomber  B-1 1999    Cost  71848336
+## 119 Bomber  B-1 2000    Cost  58439777
+## 120 Bomber  B-1 2001    Cost  94946077
+## 121 Bomber  B-1 2002    Cost  96458536
+## 122 Bomber  B-1 2003    Cost  68650070
+## 123 Bomber  B-1 2004    Cost 101895634
+## 124 Bomber  B-1 2005    Cost 124816690
+## 125 Bomber  B-1 2006    Cost 174627869
+## 126 Bomber  B-1 2007    Cost 204486404
+## 127 Bomber  B-1 2008    Cost 266109848
+## 128 Bomber  B-1 2009    Cost 185902082
+## 129 Bomber  B-1 2010    Cost 237413270
+## 130 Bomber  B-1 2011    Cost 299215343
+## 131 Bomber  B-1 2012    Cost 374028795
+## 132 Bomber  B-1 2013    Cost 346054359
+## 133 Bomber  B-1 2014    Cost 289357667
+## 134 Bomber  B-2 1996    Cost   5863355
+## 135 Bomber  B-2 1997    Cost   6866121
+## 136 Bomber  B-2 1998    Cost   7891851
+## 137 Bomber  B-2 1999    Cost   9801821
+## 138 Bomber  B-2 2000    Cost   9618219
+## 139 Bomber  B-2 2001    Cost  13949654
+## 140 Bomber  B-2 2002    Cost  15938278
+## 141 Bomber  B-2 2003    Cost  15401463
+## 142 Bomber  B-2 2004    Cost  14158041
+## 143 Bomber  B-2 2005    Cost  21637940
+## 144 Bomber  B-2 2006    Cost  36500436
+## 145 Bomber  B-2 2007    Cost  35775133
+## 146 Bomber  B-2 2008    Cost  36623261
+## 147 Bomber  B-2 2009    Cost  27095024
+## 148 Bomber  B-2 2010    Cost  33674977
+## 149 Bomber  B-2 2011    Cost  43326111
+## 150 Bomber  B-2 2012    Cost  43322482
+## 151 Bomber  B-2 2013    Cost  41433404
+## 152 Bomber  B-2 2014    Cost  46326775
+## 153 Bomber B-52 1996    Cost  71051283
+## 154 Bomber B-52 1997    Cost  63767578
+## 155 Bomber B-52 1998    Cost  72563957
+## 156 Bomber B-52 1999    Cost  63267336
+## 157 Bomber B-52 2000    Cost  46983727
+## 158 Bomber B-52 2001    Cost  74897262
+## 159 Bomber B-52 2002    Cost 112111826
+## 160 Bomber B-52 2003    Cost  86410724
+## 161 Bomber B-52 2004    Cost  72806150
+## 162 Bomber B-52 2005    Cost 139059663
+## 163 Bomber B-52 2006    Cost 201736741
+## 164 Bomber B-52 2007    Cost 161218235
+## 165 Bomber B-52 2008    Cost 196858812
+## 166 Bomber B-52 2009    Cost 123246431
+## 167 Bomber B-52 2010    Cost 152292780
+## 168 Bomber B-52 2011    Cost 221528055
+## 169 Bomber B-52 2012    Cost 222391448
+## 170 Bomber B-52 2013    Cost 209017819
+## 171 Bomber B-52 2014    Cost 224248841
+```
+
+]
+
+---
+
+class: clear, center, middle
+
+background-image: url(images/please-no-more.gif)
+background-size: cover
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+.font300.bold.white[One last challenge!]
+
+---
+
+class: yourturn
+
+# Big Challenge
+
+.pull-left[
+
+### Challenge
+
+.font120[Reshape the __bomber_mess__ data so it looks like:]
+
+
+```
+## # A tibble: 57 x 6
+##    Type   MD    FY         Cost    FH   Gallons
+##    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;     &lt;int&gt; &lt;int&gt;     &lt;int&gt;
+##  1 Bomber B-1   1996   72753781 26914  88594449
+##  2 Bomber B-1   1997   71297263 25219  85484074
+##  3 Bomber B-1   1998   84026805 24205  85259038
+##  4 Bomber B-1   1999   71848336 23306  79323816
+##  5 Bomber B-1   2000   58439777 25013  86230284
+##  6 Bomber B-1   2001   94946077 25059  86892432
+##  7 Bomber B-1   2002   96458536 26581  89198262
+##  8 Bomber B-1   2003   68650070 21491  74485788
+##  9 Bomber B-1   2004  101895634 28118 101397707
+## 10 Bomber B-1   2005  124816690 21859  78410415
+## # ... with 47 more rows
+```
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+bomber_mess %&gt;%
+  unite(col = MD, prefix:number, sep = "-") %&gt;%
+  separate(Metric, into = c("FY", "Output")) %&gt;%
+  spread(Output, Value) %&gt;%
+  as_tibble()
+## # A tibble: 57 x 6
+##    Type   MD    FY         Cost    FH   Gallons
+##    &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;     &lt;int&gt; &lt;int&gt;     &lt;int&gt;
+##  1 Bomber B-1   1996   72753781 26914  88594449
+##  2 Bomber B-1   1997   71297263 25219  85484074
+##  3 Bomber B-1   1998   84026805 24205  85259038
+##  4 Bomber B-1   1999   71848336 23306  79323816
+##  5 Bomber B-1   2000   58439777 25013  86230284
+##  6 Bomber B-1   2001   94946077 25059  86892432
+##  7 Bomber B-1   2002   96458536 26581  89198262
+##  8 Bomber B-1   2003   68650070 21491  74485788
+##  9 Bomber B-1   2004  101895634 28118 101397707
+## 10 Bomber B-1   2005  124816690 21859  78410415
+## # ... with 47 more rows
+```
+
+]
+
+---
+
+# Questions?
+
+&lt;br&gt;
+
+&lt;img src="images/questions.png" width="450" height="450" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
