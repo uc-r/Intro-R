@@ -539,6 +539,18 @@ background-size: cover
 
 ---
 
+# Leverage cheat sheet
+
+.font130.center[Use __tidyr__ tips on back of Data Import cheat sheet]
+
+.font120.center[[hrstudio.com/resources/cheatsheets](https://www.rstudio.com/resources/cheatsheets/)]
+
+```{r tidyr-cheat-sheet, echo=FALSE}
+knitr::include_graphics("images/cheatsheet-tidyr.png")
+```
+
+---
+
 class: yourturn
 
 # Big Challenge
@@ -572,6 +584,35 @@ bomber_mess %>%
   spread(Output, Value) %>%
   as_tibble()
 ```
+
+]
+
+---
+
+# Key things to remember
+
+.pull-left[
+
+<br>
+
+* .bold[`gather`]: reshape wide data to long
+
+* .bold[`spread`]: reshape long data to wide
+
+* .bold[`separate`]: reshape a single variable into multiple
+
+* .bold[`unite`]: reshape multiple variables into one
+
+
+]
+
+.pull-right[
+
+<br><br>
+```{r, echo=FALSE}
+knitr::include_graphics("images/information-overload.jpg")
+```
+
 
 ]
 
