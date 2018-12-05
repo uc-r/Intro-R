@@ -625,3 +625,4 @@ knitr::include_graphics("images/information-overload.jpg")
 ```{r questions-tidyr, echo=FALSE, out.height="450", out.width="450"}
 knitr::include_graphics("images/questions.png")
 ```
+

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>An .red[Incomplete] Introduction to R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Brad Boehmke" />
+    <meta name="date" content="2018-12-13" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: clear, center, middle
+
+background-image: url(images/relational-nycflights.png)
+background-size: cover
+
+.font300.bold[Relational Data]
+
+---
+
+# What is relational data
+
+.pull-left[
+&lt;br&gt;
+
+_.font120[“It’s rare that a data analysis involves only a single table of data. .blue[Typically you have many tables of data, and you must combine them] to answer the questions that you’re interested in.”_ 
+
+--- Garrett Grolemund
+
+]
+]
+
+.pull-right[
+&lt;br&gt;
+
+&lt;img src="images/relational-nycflights.png" width="1056" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Types of joins
+
+To work with relational data you need join operations that work with pairs of tables.  There are two families of verbs designed to work with relational data:
+
+.pull-left[
+
+* __Mutating joins__: add new variables to one data frame by matching observations in another.
+
+* __Filter joins__:  filter observations from one data frame based on whether or not they match an observation in the other table.
+
+]
+
+.pull-right[
+
+&lt;img src="images/dplyr.png" width="60%" height="60%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Prerequisites
+
+.pull-left[
+
+### Packages
+
+
+```r
+library(tidyverse) # or library(dplyr)
+```
+
+]
+
+.pull-right[
+
+### Example data
+
+
+```r
+x &lt;- tribble(
+  ~key, ~val_x,
+     1, "x1",
+     2, "x2",
+     3, "x3"
+)
+y &lt;- tribble(
+  ~key, ~val_y,
+     1, "y1",
+     2, "y2",
+     4, "y3"
+)
+```
+
+&lt;img src="images/join-setup.png" width="35%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Prerequisites
+
+.pull-left[
+
+### Exercise data
+
+
+```r
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = F) %&gt;% as_tibble()
+products     &lt;- data.table::fread("data/products.csv", data.table = F) %&gt;% as_tibble()
+households   &lt;- data.table::fread("data/households.csv", data.table = F) %&gt;% as_tibble()
+```
+
+]
+
+.pull-right[
+
+### Exercise data connections
+
+&lt;img src="images/customer-data-relations.png" width="3421" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Keys <span>&lt;i class="fas  fa-key faa-FALSE animated " style=" color:red;"&gt;&lt;/i&gt;</span>
+
+.font120[
+
+- __keys__ are variables that connect pairs of tables
+- A primary key uniquely identifies an observation in its own table
+- A foreign key uniquely identifies an observation in another table
+
+]
+--
+
+.pull-left[
+
+.center.font120.bold[Example data keys]
+
+&lt;img src="images/example-data-keys.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-left[
+
+.center.font120.bold[Exercise data keys]
+
+&lt;img src="images/customer-data-relations.png" width="3421" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: clear, center, middle
+
+.font300.bold[Mutating Joins]
+
+
+---
+
+# Inner join
+
+&lt;br&gt;
+.font120[
+
+- Simplest type of join
+- Keeps all observations where key values match
+- Discards observatoins that don't match
+- Add variables from y to x
+]
+
+--
+
+.pull-left[
+
+
+```r
+x %&gt;% inner_join(y, by = "key")
+## # A tibble: 2 x 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2
+```
+
+]
+
+.pull-right[
+
+&lt;img src="images/join-inner.png" width="901" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Outer joins
+
+&lt;br&gt;
+.font120[
+
+- Outer joins keep ___all___ observations that appear in at least one of the tables
+- There are 3 types of outer joins:
+]
+
+--
+
+.pull-left[
+
+.center.font120[.blue.bold[left join]: keeps all observations in x]
+
+
+```r
+x %&gt;% left_join(y, by = "key")
+## # A tibble: 3 x 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2   
+## 3     3 x3    &lt;NA&gt;
+```
+
+]
+
+.pull-right[
+
+&lt;img src="images/join-left.png" width="1029" style="display: block; margin: auto;" /&gt;
+
+]
+
+&lt;br&gt;
+
+.center[.content-box-grey[.bold[Note how missing values get filled in with `NA`]]]
+
+---
+
+# Outer joins
+
+&lt;br&gt;
+.font120[
+
+- Outer joins keep ___all___ observations that appear in at least one of the tables
+- There are 3 types of outer joins:
+]
+
+.pull-left[
+
+.center.font120[.blue.bold[right join]: keeps all observations in y]
+
+
+```r
+x %&gt;% right_join(y, by = "key")
+## # A tibble: 3 x 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2   
+## 3     4 &lt;NA&gt;  y3
+```
+
+]
+
+.pull-right[
+
+&lt;img src="images/join-right.png" width="1048" style="display: block; margin: auto;" /&gt;
+
+]
+
+&lt;br&gt;
+
+.center[.content-box-grey[.bold[Note how missing values get filled in with `NA`]]]
+
+---
+
+# Outer joins
+
+&lt;br&gt;
+.font120[
+
+- Outer joins keep ___all___ observations that appear in at least one of the tables
+- There are 3 types of outer joins:
+]
+
+
+.pull-left[
+
+.center.font120[.blue.bold[full join]: keeps all observations in x &amp; y]
+
+
+```r
+x %&gt;% full_join(y, by = "key")
+## # A tibble: 4 x 3
+##     key val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2   
+## 3     3 x3    &lt;NA&gt; 
+## 4     4 &lt;NA&gt;  y3
+```
+
+]
+
+.pull-right[
+
+&lt;img src="images/join-full.png" width="1045" style="display: block; margin: auto;" /&gt;
+
+]
+
+&lt;br&gt;
+
+.center[.content-box-grey[.bold[Note how missing values get filled in with `NA`]]]
+
+---
+
+# Outer joins
+
+&lt;br&gt;
+.font120[
+
+- Outer joins keep ___all___ observations that appear in at least one of the tables
+- There are 3 types of outer joins:
+]
+
+.pull-left[
+
+&lt;br&gt;
+.font120[
+- left join: keeps all observations in x
+- right join: keeps all observations in y
+- full join: keeps all observations in x &amp; y
+] 
+]
+
+.pull-right[
+
+&lt;img src="images/join-outer.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Join the transactions and products data using `inner_join()`
+
+2. Join the transactions, products, and households data using two `inner_join()`s
+
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+.code70[
+
+
+```r
+# 1
+trans_prod &lt;- transactions %&gt;% inner_join(products, by = "product_num")
+
+# 2
+combined &lt;- transactions %&gt;% 
+  inner_join(products, by = "product_num") %&gt;%
+  inner_join(households, by = "hshd_num")
+
+head(combined)
+## # A tibble: 6 x 21
+##   basket_num hshd_num purchase_ product_num spend units store_r week_num
+##        &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;      &lt;int&gt;
+## 1     100369     3708 09-DEC-17       93466  3.18     2 SOUTH        101
+## 2     891779      719 20-SEP-17       85201  3.49     1 CENTRAL       90
+## 3     609562     4995 07-MAR-17     2507006  0.89     1 CENTRAL       62
+## 4     760220       44 19-JUN-17     4819172  8.99     1 SOUTH         77
+## 5     869525     3937 04-SEP-17     1055355  1        1 SOUTH         88
+## 6     922989     2356 13-OCT-17     4285485  2.87     1 WEST          93
+## # ... with 13 more variables: year &lt;int&gt;, department &lt;chr&gt;,
+## #   commodity &lt;chr&gt;, brand_ty &lt;chr&gt;, x5 &lt;chr&gt;, l &lt;chr&gt;, age_range &lt;chr&gt;,
+## #   marital &lt;chr&gt;, income_range &lt;chr&gt;, homeowner &lt;chr&gt;,
+## #   hshd_composition &lt;chr&gt;, hh_size &lt;chr&gt;, children &lt;chr&gt;
+```
+
+]
+]
+
+---
+class: clear, center, middle
+
+.font300.bold[Filtering Joins]
+
+---
+
+# Filtering joins
+
+&lt;br&gt;
+.font120[
+
+* Filtering joins affect the observations rather than adding variables
+
+* Use when wanting to filter one data set based on foreign key variables in another data set
+
+* There are 2 types of filtering joins:
+
+   - .bold.font120[`semi_join()`]
+   - .bold.font120[`anti_join()`]
+   
+]   
+
+---
+
+# Filtering joins
+
+
+.pull-left[
+
+.font110[.bold.blue[Semi joins] keep all observations in x that have a match in y]
+
+
+```r
+x %&gt;% semi_join(y, by = "key")
+## # A tibble: 2 x 2
+##     key val_x
+##   &lt;dbl&gt; &lt;chr&gt;
+## 1     1 x1   
+## 2     2 x2
+```
+
+
+&lt;img src="images/join-semi.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-right[
+
+.font110[.bold.blue[Anti joins] keep all observations that don't have a match]
+
+
+```r
+x %&gt;% anti_join(y, by = "key")
+## # A tibble: 1 x 2
+##     key val_x
+##   &lt;dbl&gt; &lt;chr&gt;
+## 1     3 x3
+```
+
+
+&lt;img src="images/join-anti.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+class: yourturn
+
+# Your Turn!
+
+.pull-left[
+
+### Challenge
+
+1. Of the 5000 households in our __households__ data, how many do we transaction data for?
+
+2. Of the 151,141 products in our __products__ data, how many are not represented in our __transactions__ data?
+
+&lt;br&gt;
+
+.center[_Hint: after you use the right join functions, pipe the result into `tally()`_]
+]
+
+--
+
+.pull-right[
+
+### Solution
+
+
+```r
+# 1
+households %&gt;% 
+* semi_join(transactions) %&gt;%
+  tally()
+## # A tibble: 1 x 1
+##       n
+##   &lt;int&gt;
+## 1  4509
+
+# 2
+products %&gt;%
+* anti_join(transactions) %&gt;%
+  tally()
+## # A tibble: 1 x 1
+##       n
+##   &lt;int&gt;
+## 1 66247
+```
+
+]
+
+---
+
+# Quick tip: defining keys
+
+.center.font130[What if our key names don’t match?]
+
+.pull-left[
+
+.center.font120.bold[x]
+
+&lt;table class="table" style="font-size: 25px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; key1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; val_x &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; x1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; x2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; x3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+.pull-right[
+
+.center.font120.bold[y]
+
+&lt;table class="table" style="font-size: 25px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; key2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; val_y &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; y1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; y2 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1in; "&gt; y3 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+&lt;br&gt;
+
+--
+
+
+```r
+x %&gt;% inner_join(y, by = c("key1" = "key2"))
+## # A tibble: 2 x 3
+##    key1 val_x val_y
+##   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;
+## 1     1 x1    y1   
+## 2     2 x2    y2
+```
+
+---
+
+# Things to remember
+
+&lt;br&gt;
+
+* .bold[mutating joins]: add new variables to one data frame by matching key values in another. Includes `inner_join`, `left_join`, `right_join`, `full_join`
+
+* .bold[filtering joins]: filter observations from one data frame based on whether or not they match a key value in the other table. Includes `semi_join` and `anti_join`
+
+---
+class: clear, center, middle
+
+background-image: url(images/your-killing-me-smalls.webp)
+background-size: cover
+
+.font300.bold.white[One last challenge!]
+
+---
+class: yourturn
+
+# Your Turn!
+
+### Challenge
+
+Compute the total `spend` by `commodity` for household (`hshd_num`) 3708.  See if you can plot the results in rank order. 
+
+--
+
+### Solution
+
+.pull-left[
+
+
+```r
+households %&gt;%
+  filter(hshd_num == 3708) %&gt;%
+  inner_join(transactions) %&gt;%
+  inner_join(products) %&gt;%
+  group_by(commodity) %&gt;%
+  summarize(total = sum(spend, na.rm = TRUE)) %&gt;%
+  ggplot(aes(total, reorder(commodity, total))) +
+  geom_point()
+```
+
+]
+
+.pull-right[
+
+&lt;img src="day-2d-joins_files/figure-html/final-challenge-plot-1.png" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Questions?
+
+&lt;br&gt;
+
+&lt;img src="images/questions.png" width="450" height="450" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
