@@ -1,0 +1,626 @@
+---
+title: "An .red[Incomplete] Introduction to R"
+subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
+author: "Brad Boehmke"
+date: "2018-12-13"
+output:
+  xaringan::moon_reader:
+    css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
+    self_contained: false
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false  
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+# Set global R options
+options(htmltools.dir.version = FALSE, servr.daemon = TRUE)
+
+# Set global knitr chunk options
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  cache = TRUE,
+  error = FALSE,
+  message = FALSE, 
+  warning = FALSE, 
+  collapse = TRUE 
+)
+
+# This is good for getting the ggplot background consistent with
+# the html background color
+library(ggplot2)
+thm <- theme_bw()
+theme_set(thm)
+```
+
+class: clear, center, middle
+
+background-image: url(images/building-blocks.png)
+background-size: cover
+
+.font300.bold[Data Structures]
+
+---
+
+# Getting exposure
+
+<br>
+
+.pull-left[
+
+* This section is meant to give you exposure to the main data structures used in R
+
+* As you become more familiar with R you will, inevitably, become more familiar with most of these structures
+
+* However, you will not be required to apply the methods you see in this afternoon's case study
+
+
+]
+
+--
+
+.pull-right[
+
+.center.red[`r anicon::nia("There will be no Your Turn's or Challenges", animate = "flash")`]
+
+```{r no-challenges, echo=FALSE}
+knitr::include_graphics("images/no-challenge.gif")
+```
+
+
+]
+
+---
+
+# 5 Fundamental Data Structures
+
+```{r structures, echo=FALSE}
+knitr::include_graphics("images/data-structures.png")
+```
+
+---
+class: clear, center, middle
+
+.font300.bold[Atomic Vectors]
+
+---
+# Properties
+
+.pull-left[
+
+* .blue[1 dimension]
+
+* Only holds .blue[homogenous] data types
+
+* If you try to combine non-homogeneous types, .blue[coercion] occurs
+   - Non-characters become characters
+   - Logicals become numerics
+   - Factors are funky
+]
+
+.pull-right[
+
+```{r atomic-vector-examples}
+letters
+
+1:12
+
+sample(c(TRUE, FALSE), 10, replace = TRUE)
+
+# Coercion --------------------------------------------------------
+# Non-characters become characters
+c("a", "b", 1:2)
+
+# Logicals become numerics
+c(1:2, TRUE)
+
+# Factors are funky
+c(factor("a"), 1)
+c(factor("a"), "b")
+```
+
+]
+
+---
+
+# Application
+
+.scrollable90[
+.pull-left[
+
+* Vectors are the fundamental building block for all other data types
+
+* You will use them on a daily basis
+   - For filtering
+   - For naming columns
+   - Creating factor levels
+   - Holding values for comparison
+   - ...
+]   
+
+.pull-right[
+
+```{r echo=FALSE}
+library(tidyverse)
+```
+
+
+```{r vector-application}
+# for filtering
+dplyr::filter(warpbreaks, tension %in% c("L", "H")) %>% as_tibble()
+
+# for naming
+names(warpbreaks) <- c("Variable1", "Variable2", "Variable3")
+```
+
+]
+]
+
+---
+
+# Indexing
+
+We can access specific elements of a vector with brackets:
+
+
+.center.blue[`vector[element]`]
+
+.code70[
+
+```{r}
+# some vector
+v <- letters[1:10]
+v
+```
+
+]
+
+--
+
+.code70[
+
+```{r}
+# index by element number
+v[1]
+v[c(1, 5, 10)]
+v[-c(1, 5, 10)]
+```
+
+]
+
+--
+
+.code70[
+
+```{r}
+
+# if the vector is named we can index by name
+names(v) <- LETTERS[1:10]
+v
+
+v[c("A", "A", "B")]
+```
+
+]
+
+---
+class: clear, center, middle
+
+.font300.bold[Matrices]
+
+---
+
+# Properties
+
+.pull-left[
+
+* .blue[2 dimensions]
+   - rows
+   - columns
+
+* Can only contain .blue[homogenous] data
+
+* All rows & columns must be of equal length
+
+]
+
+.pull-right[
+
+```{r matrix-example}
+# numeric matrix
+set.seed(123)
+v1 <- sample(1:10, 25, replace = TRUE)
+m1 <- matrix(v1, nrow = 5)
+m1
+
+# character matrix
+m2 <- matrix(letters[1:9], nrow = 3)
+m2
+```
+
+]
+
+---
+
+# Application
+
+.pull-left[
+
+* Matrix algebra
+
+* I use them rarely accept when a certain result is provided in matrix form (i.e. correlation matrices)
+
+]
+
+.pull-right[
+
+```{r matrix-application}
+# correlation matrix
+cor(mtcars)[, 1:5]
+
+# matrix multiplication
+m3 <- matrix(1:6, nrow = 2)
+m4 <- matrix(6:11, ncol = 2)
+m3 %*% m4
+```
+
+
+]
+
+---
+
+# Indexing
+
+We can access specific elements of a matrix with brackets:
+
+.center.blue[`matrix[row, col]`]
+
+```{r}
+m5 <- matrix(1:15, nrow = 3)
+
+# first element, third colum
+m5[1, 3]
+```
+
+--
+
+```{r}
+# first three elements of all columns
+m5[1:2, ]
+```
+
+--
+
+```{r}
+# Using names to access rows and columns
+colnames(m5) <- letters[1:5]
+rownames(m5) <- LETTERS[1:3]
+m5[c("A", "C"), c("b", "d")]
+```
+
+---
+class: clear, center, middle
+
+.font300.bold[Arrays]
+
+---
+# Properties
+
+.pull-left[
+
+* Similar to a matrix but...
+
+* has .blue[3 dimensions]
+   - rows
+   - columns
+   - depth
+
+* An array with depth = 1 is the same as a matrix
+
+]
+
+.pull-right[
+
+```{r array-example}
+# depth = 2
+array(1:25, c(3, 5, 2))
+
+# depth = 1 (same as a matrix)
+array(1:15, c(3, 5, 1))
+```
+
+]
+
+---
+
+# Application
+
+<br>
+
+* Generally arrays are used sparingly unless you get into deep learning modeling with __Keras__ and __TensorFlow__.  There are a few machine learning packages that provide arrays as outputs (i.e. __glmnet__) but that is the exception rather than the rule.
+
+* For now, you should not be too concerned about mastering this data structure
+
+---
+
+# Indexing
+
+We can access specific elements of an array with brackets:
+
+.center.blue[`array[row, col, depth]`]
+
+```{r}
+a1 <- array(1:25, c(3, 5, 2))
+
+# rows 1 & 2, columns 2-4 of the second matrix
+a1[1:2, 2:4, 2]
+```
+
+--
+
+```{r}
+# first row and all columns of both matrices (converts result into a single matrix)
+a1[1, , ]
+```
+
+---
+class: clear, center, middle
+
+.font300.bold[Data Frames]
+
+---
+
+# Properties
+
+.pull-left[
+
+
+* Most common data structure you'll work with
+
+* .blue[Spreadsheet style] data
+
+* .blue[2 dimensions]
+   - rows
+   - columns
+
+* Can contain .blue[heterogenous data]
+
+* All columns must be of equal length
+
+* A .blue[tibble] is just a .blue[slightly modified data frame]
+
+]
+
+.pull-right[
+
+```{r}
+completejourney::transactions
+```
+
+]
+
+---
+
+# Application
+
+<br>
+
+* holding imported data
+
+* exploratory data analysis
+
+---
+
+# Indexing
+
+We can access specific elements of a data frame with brackets...
+
+.center.blue[`data.frame[row, col]`]
+
+...but most of your indexing during EDA will likely be done with __dplyr__ functions.
+
+
+```{r}
+# first 10 rows for 3 columns
+mpg[1:10, c("manufacturer", "model", "cty")]
+
+```
+
+
+---
+
+# Indexing
+
+For data frames, we can actually extract a single column 3 different ways:
+
+* preserve: `data.frame[column]`
+* simplify: `data.frame[[column]]`
+* simplify: `data.frame$column`
+
+.pull-left-30[
+
+```{r}
+# preserve output as data frame
+mpg["cty"]
+```
+
+]
+--
+.pull-left-30[
+
+```{r}
+# simplify output as a vector
+mpg[["cty"]]
+```
+
+]
+--
+.pull-left-30[
+
+```{r}
+# simplify output as a vector
+mpg$cty
+```
+
+]
+
+---
+class: clear, center, middle
+
+.font300.bold[Lists]
+
+---
+
+# Properties
+
+.pull-left[
+
+* .blue[1 dimension]
+
+* Acts like a vector (technically it is a vector) but where .blue[each element can hold any other data structure] (i.e. vectors, data frames, matrices, and even lists)
+
+* Can only contain .blue[heterogeneous data]
+
+* Think of it like a shopping cart that just holds a bunch of other structures
+
+]
+
+.pull-right[
+
+```{r}
+l1 <- list(item1 = v1, item2 = m1, item3 = mpg)
+l1
+```
+
+
+]
+
+---
+
+# Application
+
+<br>
+
+* Many statistical modeling results come in the form of lists
+
+* You need to know how to extract parts of a list to access model results
+
+* As you start using R more, and possible start creating your own classes, you will use lists to hold different information
+
+---
+
+# Indexing
+
+Like data frames, we can extract a single list item 3 different ways:
+
+* preserve: `list[column]`
+* simplify: `list[[column]]`
+* simplify: `list$column`
+
+.pull-left-30[
+
+```{r}
+# preserve output as a list
+a <- l1["item1"]
+
+is.list(a)
+is.atomic(a)
+
+a
+```
+
+]
+--
+.pull-left-30[
+
+```{r}
+# simplify output as a vector
+b <- l1[["item1"]]
+
+is.list(b)
+is.atomic(b)
+
+b
+```
+
+]
+--
+.pull-left-30[
+
+```{r}
+# simplify output as a vector
+c <- l1$item1
+
+is.list(c)
+is.atomic(c)
+
+c
+```
+
+]
+
+---
+
+# Indexing
+
+With lists, we often combine previous indexing procedures to extract information.
+
+.pull-left[
+
+```{r}
+# a linear model
+model <- lm(mpg ~ ., data = mtcars)
+
+# results are in a list
+str(model)
+```
+
+]
+
+.pull-right[
+
+```{r}
+# get the first ten residuals
+model[["residuals"]][1:10]
+
+# get the coefficient for the wt variable
+model$coefficients["wt"]
+```
+
+]
+
+---
+
+# Take away
+
+<br>
+<br>
+
+
+* Get familiar with vectors and data frames / tibbles as quickly as possible
+
+* Then start getting familiar with lists
+
+* Learn matrices and arrays as you see fit
+
+* Get familiar with using brackets `[` and `$` for indexing elements/components
+
+---
+
+# Questions?
+
+<br>
+
+```{r questions-data-structures, echo=FALSE, out.height="450", out.width="450"}
+knitr::include_graphics("images/questions.png")
+```
+
+
+
+
+

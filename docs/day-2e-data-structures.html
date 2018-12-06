@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>An .red[Incomplete] Introduction to R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Brad Boehmke" />
+    <meta name="date" content="2018-12-13" />
+    <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
+    <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
+    <link rel="stylesheet" href="scrollable.css" type="text/css" />
+    <link rel="stylesheet" href="mtheme_max.css" type="text/css" />
+    <link rel="stylesheet" href="fonts_mtheme_max.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+class: clear, center, middle
+
+background-image: url(images/building-blocks.png)
+background-size: cover
+
+.font300.bold[Data Structures]
+
+---
+
+# Getting exposure
+
+&lt;br&gt;
+
+.pull-left[
+
+* This section is meant to give you exposure to the main data structures used in R
+
+* As you become more familiar with R you will, inevitably, become more familiar with most of these structures
+
+* However, you will not be required to apply the methods you see in this afternoon's case study
+
+
+]
+
+--
+
+.pull-right[
+
+.center.red[<span class=" faa-flash animated " style=" display: -moz-inline-stack; display: inline-block; transform: rotate(0deg);">There will be no Your Turn's or Challenges</span>]
+
+&lt;img src="images/no-challenge.gif" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+---
+
+# 5 Fundamental Data Structures
+
+&lt;img src="images/data-structures.png" width="2209" style="display: block; margin: auto;" /&gt;
+
+---
+class: clear, center, middle
+
+.font300.bold[Atomic Vectors]
+
+---
+# Properties
+
+.pull-left[
+
+* .blue[1 dimension]
+
+* Only holds .blue[homogenous] data types
+
+* If you try to combine non-homogeneous types, .blue[coercion] occurs
+   - Non-characters become characters
+   - Logicals become numerics
+   - Factors are funky
+]
+
+.pull-right[
+
+
+```r
+letters
+##  [1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q"
+## [18] "r" "s" "t" "u" "v" "w" "x" "y" "z"
+
+1:12
+##  [1]  1  2  3  4  5  6  7  8  9 10 11 12
+
+sample(c(TRUE, FALSE), 10, replace = TRUE)
+##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE  TRUE FALSE  TRUE
+
+# Coercion --------------------------------------------------------
+# Non-characters become characters
+c("a", "b", 1:2)
+## [1] "a" "b" "1" "2"
+
+# Logicals become numerics
+c(1:2, TRUE)
+## [1] 1 2 1
+
+# Factors are funky
+c(factor("a"), 1)
+## [1] 1 1
+c(factor("a"), "b")
+## [1] "1" "b"
+```
+
+]
+
+---
+
+# Application
+
+.scrollable90[
+.pull-left[
+
+* Vectors are the fundamental building block for all other data types
+
+* You will use them on a daily basis
+   - For filtering
+   - For naming columns
+   - Creating factor levels
+   - Holding values for comparison
+   - ...
+]   
+
+.pull-right[
+
+
+
+
+
+```r
+# for filtering
+dplyr::filter(warpbreaks, tension %in% c("L", "H")) %&gt;% as_tibble()
+## # A tibble: 36 x 3
+##    breaks wool  tension
+##     &lt;dbl&gt; &lt;fct&gt; &lt;fct&gt;  
+##  1     26 A     L      
+##  2     30 A     L      
+##  3     54 A     L      
+##  4     25 A     L      
+##  5     70 A     L      
+##  6     52 A     L      
+##  7     51 A     L      
+##  8     26 A     L      
+##  9     67 A     L      
+## 10     36 A     H      
+## # ... with 26 more rows
+
+# for naming
+names(warpbreaks) &lt;- c("Variable1", "Variable2", "Variable3")
+```
+
+]
+]
+
+---
+
+# Indexing
+
+We can access specific elements of a vector with brackets:
+
+
+.center.blue[`vector[element]`]
+
+.code70[
+
+
+```r
+# some vector
+v &lt;- letters[1:10]
+v
+##  [1] "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"
+```
+
+]
+
+--
+
+.code70[
+
+
+```r
+# index by element number
+v[1]
+## [1] "a"
+v[c(1, 5, 10)]
+## [1] "a" "e" "j"
+v[-c(1, 5, 10)]
+## [1] "b" "c" "d" "f" "g" "h" "i"
+```
+
+]
+
+--
+
+.code70[
+
+
+```r
+
+# if the vector is named we can index by name
+names(v) &lt;- LETTERS[1:10]
+v
+##   A   B   C   D   E   F   G   H   I   J 
+## "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"
+
+v[c("A", "A", "B")]
+##   A   A   B 
+## "a" "a" "b"
+```
+
+]
+
+---
+class: clear, center, middle
+
+.font300.bold[Matrices]
+
+---
+
+# Properties
+
+.pull-left[
+
+* .blue[2 dimensions]
+   - rows
+   - columns
+
+* Can only contain .blue[homogenous] data
+
+* All rows &amp; columns must be of equal length
+
+]
+
+.pull-right[
+
+
+```r
+# numeric matrix
+set.seed(123)
+v1 &lt;- sample(1:10, 25, replace = TRUE)
+m1 &lt;- matrix(v1, nrow = 5)
+m1
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    3    1   10    9    9
+## [2,]    8    6    5    3    7
+## [3,]    5    9    7    1    7
+## [4,]    9    6    6    4   10
+## [5,]   10    5    2   10    7
+
+# character matrix
+m2 &lt;- matrix(letters[1:9], nrow = 3)
+m2
+##      [,1] [,2] [,3]
+## [1,] "a"  "d"  "g" 
+## [2,] "b"  "e"  "h" 
+## [3,] "c"  "f"  "i"
+```
+
+]
+
+---
+
+# Application
+
+.pull-left[
+
+* Matrix algebra
+
+* I use them rarely accept when a certain result is provided in matrix form (i.e. correlation matrices)
+
+]
+
+.pull-right[
+
+
+```r
+# correlation matrix
+cor(mtcars)[, 1:5]
+##             mpg        cyl       disp         hp        drat
+## mpg   1.0000000 -0.8521620 -0.8475514 -0.7761684  0.68117191
+## cyl  -0.8521620  1.0000000  0.9020329  0.8324475 -0.69993811
+## disp -0.8475514  0.9020329  1.0000000  0.7909486 -0.71021393
+## hp   -0.7761684  0.8324475  0.7909486  1.0000000 -0.44875912
+## drat  0.6811719 -0.6999381 -0.7102139 -0.4487591  1.00000000
+## wt   -0.8676594  0.7824958  0.8879799  0.6587479 -0.71244065
+## qsec  0.4186840 -0.5912421 -0.4336979 -0.7082234  0.09120476
+## vs    0.6640389 -0.8108118 -0.7104159 -0.7230967  0.44027846
+## am    0.5998324 -0.5226070 -0.5912270 -0.2432043  0.71271113
+## gear  0.4802848 -0.4926866 -0.5555692 -0.1257043  0.69961013
+## carb -0.5509251  0.5269883  0.3949769  0.7498125 -0.09078980
+
+# matrix multiplication
+m3 &lt;- matrix(1:6, nrow = 2)
+m4 &lt;- matrix(6:11, ncol = 2)
+m3 %*% m4
+##      [,1] [,2]
+## [1,]   67   94
+## [2,]   88  124
+```
+
+
+]
+
+---
+
+# Indexing
+
+We can access specific elements of a matrix with brackets:
+
+.center.blue[`matrix[row, col]`]
+
+
+```r
+m5 &lt;- matrix(1:15, nrow = 3)
+
+# first element, third colum
+m5[1, 3]
+## [1] 7
+```
+
+--
+
+
+```r
+# first three elements of all columns
+m5[1:2, ]
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    4    7   10   13
+## [2,]    2    5    8   11   14
+```
+
+--
+
+
+```r
+# Using names to access rows and columns
+colnames(m5) &lt;- letters[1:5]
+rownames(m5) &lt;- LETTERS[1:3]
+m5[c("A", "C"), c("b", "d")]
+##   b  d
+## A 4 10
+## C 6 12
+```
+
+---
+class: clear, center, middle
+
+.font300.bold[Arrays]
+
+---
+# Properties
+
+.pull-left[
+
+* Similar to a matrix but...
+
+* has .blue[3 dimensions]
+   - rows
+   - columns
+   - depth
+
+* An array with depth = 1 is the same as a matrix
+
+]
+
+.pull-right[
+
+
+```r
+# depth = 2
+array(1:25, c(3, 5, 2))
+## , , 1
+## 
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    4    7   10   13
+## [2,]    2    5    8   11   14
+## [3,]    3    6    9   12   15
+## 
+## , , 2
+## 
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]   16   19   22   25    3
+## [2,]   17   20   23    1    4
+## [3,]   18   21   24    2    5
+
+# depth = 1 (same as a matrix)
+array(1:15, c(3, 5, 1))
+## , , 1
+## 
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    1    4    7   10   13
+## [2,]    2    5    8   11   14
+## [3,]    3    6    9   12   15
+```
+
+]
+
+---
+
+# Application
+
+&lt;br&gt;
+
+* Generally arrays are used sparingly unless you get into deep learning modeling with __Keras__ and __TensorFlow__.  There are a few machine learning packages that provide arrays as outputs (i.e. __glmnet__) but that is the exception rather than the rule.
+
+* For now, you should not be too concerned about mastering this data structure
+
+---
+
+# Indexing
+
+We can access specific elements of an array with brackets:
+
+.center.blue[`array[row, col, depth]`]
+
+
+```r
+a1 &lt;- array(1:25, c(3, 5, 2))
+
+# rows 1 &amp; 2, columns 2-4 of the second matrix
+a1[1:2, 2:4, 2]
+##      [,1] [,2] [,3]
+## [1,]   19   22   25
+## [2,]   20   23    1
+```
+
+--
+
+
+```r
+# first row and all columns of both matrices (converts result into a single matrix)
+a1[1, , ]
+##      [,1] [,2]
+## [1,]    1   16
+## [2,]    4   19
+## [3,]    7   22
+## [4,]   10   25
+## [5,]   13    3
+```
+
+---
+class: clear, center, middle
+
+.font300.bold[Data Frames]
+
+---
+
+# Properties
+
+.pull-left[
+
+
+* Most common data structure you'll work with
+
+* .blue[Spreadsheet style] data
+
+* .blue[2 dimensions]
+   - rows
+   - columns
+
+* Can contain .blue[heterogenous data]
+
+* All columns must be of equal length
+
+* A .blue[tibble] is just a .blue[slightly modified data frame]
+
+]
+
+.pull-right[
+
+
+```r
+completejourney::transactions
+## # A tibble: 1,469,307 x 11
+##    household_id store_id basket_id product_id quantity sales_value
+##    &lt;chr&gt;        &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;         &lt;int&gt;       &lt;dbl&gt;
+##  1 900          330      31198570… 1095275           1        0.5 
+##  2 900          330      31198570… 9878513           1        0.99
+##  3 1228         406      31198655… 1041453           1        1.43
+##  4 906          319      31198705… 1020156           1        1.5 
+##  5 906          319      31198705… 1053875           2        2.78
+##  6 906          319      31198705… 1060312           1        5.49
+##  7 906          319      31198705… 1075313           1        1.5 
+##  8 1058         381      31198676… 985893            1        1.88
+##  9 1058         381      31198676… 988791            1        1.5 
+## 10 1058         381      31198676… 9297106           1        2.69
+## # ... with 1,469,297 more rows, and 5 more variables: retail_disc &lt;dbl&gt;,
+## #   coupon_disc &lt;dbl&gt;, coupon_match_disc &lt;dbl&gt;, week &lt;dbl&gt;,
+## #   transaction_timestamp &lt;dttm&gt;
+```
+
+]
+
+---
+
+# Application
+
+&lt;br&gt;
+
+* holding imported data
+
+* exploratory data analysis
+
+---
+
+# Indexing
+
+We can access specific elements of a data frame with brackets...
+
+.center.blue[`data.frame[row, col]`]
+
+...but most of your indexing during EDA will likely be done with __dplyr__ functions.
+
+
+
+```r
+# first 10 rows for 3 columns
+mpg[1:10, c("manufacturer", "model", "cty")]
+## # A tibble: 10 x 3
+##    manufacturer model        cty
+##    &lt;chr&gt;        &lt;chr&gt;      &lt;int&gt;
+##  1 audi         a4            18
+##  2 audi         a4            21
+##  3 audi         a4            20
+##  4 audi         a4            21
+##  5 audi         a4            16
+##  6 audi         a4            18
+##  7 audi         a4            18
+##  8 audi         a4 quattro    18
+##  9 audi         a4 quattro    16
+## 10 audi         a4 quattro    20
+```
+
+
+---
+
+# Indexing
+
+For data frames, we can actually extract a single column 3 different ways:
+
+* preserve: `data.frame[column]`
+* simplify: `data.frame[[column]]`
+* simplify: `data.frame$column`
+
+.pull-left-30[
+
+
+```r
+# preserve output as data frame
+mpg["cty"]
+## # A tibble: 234 x 1
+##      cty
+##    &lt;int&gt;
+##  1    18
+##  2    21
+##  3    20
+##  4    21
+##  5    16
+##  6    18
+##  7    18
+##  8    18
+##  9    16
+## 10    20
+## # ... with 224 more rows
+```
+
+]
+--
+.pull-left-30[
+
+
+```r
+# simplify output as a vector
+mpg[["cty"]]
+##   [1] 18 21 20 21 16 18 18 18 16 20 19 15 17 17 15 15 17 16 14 11 14 13 12
+##  [24] 16 15 16 15 15 14 11 11 14 19 22 18 18 17 18 17 16 16 17 17 11 15 15
+##  [47] 16 16 15 14 13 14 14 14  9 11 11 13 13  9 13 11 13 11 12  9 13 13 12
+##  [70]  9 11 11 13 11 11 11 12 14 15 14 13 13 13 14 14 13 13 13 11 13 18 18
+##  [93] 17 16 15 15 15 15 14 28 24 25 23 24 26 25 24 21 18 18 21 21 18 18 19
+## [116] 19 19 20 20 17 16 17 17 15 15 14  9 14 13 11 11 12 12 11 11 11 12 14
+## [139] 13 13 13 21 19 23 23 19 19 18 19 19 14 15 14 12 18 16 17 18 16 18 18
+## [162] 20 19 20 18 21 19 19 19 20 20 19 20 15 16 15 15 16 14 21 21 21 21 18
+## [185] 18 19 21 21 21 22 18 18 18 24 24 26 28 26 11 13 15 16 17 15 15 15 16
+## [208] 21 19 21 22 17 33 21 19 22 21 21 21 16 17 35 29 21 19 20 20 21 18 19
+## [231] 21 16 18 17
+```
+
+]
+--
+.pull-left-30[
+
+
+```r
+# simplify output as a vector
+mpg$cty
+##   [1] 18 21 20 21 16 18 18 18 16 20 19 15 17 17 15 15 17 16 14 11 14 13 12
+##  [24] 16 15 16 15 15 14 11 11 14 19 22 18 18 17 18 17 16 16 17 17 11 15 15
+##  [47] 16 16 15 14 13 14 14 14  9 11 11 13 13  9 13 11 13 11 12  9 13 13 12
+##  [70]  9 11 11 13 11 11 11 12 14 15 14 13 13 13 14 14 13 13 13 11 13 18 18
+##  [93] 17 16 15 15 15 15 14 28 24 25 23 24 26 25 24 21 18 18 21 21 18 18 19
+## [116] 19 19 20 20 17 16 17 17 15 15 14  9 14 13 11 11 12 12 11 11 11 12 14
+## [139] 13 13 13 21 19 23 23 19 19 18 19 19 14 15 14 12 18 16 17 18 16 18 18
+## [162] 20 19 20 18 21 19 19 19 20 20 19 20 15 16 15 15 16 14 21 21 21 21 18
+## [185] 18 19 21 21 21 22 18 18 18 24 24 26 28 26 11 13 15 16 17 15 15 15 16
+## [208] 21 19 21 22 17 33 21 19 22 21 21 21 16 17 35 29 21 19 20 20 21 18 19
+## [231] 21 16 18 17
+```
+
+]
+
+---
+class: clear, center, middle
+
+.font300.bold[Lists]
+
+---
+
+# Properties
+
+.pull-left[
+
+* .blue[1 dimension]
+
+* Acts like a vector (technically it is a vector) but where .blue[each element can hold any other data structure] (i.e. vectors, data frames, matrices, and even lists)
+
+* Can only contain .blue[heterogeneous data]
+
+* Think of it like a shopping cart that just holds a bunch of other structures
+
+]
+
+.pull-right[
+
+
+```r
+l1 &lt;- list(item1 = v1, item2 = m1, item3 = mpg)
+l1
+## $item1
+##  [1]  3  8  5  9 10  1  6  9  6  5 10  5  7  6  2  9  3  1  4 10  9  7  7
+## [24] 10  7
+## 
+## $item2
+##      [,1] [,2] [,3] [,4] [,5]
+## [1,]    3    1   10    9    9
+## [2,]    8    6    5    3    7
+## [3,]    5    9    7    1    7
+## [4,]    9    6    6    4   10
+## [5,]   10    5    2   10    7
+## 
+## $item3
+## # A tibble: 234 x 11
+##    manufacturer model displ  year   cyl trans drv     cty   hwy fl    cla…
+##    &lt;chr&gt;        &lt;chr&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;ch&gt;
+##  1 audi         a4      1.8  1999     4 auto… f        18    29 p     com…
+##  2 audi         a4      1.8  1999     4 manu… f        21    29 p     com…
+##  3 audi         a4      2    2008     4 manu… f        20    31 p     com…
+##  4 audi         a4      2    2008     4 auto… f        21    30 p     com…
+##  5 audi         a4      2.8  1999     6 auto… f        16    26 p     com…
+##  6 audi         a4      2.8  1999     6 manu… f        18    26 p     com…
+##  7 audi         a4      3.1  2008     6 auto… f        18    27 p     com…
+##  8 audi         a4 q…   1.8  1999     4 manu… 4        18    26 p     com…
+##  9 audi         a4 q…   1.8  1999     4 auto… 4        16    25 p     com…
+## 10 audi         a4 q…   2    2008     4 manu… 4        20    28 p     com…
+## # ... with 224 more rows
+```
+
+
+]
+
+---
+
+# Application
+
+&lt;br&gt;
+
+* Many statistical modeling results come in the form of lists
+
+* You need to know how to extract parts of a list to access model results
+
+* As you start using R more, and possible start creating your own classes, you will use lists to hold different information
+
+---
+
+# Indexing
+
+Like data frames, we can extract a single list item 3 different ways:
+
+* preserve: `list[column]`
+* simplify: `list[[column]]`
+* simplify: `list$column`
+
+.pull-left-30[
+
+
+```r
+# preserve output as a list
+a &lt;- l1["item1"]
+
+is.list(a)
+## [1] TRUE
+is.atomic(a)
+## [1] FALSE
+
+a
+## $item1
+##  [1]  3  8  5  9 10  1  6  9  6  5 10  5  7  6  2  9  3  1  4 10  9  7  7
+## [24] 10  7
+```
+
+]
+--
+.pull-left-30[
+
+
+```r
+# simplify output as a vector
+b &lt;- l1[["item1"]]
+
+is.list(b)
+## [1] FALSE
+is.atomic(b)
+## [1] TRUE
+
+b
+##  [1]  3  8  5  9 10  1  6  9  6  5 10  5  7  6  2  9  3  1  4 10  9  7  7
+## [24] 10  7
+```
+
+]
+--
+.pull-left-30[
+
+
+```r
+# simplify output as a vector
+c &lt;- l1$item1
+
+is.list(c)
+## [1] FALSE
+is.atomic(c)
+## [1] TRUE
+
+c
+##  [1]  3  8  5  9 10  1  6  9  6  5 10  5  7  6  2  9  3  1  4 10  9  7  7
+## [24] 10  7
+```
+
+]
+
+---
+
+# Indexing
+
+With lists, we often combine previous indexing procedures to extract information.
+
+.pull-left[
+
+
+```r
+# a linear model
+model &lt;- lm(mpg ~ ., data = mtcars)
+
+# results are in a list
+str(model)
+## List of 12
+##  $ coefficients : Named num [1:11] 12.3034 -0.1114 0.0133 -0.0215 0.7871 ...
+##   ..- attr(*, "names")= chr [1:11] "(Intercept)" "cyl" "disp" "hp" ...
+##  $ residuals    : Named num [1:32] -1.6 -1.112 -3.451 0.163 1.007 ...
+##   ..- attr(*, "names")= chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
+##  $ effects      : Named num [1:32] -113.65 -28.6 6.13 -3.06 -4.06 ...
+##   ..- attr(*, "names")= chr [1:32] "(Intercept)" "cyl" "disp" "hp" ...
+##  $ rank         : int 11
+##  $ fitted.values: Named num [1:32] 22.6 22.1 26.3 21.2 17.7 ...
+##   ..- attr(*, "names")= chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
+##  $ assign       : int [1:11] 0 1 2 3 4 5 6 7 8 9 ...
+##  $ qr           :List of 5
+##   ..$ qr   : num [1:32, 1:11] -5.657 0.177 0.177 0.177 0.177 ...
+##   .. ..- attr(*, "dimnames")=List of 2
+##   .. .. ..$ : chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
+##   .. .. ..$ : chr [1:11] "(Intercept)" "cyl" "disp" "hp" ...
+##   .. ..- attr(*, "assign")= int [1:11] 0 1 2 3 4 5 6 7 8 9 ...
+##   ..$ qraux: num [1:11] 1.18 1.02 1.11 1.17 1.08 ...
+##   ..$ pivot: int [1:11] 1 2 3 4 5 6 7 8 9 10 ...
+##   ..$ tol  : num 1e-07
+##   ..$ rank : int 11
+##   ..- attr(*, "class")= chr "qr"
+##  $ df.residual  : int 21
+##  $ xlevels      : Named list()
+##  $ call         : language lm(formula = mpg ~ ., data = mtcars)
+##  $ terms        :Classes 'terms', 'formula'  language mpg ~ cyl + disp + hp + drat + wt + qsec + vs + am + gear + carb
+##   .. ..- attr(*, "variables")= language list(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
+##   .. ..- attr(*, "factors")= int [1:11, 1:10] 0 1 0 0 0 0 0 0 0 0 ...
+##   .. .. ..- attr(*, "dimnames")=List of 2
+##   .. .. .. ..$ : chr [1:11] "mpg" "cyl" "disp" "hp" ...
+##   .. .. .. ..$ : chr [1:10] "cyl" "disp" "hp" "drat" ...
+##   .. ..- attr(*, "term.labels")= chr [1:10] "cyl" "disp" "hp" "drat" ...
+##   .. ..- attr(*, "order")= int [1:10] 1 1 1 1 1 1 1 1 1 1
+##   .. ..- attr(*, "intercept")= int 1
+##   .. ..- attr(*, "response")= int 1
+##   .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+##   .. ..- attr(*, "predvars")= language list(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
+##   .. ..- attr(*, "dataClasses")= Named chr [1:11] "numeric" "numeric" "numeric" "numeric" ...
+##   .. .. ..- attr(*, "names")= chr [1:11] "mpg" "cyl" "disp" "hp" ...
+##  $ model        :'data.frame':	32 obs. of  11 variables:
+##   ..$ mpg : num [1:32] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+##   ..$ cyl : num [1:32] 6 6 4 6 8 6 8 4 4 6 ...
+##   ..$ disp: num [1:32] 160 160 108 258 360 ...
+##   ..$ hp  : num [1:32] 110 110 93 110 175 105 245 62 95 123 ...
+##   ..$ drat: num [1:32] 3.9 3.9 3.85 3.08 3.15 2.76 3.21 3.69 3.92 3.92 ...
+##   ..$ wt  : num [1:32] 2.62 2.88 2.32 3.21 3.44 ...
+##   ..$ qsec: num [1:32] 16.5 17 18.6 19.4 17 ...
+##   ..$ vs  : num [1:32] 0 0 1 1 0 1 0 1 1 1 ...
+##   ..$ am  : num [1:32] 1 1 1 0 0 0 0 0 0 0 ...
+##   ..$ gear: num [1:32] 4 4 4 3 3 3 3 4 4 4 ...
+##   ..$ carb: num [1:32] 4 4 1 1 2 1 4 2 2 4 ...
+##   ..- attr(*, "terms")=Classes 'terms', 'formula'  language mpg ~ cyl + disp + hp + drat + wt + qsec + vs + am + gear + carb
+##   .. .. ..- attr(*, "variables")= language list(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
+##   .. .. ..- attr(*, "factors")= int [1:11, 1:10] 0 1 0 0 0 0 0 0 0 0 ...
+##   .. .. .. ..- attr(*, "dimnames")=List of 2
+##   .. .. .. .. ..$ : chr [1:11] "mpg" "cyl" "disp" "hp" ...
+##   .. .. .. .. ..$ : chr [1:10] "cyl" "disp" "hp" "drat" ...
+##   .. .. ..- attr(*, "term.labels")= chr [1:10] "cyl" "disp" "hp" "drat" ...
+##   .. .. ..- attr(*, "order")= int [1:10] 1 1 1 1 1 1 1 1 1 1
+##   .. .. ..- attr(*, "intercept")= int 1
+##   .. .. ..- attr(*, "response")= int 1
+##   .. .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+##   .. .. ..- attr(*, "predvars")= language list(mpg, cyl, disp, hp, drat, wt, qsec, vs, am, gear, carb)
+##   .. .. ..- attr(*, "dataClasses")= Named chr [1:11] "numeric" "numeric" "numeric" "numeric" ...
+##   .. .. .. ..- attr(*, "names")= chr [1:11] "mpg" "cyl" "disp" "hp" ...
+##  - attr(*, "class")= chr "lm"
+```
+
+]
+
+.pull-right[
+
+
+```r
+# get the first ten residuals
+model[["residuals"]][1:10]
+##         Mazda RX4     Mazda RX4 Wag        Datsun 710    Hornet 4 Drive 
+##       -1.59950576       -1.11188608       -3.45064408        0.16259545 
+## Hornet Sportabout           Valiant        Duster 360         Merc 240D 
+##        1.00656597       -2.28303904       -0.08625625        1.90398812 
+##          Merc 230          Merc 280 
+##       -1.61908990        0.50097006
+
+# get the coefficient for the wt variable
+model$coefficients["wt"]
+##        wt 
+## -3.715304
+```
+
+]
+
+---
+
+# Take away
+
+&lt;br&gt;
+&lt;br&gt;
+
+
+* Get familiar with vectors and data frames / tibbles as quickly as possible
+
+* Then start getting familiar with lists
+
+* Learn matrices and arrays as you see fit
+
+* Get familiar with using brackets `[` and `$` for indexing elements/components
+
+---
+
+# Questions?
+
+&lt;br&gt;
+
+&lt;img src="images/questions.png" width="450" height="450" style="display: block; margin: auto;" /&gt;
+    </textarea>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
