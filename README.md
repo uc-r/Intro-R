@@ -3,9 +3,11 @@
 
 ### Course Description
 
-Welcome to Intro to R\! This short course introduces new users to R for
-data science applications. The following is an outline of the material
-covered in this training:
+Welcome to Intro to R\! This short course provides a gentle, hands-on
+introduction to the R programming language for data science
+applications. You will learn the fundamental skills required to import,
+tidy, transform, manipulate, and visualize real world consumer data. The
+following is an outline of the material covered in this training:
 
 **Day
 1**
@@ -36,7 +38,7 @@ covered in this training:
 | [Joining data](https://uc-r.github.io/Intro-R/day-2d-joins.html)              |   1:00-1:45   |
 | [Data structures](https://uc-r.github.io/Intro-R/day-2e-data-structures.html) |   1:45-2:30   |
 | Break                                                                         |   2:30-2:45   |
-| Exploratory data analysis                                                     |   2:45-4:00   |
+| Case study                                                                    |   2:45-4:00   |
 | Q\&A                                                                          |   4:00-4:30   |
 
 ### Course Preparation
@@ -44,17 +46,25 @@ covered in this training:
 To prepare for this course please complete the following ***prior*** to
 the day of class:
 
-1.  Download the class material at \_\_\_\_\_\_
+1.  Download the class material
+    [here](https://www.dropbox.com/sh/atlmrrqnxadlv2b/AACmHEKViL-eFeH9itgc5E9oa?dl=1).
+    This will provide you with the data and R scripts to follow along
+    during class. I have also included handy cheat sheets that you can
+    reference throughout different sections.
 
-2.  Have the following versions of R and RStudio downloaded. If you have
-    an earlier version of R that is at least version 3.4.5 or later you
-    should be ok but its best to be as current as possible.
+2.  All slides are available via the hyperlinks in the schedule above so
+    that you can follow along.
+
+3.  Please have the following versions of R and RStudio installed. If
+    you have an earlier version of R that is at least version 3.4.5 or
+    later you should be ok but its best to be as current as possible.
     
-      - R: 3.5.1 [download latest version](https://cran.r-project.org/)
-      - RStudio: 1.1.463 [download latest
-        version](https://www.rstudio.com/products/rstudio/download/#download)
+      - R: 3.5.1 \[[download latest
+        version](https://cran.r-project.org/)\]
+      - RStudio: 1.1.463 \[[download latest
+        version](https://www.rstudio.com/products/rstudio/download/#download)\]
       - Visit [here](http://uc-r.github.io/basics#installation) if you
         need installation instructions
 
-If you any specific questions prior to the class you can reach out to
-Brad Boehmke directly at <bradleyboehmke@gmail.com>
+If you have any specific questions prior to the class you can reach out
+to Brad Boehmke directly at <bradleyboehmke@gmail.com>
