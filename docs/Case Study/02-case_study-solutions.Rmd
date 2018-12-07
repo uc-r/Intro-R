@@ -1,0 +1,82 @@
+---
+title: "Day 2 Case Study Solutions"
+output: github_document
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  #eval = FALSE,
+  warning = FALSE,
+  message = FALSE
+  )
+```
+
+The following XX exercises are based on concepts covered over the last two days. They can be answered using the transactions.csv, products.csv, and households.csv data sets. Start by loading the `tidyverse` and importing the three .csv data sets.
+
+```{r prereqs}
+# load tidyverse
+library(tidyverse)
+
+# import data
+transactions <- data.table::fread("../data/transactions.csv", data.table = FALSE) %>% as_tibble()
+products     <- data.table::fread("../data/products.csv", data.table = FALSE) %>% as_tibble()
+households   <- data.table::fread("../data/households.csv", data.table = FALSE) %>% as_tibble()
+```
+
+
+## Exercise 1
+
+How many unique households exist in the transactions data, and how many of these households have demographic data in the households data?
+
+1. Use `distinct()` to create a tibble of unique `hshd_num` values.
+2. Use `nrow()` or `tally()` to count these households.
+3. Use an inner join to match transactions observations with households data.
+4. Use distinct() and nrow() to count the rows that remain.
+
+#### Answer
+
+```{r}
+# How many unique households exist in the transactions data
+transactions %>%
+  distinct(hshd_num) %>%
+  tally()
+
+# How many of these households have demographic data in the households data
+transactions %>%
+  inner_join(households) %>%
+  distinct(hshd_num) %>%
+  tally()
+```
+
+
+## Exercise 2
+
+Compute the average number of weekly transactions for each househould. Plot this distribution.  The represents the average number of unique products he household purchases per week.  Now do the same to identify the average number of baskets each household has per week.  This represents the approximate number of store visits each household has per week.
+
+#### Answer
+
+```{r}
+# average number of unique products households buy per week
+transactions %>%
+  count(hshd_num, week_num) %>% 
+  group_by(hshd_num) %>% 
+  summarise(avg = mean(n)) %>% 
+  ggplot(aes(avg)) + 
+  geom_histogram()
+
+# average number of visits each household has per week
+transactions %>%
+  count(hshd_num, basket_num, week_num) %>% 
+  group_by(hshd_num) %>% 
+  summarise(avg = mean(n)) %>% 
+  ggplot(aes(avg)) + 
+  geom_histogram()
+```
+
+
+
+
+
+
