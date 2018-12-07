@@ -14,6 +14,7 @@ following is an outline of the material covered in this training:
 
 | Topic                                                                          |     Time      |
 | :----------------------------------------------------------------------------- | :-----------: |
+| Breakfast / Social time                                                        |  8:00 - 9:00  |
 | [Intro & Fundamentals](https://uc-r.github.io/Intro-R/day-1a-intro.html)       | 9:00 - 10:00  |
 | [Importing data](https://uc-r.github.io/Intro-R/day-1b-import.html)            | 10:00 - 10:30 |
 | Break                                                                          | 10:30 - 10:45 |
@@ -30,6 +31,7 @@ following is an outline of the material covered in this training:
 
 | Topic                                                                         |     Time      |
 | :---------------------------------------------------------------------------- | :-----------: |
+| Breakfast / Social time                                                       |  8:00 - 9:00  |
 | [Review](https://uc-r.github.io/Intro-R/day-2a-intro.html)                    |  9:00-10:00   |
 | [Data types](https://uc-r.github.io/Intro-R/day-2b-data-types.html)           |  10:00-10:45  |
 | Break                                                                         | 10:45 - 11:00 |
@@ -67,4 +69,4 @@ the day of class:
         need installation instructions
 
 If you have any specific questions prior to the class you can reach out
-to Brad Boehmke directly at <bradleyboehmke@gmail.com>
+to me (Brad Boehmke) directly at <bradleyboehmke@gmail.com>
