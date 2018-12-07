@@ -47,6 +47,16 @@ background-size: cover
 
 ---
 
+# Joining data is part of...
+
+<br><br>
+
+```{r joins-task, echo=FALSE}
+knitr::include_graphics("images/transform-task.png")
+```
+
+---
+
 # What is relational data
 
 .pull-left[

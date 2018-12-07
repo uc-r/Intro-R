@@ -48,6 +48,15 @@ background-size: cover
 
 ---
 
+# Tidy Data
+
+<br><br>
+```{r tidy-ds-task, echo=FALSE}
+knitr::include_graphics("images/tidy-task.png")
+```
+
+---
+
 class: yourturn
 # Your Turn!
 

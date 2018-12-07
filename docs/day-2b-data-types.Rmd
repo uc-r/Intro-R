@@ -47,6 +47,16 @@ background-image: url(images/data-types-icon.png)
 
 ---
 
+# Data types
+
+.font120.center[Data types are involved in nearly every task in the data science flow; however, most relevant to you today will be in the visualization and transformation tasks.]
+
+```{r ds-task, echo=FALSE}
+knitr::include_graphics("images/visualize-transform-task.png")
+```
+
+---
+
 class: yourturn
 # Your Turn!
 

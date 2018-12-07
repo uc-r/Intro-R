@@ -12,3 +12,6 @@ bindrcpp
 lubridate
 hms
 completejourney
+readxl
+ggmap
+gganimate
