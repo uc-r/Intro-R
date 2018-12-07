@@ -87,7 +87,7 @@ products
 .pull-left-60[
 
 ```{r import-excel}
-# load readr library (or tidyverse)
+# load readxl
 library(readxl)
 
 # read workbook sheets
@@ -111,7 +111,7 @@ excel_sheets(path = "data/products.xlsx")
 .pull-left-60[
 
 ```{r import-excel2}
-# load readr library (or tidyverse)
+# load readxl
 library(readxl)
 
 # read workbook sheets
