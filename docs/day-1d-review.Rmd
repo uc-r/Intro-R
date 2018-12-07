@@ -1,5 +1,5 @@
 ---
-title: "An .red[Incomplete] Introduction to R"
+title: "A Quick Review"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
 date: "2018-12-13"

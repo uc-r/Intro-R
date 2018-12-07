@@ -1,5 +1,5 @@
 ---
-title: "An .red[Incomplete] Introduction to R"
+title: "Day 1 Case Study"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
 date: "2018-12-13"
@@ -30,14 +30,6 @@ knitr::opts_chunk$set(
   warning = FALSE, 
   collapse = TRUE 
 )
-
-# This is good for getting the ggplot background consistent with
-# the html background color
-library(ggplot2)
-thm <- theme_bw()
-theme_set(thm)
-
-transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
 ```
 
 # Case Study
