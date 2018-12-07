@@ -3,8 +3,9 @@
 
 ### Course Description
 
-This short course introduces new users to R. The following is an outline
-of the material covered in this training:
+Welcome to Intro to R\! This short course introduces new users to R for
+data science applications. The following is an outline of the material
+covered in this training:
 
 **Day
 1**
@@ -40,4 +41,20 @@ of the material covered in this training:
 
 ### Course Preparation
 
-To prepare for this course…
+To prepare for this course please complete the following ***prior*** to
+the day of class:
+
+1.  Download the class material at \_\_\_\_\_\_
+
+2.  Have the following versions of R and RStudio downloaded. If you have
+    an earlier version of R that is at least version 3.4.5 or later you
+    should be ok but its best to be as current as possible.
+    
+      - R: 3.5.1 [download latest version](https://cran.r-project.org/)
+      - RStudio: 1.1.463 [download latest
+        version](https://www.rstudio.com/products/rstudio/download/#download)
+      - Visit [here](http://uc-r.github.io/basics#installation) if you
+        need installation instructions
+
+If you any specific questions prior to the class you can reach out to
+Brad Boehmke directly at <bradleyboehmke@gmail.com>
