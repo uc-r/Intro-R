@@ -1,5 +1,5 @@
 ---
-title: "An .red[Incomplete] Introduction to R"
+title: "Transforming Data"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
 date: "2018-12-13"
@@ -44,6 +44,15 @@ background-image: url(images/transformer.gif)
 background-size: cover
 
 .font200.white.bold[Transforming Data]
+
+---
+
+# Data transformation task
+
+<br><br>
+```{r, echo=FALSE}
+knitr::include_graphics("images/transform-task.png")
+```
 
 ---
 

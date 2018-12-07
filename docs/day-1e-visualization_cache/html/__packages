@@ -8,3 +8,10 @@ bindrcpp
 forcats
 ggmap
 gganimate
+tidyverse
+tidyr
+purrr
+stringr
+lubridate
+hms
+completejourney

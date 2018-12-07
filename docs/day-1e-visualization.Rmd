@@ -52,6 +52,15 @@ background-size: cover
 
 ---
 
+# Data visualization task
+
+<br><br>
+```{r, echo=FALSE}
+knitr::include_graphics("images/visualize-task.png")
+```
+
+---
+
 # ggplot
 <br>
 .pull-left[

@@ -5,3 +5,11 @@ readxl
 tibble
 dplyr
 bindrcpp
+tidyverse
+tidyr
+purrr
+stringr
+forcats
+lubridate
+hms
+completejourney
