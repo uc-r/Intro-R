@@ -1,5 +1,5 @@
 ---
-title: "Day 2 Case Study Solutions"
+title: "Day 2 Case Study Exercises"
 output: github_document
 ---
 
@@ -12,7 +12,8 @@ knitr::opts_chunk$set(
   message = FALSE,
   fig.align = 'center',
   fig.height = 4,
-  fig.width = 6
+  fig.width = 6,
+  eval = FALSE
   )
 ```
 
@@ -20,12 +21,10 @@ The following 6 exercises are based on concepts covered over the last two days. 
 
 ```{r prereqs}
 # load tidyverse
-library(tidyverse)
+
 
 # import data
-transactions <- data.table::fread("../data/transactions.csv", data.table = FALSE) %>% as_tibble()
-products     <- data.table::fread("../data/products.csv", data.table = FALSE) %>% as_tibble()
-households   <- data.table::fread("../data/households.csv", data.table = FALSE) %>% as_tibble()
+
 ```
 
 
@@ -40,18 +39,17 @@ Suggested steps:
 3. Use an inner join to match transactions observations with households data.
 4. Use distinct() and nrow() to count the rows that remain.
 
-#### Answer
 
 ```{r}
 # How many unique households exist in the transactions data
 transactions %>%
-  distinct(hshd_num) %>%
+  distinct(_____) %>%
   tally()
 
 # How many of these households have demographic data in the households data
 transactions %>%
-  inner_join(households) %>%
-  distinct(hshd_num) %>%
+  inner_join(_____) %>%
+  distinct(_____) %>%
   tally()
 ```
 
@@ -68,23 +66,22 @@ Suggested steps:
 4. The x attribute in ggplot should be the average that you computed.
 5. Try adjusting the `bins = 100` to see how this affects your histogram.
 
-#### Answer
 
 ```{r}
 # average number of unique products households buy per week
-transactions %>% 
-  group_by(hshd_num, week_num) %>% 
-  summarize(n = n_distinct(product_num))  %>% 
-  summarize(avg = mean(n)) %>% 
-  ggplot(aes(avg)) + 
+_____ %>% 
+  group_by(_____, _____) %>% 
+  summarize(n = n_distinct(_____))  %>% 
+  summarize(avg = mean(_____)) %>% 
+  ggplot(aes(_____)) + 
   geom_histogram(bins = 100)
 
 # average number of visits each household has per week
-transactions %>% 
-  group_by(hshd_num, week_num) %>% 
-  summarize(n = n_distinct(basket_num))  %>% 
-  summarize(avg = mean(n)) %>% 
-  ggplot(aes(avg)) + 
+_____ %>% 
+  group_by(_____, _____) %>% 
+  summarize(n = n_distinct(_____))  %>% 
+  summarize(avg = mean(_____)) %>% 
+  ggplot(aes(_____)) + 
   geom_histogram(bins = 100)
 ```
 
@@ -102,20 +99,15 @@ Suggested steps:
 5. Compute the median of the total spend
 6. Plot the result with household size on the x-axis and median total spend on the y-axis
 
-#### Answer
 
 ```{r}
 transactions %>%
-  # this part computes median spend per household
-  group_by(hshd_num, week_num) %>%
-  summarize(total_spend = sum(spend, na.rm = TRUE)) %>%
-  # now join with households data and
-  inner_join(households) %>%
-  # compute the median by household size
-  group_by(hh_size) %>%
-  summarize(median_spend = median(total_spend, na.rm = TRUE)) %>%
-  # plot the results
-  ggplot(aes(x = hh_size, y = median_spend)) + 
+  group_by(_____, _____) %>%
+  summarize(_____) %>%
+  inner_join(_____) %>%
+  group_by(_____) %>%
+  summarize(_____) %>%
+  ggplot(aes(x = _____, y = _____)) + 
   geom_col()
 ```
 
@@ -133,29 +125,27 @@ Suggested steps:
 3. Now group by basket and summarize if the basket does or does not contain baby stuff and alcohol.  An easy way to do this is with use `basket_has_baby_stuff = max(baby_stuff)` within the summarize function.  This will return a 0 or 1 for each basket number signally if baby products were present.
 4. Now compute the proportion of baskets that contain just alcohol versus both baby stuff and alcohol
 
-#### Answer
 
 ```{r}
-transactions %>%
+_____ %>%
   # join with products data
-  inner_join(products) %>% 
+  inner_join(_____) %>% 
   # create two new variables representing TRUE/FALSE if commodity equals "BABY" or "ALCOHOL"
   mutate(
-    baby_stuff = commodity == 'BABY', 
-    alcohol    = commodity == 'ALCOHOL'
+    baby_stuff = _____, 
+    alcohol    = _____
   ) %>%
   # summarize by basket number if it does/does not contain baby stuff and alcohol 
-  group_by(basket_num) %>%
+  group_by(_____) %>%
   summarize(
-    basket_has_baby_stuff = max(baby_stuff), 
-    basket_has_alcohol    = max(alcohol)
+    basket_has_baby_stuff = _____, 
+    basket_has_alcohol    = _____
   ) %>%
   # now compute the proportion of baskets that contain just alcohol versus both baby stuff and alcohol
   summarize(
-    prop_both   = sum(basket_has_baby_stuff * basket_has_alcohol == 1) / 
-                  sum(basket_has_baby_stuff == 1),
-    prob_beer   = mean(basket_has_alcohol),
-    diaper_lift = prop_both / prob_beer
+    prop_both   = _____,
+    prob_beer   = _____,
+    diaper_lift = _____
   )
 ```
 
@@ -174,20 +164,8 @@ Suggested steps:
 
 #### Answer
 
-```{r, fig.width=7}
-transactions %>%
-  inner_join(products) %>%
-  inner_join(households) %>%
-  group_by(brand_ty, income_range) %>%
-  summarize(total_spend = sum(spend, na.rm = TRUE)) %>%
-  mutate(
-    income_range = fct_recode(income_range, Unknown = "null"),
-    income_range = fct_relevel(income_range,
-                               "UNDER 35K", "35-49K", "50-74K",
-                               "75-99K", "100-150K", "150K+", "Unknown")
-) %>%
-  ggplot(aes(income_range, total_spend, fill = brand_ty)) +
-  geom_col(position = "fill")
+```{r}
+# You're all on your own!
 ```
 
 
@@ -207,26 +185,7 @@ Suggested steps:
 8. Compute the percent difference (using `spread` may be helpful here)
 9. Plot the results
 
-#### Answer
 
-```{r, fig.height=5}
-transactions %>%
-  inner_join(products) %>%
-  group_by(commodity, week_num) %>%
-  summarize(spend = sum(spend, na.rm = TRUE)) %>%
-  group_by(commodity) %>%
-  filter(
-    !(commodity %in% c("HOLIDAY", "SEASONAL PRODUCTS", "OUTDOOR")),
-    min(week_num) == 53 & max(week_num) == 104,
-    week_num %in% c(53, 104)
-    ) %>%
-  spread(week_num, spend) %>%
-  mutate(growth = `104` / `53`) %>%
-  ggplot(aes(growth, fct_reorder(commodity, growth))) +
-  geom_point()
+```{r}
+# You're all on your own!
 ```
-
-
-
-
-

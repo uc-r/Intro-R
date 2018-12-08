@@ -7,9 +7,9 @@ output: github_document
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   echo = TRUE,
-  #eval = FALSE,
   warning = FALSE,
-  message = FALSE
+  message = FALSE,
+  collapse = TRUE
   )
 ```
 
@@ -40,7 +40,7 @@ products
 
 # Data Transformation
 
-The following five questions are based on concepts covered in the data transformation (`dplyr`) slides. Answer them using `transactions` in the Complete Journey data package modified with the following:
+The following five exercises are based on concepts covered in the data transformation (`dplyr`) slides. Answer them using `transactions` in the Complete Journey data package modified with the following ( ___run the below code before performing the exercises that follow!___ ):
 
 ```{r load-packages}
 transactions <- transactions %>% 
@@ -56,13 +56,16 @@ transactions <- transactions %>%
 
 ---
 
-**Question 1**: Change the discount variables (i.e., `retail_disc`, `coupon_disc`, `coupon_match_disc`) from negative to positive. 
+## Exercise 1
+
+Change the discount variables (i.e., `retail_disc`, `coupon_disc`, `coupon_match_disc`) from negative to positive. 
 
 **Hint:** Use the `abs()` function within `mutate()`. 
 
 This question is designed to strengthen your ability to use the `dplyr` verb `mutate()` to overwrite an existing variable.
 
-**Answer**:
+#### Answer
+
 ```{r}
 transactions <- transactions %>% 
   mutate(
@@ -74,7 +77,9 @@ transactions <- transactions %>%
 
 ---
 
-**Question 2**: Create three new variables named `regular_price`, `loyalty_price`, and `coupon_price` according to the following logic:
+## Exercise 2
+
+Create three new variables named `regular_price`, `loyalty_price`, and `coupon_price` according to the following logic:
 
 ```{r eval = FALSE}
 regular_price = (sales_value + retail_disc + coupon_match_disc) / quantity
@@ -85,7 +90,8 @@ coupon_price  = (sales_value - coupon_disc) / quantity
 
 This question is designed to strengthen your ability to use the `dplyr` verb `mutate()` to create new variables from existing ones. It should also help you develop a better understanding of the discount variables in `transactions`.
 
-**Answer:**
+#### Answer
+
 ```{r}
 (transactions <- transactions %>% 
   mutate(
@@ -99,28 +105,33 @@ This question is designed to strengthen your ability to use the `dplyr` verb `mu
 
 ---
 
-**Question 3**: `transactions` includes 68,509 unique product IDs. How many of these products (not transactions!) had a regular price of one dollar or less? What does this count equal when loyalty price is one dollar or less?  How about when coupon price is one dollar or less?
+## Exercise 3
+
+`transactions` includes 68,509 unique product IDs. How many of these products (not transactions!) had a regular price of one dollar or less? What does this count equal when loyalty price is one dollar or less?  How about when coupon price is one dollar or less?
 
 **Hint:** After filtering, select the `product_id` column and count unique products using the `n_distinct()` function. 
 
 This question is designed to strengthen your ability to use the `dplyr` verbs `filter()` and `select()`.
 
-**Answer:**
+#### Answer
 
 8,698 products had a regular price less than or equal to $1.00. This count for loyalty price is 14,043 products. For coupon price, it's 15,676. These numbers indicate that over 5,300 products were discounted to a dollar or less with 
 loyalty-card promotions or coupons.
 
 ```{r}
+# how many products had a regular price of $1 or less
 transactions %>% 
   filter(regular_price <= 1) %>% 
   select(product_id) %>% 
   n_distinct()
 
+# how many products had a loyalty price of $1 or less
 transactions %>% 
   filter(loyalty_price <= 1) %>% 
   select(product_id) %>% 
   n_distinct()
 
+# how many products had a coupon price of $1 or less
 transactions %>% 
   filter(coupon_price <= 1) %>% 
   select(product_id) %>% 
@@ -129,13 +140,15 @@ transactions %>%
 
 ---
 
-**Question 4**: What proportion of baskets are over $10 in sales value? 
+## Exercise 4
+
+What proportion of baskets are over $10 in sales value? 
 
 **Hint:** You need to use `group_by()` and `summarize()`. Depending on your approach you may or may not use `mutate()`. 
 
 This question is designed to strengthen your ability to use the `dplyr` verbs `group_by()`, `summarize()` and `ungroup()`.
 
-**Answer:**
+#### Answer
 
 Approximately 66% of baskets bring the retailer over $10 in value.
 
@@ -148,7 +161,9 @@ transactions%>%
 
 ---
 
-**Question 5**: Which store with over $10K in total `sales_value`, discounts its products the most for loyal customers? 
+## Exercise 5
+
+Which store with over $10K in total `sales_value`, discounts its products the most for loyal customers? 
 
 **Hint:** You can calculate loyalty discount as a percentage of regular price using the following logic:
 
@@ -159,12 +174,13 @@ pct_loyalty_disc = 1 - (loyalty_price / regular_price)
 This question is designed to strengthen your ability to use the `dplyr` verbs `filter()`, `mutate()`, `group_by()`, 
 `summarize()`, and `arrange()`.
 
-**Answer:**
+#### Answer
 
 `store_id == 341` has, on average, a discount of 18.7% off regular price for 
 members of the retailer's loyalty program. The code below returns all stores in 
 rank order to give a sense of how similar the discounting is (not) between 
 stores.
+
 ```{r}
 transactions %>%
   mutate(pct_loyalty_disc = 1 - (loyalty_price / regular_price)) %>%
@@ -184,26 +200,30 @@ The following five questions are based on concepts covered in the data visualiza
 
 ---
 
-**Question 1**: Create a histogram of the `quantity` variable in the `transactions` data. What, if anything, do you find unusual about this visualization? 
+## Exercise 6
+
+Create a histogram of the `quantity` variable in the `transactions` data. What, if anything, do you find unusual about this visualization? 
 
 This question is designed to strengthen your ability to use `geom_histogram()`.
 
-**Answer**:
+#### Answer
 
 The unusual aspect of the histogram is its extremely long tail. The distance is so far that the histogram almost appears to be a single bar. This distortion warrants further research and cleaning of the data (e.g., `filter(quantity < 50)`).
 
 ```{r Q1, message = FALSE}
-ggplot(data = transactions) + 
-  geom_histogram(mapping = aes(x = quantity))
+ggplot(data = transactions, aes(x = quantity)) + 
+  geom_histogram()
 ```
 
 ---
 
-**Question 2**: Use a line graph to plot total sales value by `date`. What kind of patterns do you find?
+## Exercise 7
+
+Use a line graph to plot total sales value by `date`. What kind of patterns do you find?
 
 This question is designed to strengthen your ability to use `dplyr` verbs in combination with `geom_line()`.
 
-**Answer**:
+#### Answer
 
 There is a definite weekly pattern to transactions; likely illustrating how most folks buy the majority of their groceries on weekends.  We also see a few dates with very high and low amounts; likely related to holidays.
 
@@ -211,13 +231,15 @@ There is a definite weekly pattern to transactions; likely illustrating how most
 transactions %>% 
   group_by(week, date) %>% 
   summarize(total_sales_value = sum(sales_value, na.rm = TRUE)) %>%
-  ggplot() + 
-  geom_line(mapping = aes(x = date, y = total_sales_value))
+  ggplot(aes(x = date, y = total_sales_value)) + 
+  geom_line()
 ```
 
 ---
 
-**Question 3**: Use a bar graph to compare the total sales values of national and private-label brands. 
+## Exercise 8
+
+Use a bar graph to compare the total sales values of national and private-label brands. 
 
 **Hint**: Because `transactions` does not contain product metadata, run the code below to create a new dataset with additional product information in it. Use `my_transaction_data` for your answer.
 
@@ -227,7 +249,8 @@ my_transaction_data <- left_join(transactions, products, by = 'product_id')
 
 This question is designed to strengthen your ability to use `dplyr` verbs in combination with `geom_col()`.
 
-**Answer**:
+#### Answer
+
 ```{r Q3a}
 my_transaction_data %>%
   group_by(brand) %>%
@@ -238,7 +261,9 @@ my_transaction_data %>%
 
 ---
 
-**Question 4**: Building on Question 3, suppose you want to understand whether the retailer's customers' preference for national brands (compared to private-label brands) is stronger in the soft drink category than it is in the cheese category. Examine this supposition by using a stacked bar graph to compare the split between national and private-label brands for soft drinks and cheeses. 
+## Exercise 9
+
+Building on the previous exercise, suppose you want to understand whether the retailer's customers' preference for national brands (compared to private-label brands) is stronger in the soft drink category than it is in the cheese category. Examine this supposition by using a stacked bar graph to compare the split between national and private-label brands for soft drinks and cheeses. 
 
 **Hint**: Follow these three steps to create your plot: 
 
@@ -246,7 +271,8 @@ my_transaction_data %>%
  - Calculate total sales value by `product_category` and `brand`
  - Create the bars using `geom_col` and include `fill = brand` within `aes()`
 
-**Answer**: 
+#### Answer
+
 ```{r Q4}
 my_transaction_data %>%
   filter(product_category %in% c('SOFT DRINKS', 'CHEESE')) %>%
@@ -258,7 +284,9 @@ my_transaction_data %>%
 
 ---
 
-**Question 5**: The code below filters `my_transaction_data` to include only peanut better, jelly, and jam transactions. Then it creates a new variable named `package_size` equal to product size in ounces. Create a bar graph with `pb_and_j_data` to visualize the distribution of the retailer's PB\&J transactions by product size. Which two product sizes are the most popular?
+## Exercise 10
+
+The code below filters `my_transaction_data` to include only peanut better, jelly, and jam transactions. Then it creates a new variable named `package_size` equal to product size in ounces. Create a bar graph with `pb_and_j_data` to visualize the distribution of the retailer's PB\&J transactions by product size. Which two product sizes are the most popular?
 
 ```{r Q5, warning = FALSE}
 pb_and_j_data <- my_transaction_data %>% 
@@ -269,7 +297,7 @@ pb_and_j_data <- my_transaction_data %>%
   )
 ```
 
-**Answer**:
+#### Answer
 
 The most popular product size for PB&J products is 18oz. The runner-up is 32oz.
 
@@ -278,7 +306,7 @@ ggplot(pb_and_j_data, aes(x = product_size)) +
   geom_bar()
 ```
 
-This result can be confirmed numerically in the data: 
+This result can be confirmed numerically in the data below: 
 
 ```{r Q5b}
 pb_and_j_data %>% 
