@@ -1,0 +1,55 @@
+---
+title: "Day 2 Case Study"
+subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
+author: "Brad Boehmke"
+date: "2018-12-13"
+output:
+  xaringan::moon_reader:
+    css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
+    self_contained: false
+    lib_dir: libs
+    chakra: libs/remark-latest.min.js
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false  
+---
+
+```{r setup, include=FALSE, cache=FALSE}
+# Set global R options
+options(htmltools.dir.version = FALSE, servr.daemon = TRUE)
+
+# Set global knitr chunk options
+knitr::opts_chunk$set(
+  fig.align = "center", 
+  cache = TRUE,
+  error = FALSE,
+  message = FALSE, 
+  warning = FALSE, 
+  collapse = TRUE 
+)
+```
+
+# Case Study
+
+<br><br><br><br><br><br>
+.center.font200.bold[http://bit.ly/intro-r-day-2-case-study]
+
+---
+
+# Review results
+
+<br><br><br><br><br><br>
+.center.font200.bold[http://bit.ly/intro-r-day-2-case-study-solutions]
+
+---
+
+# Day 2...done `r anicon::faa("check", animate = "pulse", speed = "slow", colour = "red")`
+
+<br>
+
+```{r questions-end-of-day1, echo=FALSE, out.height="450", out.width="450"}
+knitr::include_graphics("images/exhausted.png")
+```

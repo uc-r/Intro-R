@@ -37,7 +37,7 @@ __Day 2__
 | [Joining data](https://uc-r.github.io/Intro-R/day-2d-joins.html) | 1:00-1:45 |
 | [Data structures](https://uc-r.github.io/Intro-R/day-2e-data-structures.html) | 1:45-2:30 |
 | Break | 2:30-2:45 |
-| Case study | 2:45-4:00 |
+| [Case study](https://uc-r.github.io/Intro-R/day-2f-case-study.html) | 2:45-4:00 |
 | Q&A | 4:00-4:30 |
 
 ### Course Preparation
