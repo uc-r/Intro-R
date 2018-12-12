@@ -140,7 +140,7 @@ transactions
 
 
 ```r
-# filter for all observations in month 1 (January)
+# filter for all observations for household 3780
 *filter(transactions, hshd_num == "3708")
 ## # A tibble: 565 x 9
 ##    basket_num hshd_num purchase_ product_num spend units store_r week_num
@@ -157,7 +157,7 @@ transactions
 ## 10     955303     3708 04-NOV-17     4896971  1        1 SOUTH         96
 ## # ... with 555 more rows, and 1 more variable: year &lt;int&gt;
 
-# filter for all observations on January 1st
+# filter for all observations for household 3780 with spending over $3
 *filter(transactions, hshd_num == "3708", spend &gt; 3)
 ## # A tibble: 197 x 9
 ##    basket_num hshd_num purchase_ product_num spend units store_r week_num
@@ -174,7 +174,7 @@ transactions
 ## 10     747396     3708 10-JUN-17     5235072  4.19     1 SOUTH         75
 ## # ... with 187 more rows, and 1 more variable: year &lt;int&gt;
 
-# filter for all observations on January 1st with a departure delay
+# filter for household 3780 with spending over $3 for all products except 85383
 *filter(transactions, hshd_num == "3708", spend &gt; 3, product_num != 85383)
 ## # A tibble: 176 x 9
 ##    basket_num hshd_num purchase_ product_num spend units store_r week_num
@@ -232,7 +232,7 @@ hshd_3708
 
 .font90[
 Function  | Description
-------- | ------
+:-----: | ------
 `&lt;` | less than
 `&gt;` | greater than
 `==` | equal to
@@ -805,7 +805,7 @@ summarize(transactions,
 
 .font80[
 Function  | Description
-------- | ------
+:-----: | ------
 `min()`, `max()` | min, max values in vector
 `mean()` | mean value
 `median()` | median value
@@ -895,7 +895,7 @@ class: yourturn
 
 1. Compute the average `spend` by `hshd_num` and arrange in descending order to find the household with the largest average spend.
 
-2. Find the `product_num`s with the largest median spend.
+2. Find the products (`product_num`) with the largest median spend.
 
 ]
 
@@ -1140,7 +1140,7 @@ _.blue[Must be vectorized functions - meaning the function must take a vector of
 
 .font80[
 Function  | Description
-------- | ------
+:-----: | ------
 `+,-,*,/,^` | arithmetic
 `x / sum(x)` | arithmetic w/aggregation
 `%/%, %%` | modular arithmetic
@@ -1235,10 +1235,10 @@ Hint:
 
 ```r
 transactions %&gt;%
-  group_by(______, ______) %&gt;%
-  summarize(______) %&gt;%
-  mutate(______) %&gt;%
-  arrange(______)
+  group_by(______, ______) %&gt;% # group by region and week
+  summarize(______) %&gt;%        # compute sum of units
+  mutate(______) %&gt;%           # create WoW difference (check out lag())
+  arrange(______)              # arrange in descending order
 ```
 
 ]
