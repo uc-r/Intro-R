@@ -132,6 +132,31 @@ knitr::include_graphics("images/applied-data-science.gif")
 
 ---
 
+# Data science courses
+
+<br><br><br>
+
+.pull-left[
+
+| Course | Dates |
+|:------|:------:|
+| Intro to R | Dec 13-14 |
+| Intermediate R | Jan 31 - Feb 1 |
+| Advanced R | Feb 28 - Mar 1 |
+| Machine Learning with R | Apr 1-2 |
+
+]
+
+.pull-right[
+
+```{r ds-class-options, echo=FALSE}
+knitr::include_graphics("images/data-science-flow-overall.png")
+```
+
+]
+
+---
+
 # Course objectives!
 
 .font110[Provide an intensive, hands-on introduction to the `r anicon::faa("r-project", colour = "steelblue", size = 1, animate = FALSE)` programming language:]
@@ -169,9 +194,9 @@ knitr::include_graphics("images/applied-data-science.gif")
 | Topic | Time |
 |:------|:------:|
 | Review | 9:00-10:00 |
-| Tidying & cleaning | 10:00-10:45 |
+| Data types | 10:00-10:45 |
 | Break | 10:45 - 11:00 |
-| Tidying & cleaning | 11:00-12:00 |
+| Tidy data | 11:00-12:00 |
 | Lunch | 12:00 - 1:00 |
 | Joining data | 1:00-1:45 |
 | Data structures | 1:45-2:30 |
@@ -251,8 +276,10 @@ class: yourturn
 
 .font140[
 1. What is their experience with R?
+
 2. What programming experience other than R do they have?
-2. How are they using, or how do they plan to use, R in their job?
+
+3. How are they using, or how do they plan to use, R in their job?
 ]
 
 
@@ -340,7 +367,7 @@ class: yourturn
 
 <br><br>
 .font130[
-(1). Open .R script for this module (`day-1a-intro.R`)
+(1) Open .R script for this module (`day-1a-intro.R`)
 ]
 .pull-left[
 .font130[
@@ -438,7 +465,7 @@ knitr::include_graphics("images/set-wk-dir.png")
 ### R as a calculator `r anicon::faa("calculator", animate = 'pulse', speed = 'slow', anitype="hover")`
 
 ```{r}
-# uses PEMBDAS convention for order of operations
+# uses PEMDAS convention for order of operations
 4 + 3 / 10 ^ 2
 (4 + 3) / 10 ^ 2
 (4 + 3 / 10) ^ 2
@@ -518,7 +545,7 @@ Q
 .pull-left[
 * You should now have 4 objects in your global environment
 * History tab will show your recent code
-* To list and remove these objects from your globa environment:
+* To list and remove these objects from your global environment:
 
 ```{r, eval=FALSE}
 # list all objects
@@ -549,7 +576,7 @@ knitr::include_graphics("images/workspace.png")
 
 The fundamental unit of shareable code is the .bold[package].
 
-* CRAN: 13,000+
+* CRAN: 13,500+
 * Bioconductor: 1,500+
 * GitHub: Many more plus beta versions for updated packages not yet published
 
@@ -564,7 +591,7 @@ knitr::include_graphics("images/base-r-pkgs.png")
 
 The fundamental unit of shareable code is the .bold[package].
 
-* CRAN: 13,000+
+* CRAN: 13,500+
 * Bioconductor: 1,500+
 * GitHub: Many more plus beta versions for updated packages not yet published
 
@@ -647,11 +674,13 @@ library(nycflights13)
 ]
 
 <br><br><br><br>
-.center[.content-box-gray[For a full list of useful packages see this guide:  http://bit.ly/1x9vkzV]]
+.center[.content-box-gray[For a list of useful packages see this guide:  http://bit.ly/1x9vkzV]]
 
 ---
 
 # What is tidyverse?
+
+--
 
 .pull-left[
 
