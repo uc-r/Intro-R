@@ -3,7 +3,7 @@
 library(dplyr) # or library(tidyverse)
 
 ## ----Data requirements --------------------------------------------------
-transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as_tibble()
 transactions
 
 
