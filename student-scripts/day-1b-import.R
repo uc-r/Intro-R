@@ -49,7 +49,7 @@ transactions
 
 # convert data frame to a tibble
 transactions <- data.table::fread("data/transactions.csv", data.table = FALSE)
-transactions <- as.tibble(transactions)
+transactions <- as_tibble(transactions)
 transactions
 
 
