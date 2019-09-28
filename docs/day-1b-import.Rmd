@@ -278,7 +278,7 @@ library(tibble)
 
 ```{r}
 transactions <- data.table::fread("data/transactions.csv", data.table = FALSE)
-transactions <- as.tibble(transactions) #<<
+transactions <- tibble::as_tibble(transactions) #<<
 
 transactions
 ```
@@ -302,7 +302,7 @@ knitr::include_graphics("images/i-like.gif")
 
 .center.font120[
 `r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")`  
-These methods do not incoporate the code to import the data. Unless you remember to add the code, your script will not be reproducible!  
+These methods do not incorporate the code to import the data. Unless you remember to add the code, your script will not be reproducible!  
 `r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")``r anicon::faa("exclamation-triangle", speed = "slow", colour = "red")`
 ]
 
@@ -346,7 +346,8 @@ knitr::include_graphics("images/rstudio-import-option.png")
 dim(transactions)
 
 # get a quick glimpse of the data
-glimpse(transactions)
+str(transactions)   # or...
+dplyr::glimpse(transactions)
 
 # get the names of all the variables
 names(transactions)
@@ -362,7 +363,6 @@ View(transactions)
 ```
 
 --
-<br>
 .center[.content-box-gray[.bold[.red[So we have our data, now what?]]]]
 
 ---

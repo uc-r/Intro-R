@@ -13,3 +13,4 @@ lubridate
 hms
 bindrcpp
 completejourney
+testthat
