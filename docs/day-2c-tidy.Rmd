@@ -612,6 +612,9 @@ bomber_mess %>%
 
 * .bold[`unite`]: reshape multiple variables into one
 
+* .bold[Note:] .bold[`tidyr`] just got some updates and some of this functionality will 
+  be changing (i.e. `gather()` and `spread()` are changing to `pivot_longer()` and 
+  `pivot_wider()`)
 
 ]
 
