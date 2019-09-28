@@ -1,13 +1,16 @@
 
 ## ---Package Requirements ------------------------------------------------
 library(ggplot2) # or library(tidyverse)
+library(dplyr)   # for other data wrangling tasks
 
 ## ---- Example Data ------------------------------------------------------
 # built-in data set
 mpg
 
 ## ---- Exercise Data -----------------------------------------------------
-transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as_tibble()
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% 
+  sample_frac(0.25) %>%
+  as_tibble()
 transactions
 
 

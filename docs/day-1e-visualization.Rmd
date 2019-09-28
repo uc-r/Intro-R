@@ -2,7 +2,7 @@
 title: "Visualizing Data"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
-date: "2018-12-13"
+date: "2019-10-17"
 output:
   xaringan::moon_reader:
     css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
@@ -37,7 +37,9 @@ library(ggplot2)
 thm <- theme_bw()
 theme_set(thm)
 
-transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% 
+  sample_frac(0.25) %>%
+  as_tibble()
 ```
 
 class: clear, center, middle
@@ -120,6 +122,7 @@ ggplot(data = txhousing, aes(x = volume, y = median)) +
 
 ```{r}
 library(ggplot2) # or library(tidyverse)
+library(dplyr)   # for other data wrangling tasks
 ```
 
 ]
@@ -136,8 +139,10 @@ mpg
 ### Exercise Data
 
 ```{r, eval=FALSE}
-transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
-transactions
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% 
+  sample_frac(0.25) %>%
+  as_tibble()
+transactions 
 ```
 
 ]
