@@ -2,7 +2,7 @@
 title: "Importing Data"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
-date: "2018-12-13"
+date: "2019-10-17"
 output:
   xaringan::moon_reader:
     css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]

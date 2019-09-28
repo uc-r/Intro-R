@@ -90,9 +90,6 @@ arrange(transactions, spend)
 # descending order
 arrange(transactions, desc(spend))
 
-## ------------------------------------------------------------------------
-(df <- tibble(x = c(5, 2, 5, NA)))
-
 
 
 ## ----Arrange-Your-Turn ----------E---------------------------------------
