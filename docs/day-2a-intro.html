@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Day 2 Intro</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="Brad Boehmke" />
-    <meta name="date" content="2018-12-13" />
+    <meta name="date" content="2019-10-18" />
     <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
     <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
     <link rel="stylesheet" href="scrollable.css" type="text/css" />
@@ -27,7 +27,7 @@ class: title-slide
 ## .font70[.italic['If you fall, stand tall and come back for more'] - Tupac Shakur]
 
 ### Brad Boehmke
-### Dec 13-14, 2018
+### Oct 17-18, 2019
 
 
 ---
@@ -99,11 +99,13 @@ class: yourturn
 &lt;br&gt;&lt;br&gt;
 
 ```r
+library(tidyverse)
+
 # 1
 households &lt;- readr::read_csv("data/households.csv")
 
 # 2
-transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE) %&gt;% as.tibble()
+transactions &lt;- data.table::fread("data/transactions.csv", data.table = FALSE) %&gt;% as_tibble()
 ```
 
 ---
@@ -151,7 +153,11 @@ class: yourturn
 
 ### Challenge #1
 
-How much total spend has household 4124 had throughout the available data?
+How much total spend has household 4124 had throughout the available data? 
+
+__Hint:__ 
+- `hshd_num` `\(\rightarrow\)` household variable 
+- `spend` `\(\rightarrow\)` spend variable
 
 
 ```r
@@ -170,8 +176,6 @@ transactions %&gt;%
 
 
 ```r
-library(tidyverse)
-
 transactions %&gt;%
   filter(hshd_num == 4124) %&gt;%
   summarize(spend = sum(spend, na.rm = TRUE))
@@ -194,16 +198,19 @@ class: yourturn
 
 Which week did household 4124 spend the most?
 
+__Hint:__ 
+- `week_num` `\(\rightarrow\)` week variable
+
 
 ```r
 transactions %&gt;%
   filter(_____) %&gt;%
   group_by(_____) %&gt;%
-  summarize(_____) %&gt;%
+  summarize(spend = _____) %&gt;%
 * top_n(_____)
 ```
 
-&lt;br&gt;&lt;br&gt;
+&lt;br&gt;
 
 .center[.content-box-gray[.bold[try use .grey[`top_n()`] rather than .grey[`arrange()`]]]]
 
@@ -239,14 +246,18 @@ class: yourturn
 
 ### Challenge #3
 
-Compute the average spend per basket for each region.
+Compute the average spend per basket (`basket_num`) for each region (`store_r`).
+
+__Hint:__ 
+- `basket_num` `\(\rightarrow\)` basket variable
+- `store_r` `\(\rightarrow\)` region variable
 
 
 ```r
 transactions %&gt;% 
   group_by(_____, _____) %&gt;% 
-  summarize(_____) %&gt;% 
-  summarize(_____) %&gt;%
+  summarize(spend = _____) %&gt;% 
+  summarize(avg_spend = _____) %&gt;%
   arrange(_____)
 ```
 
@@ -277,61 +288,6 @@ transactions %&gt;%
 
 ]
 
----
-
-class: yourturn
-# Your Turn!
-
-.pull-left[
-
-### Challenge #4
-
-Can you find the date that has the largest spend-to-units ratio? 
-
-
-```r
-transactions %&gt;% 
-  ______ %&gt;%
-  ______ %&gt;%
-  ______ %&gt;%
-  ______ %&gt;%
-```
-
-]
-
---
-
-.pull-right[
-
-### Solution
-
-
-```r
-transactions %&gt;%
-  group_by(purchase_) %&gt;%
-  summarize(
-    spend = sum(spend, na.rm = TRUE),
-    units = sum(units, na.rm = TRUE)
-    ) %&gt;%
-  mutate(spend_to_units = spend / units) %&gt;%
-  arrange(desc(spend_to_units))
-## # A tibble: 363 x 4
-##    purchase_  spend units spend_to_units
-##    &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;          &lt;dbl&gt;
-##  1 14-FEB-17 18971.  5372           3.53
-##  2 23-NOV-17  8514.  2669           3.19
-##  3 14-MAY-17 25180.  8070           3.12
-##  4 24-DEC-17 25316.  8138           3.11
-##  5 13-MAY-17 25785.  8303           3.11
-##  6 13-FEB-17 20300.  6619           3.07
-##  7 23-DEC-17 37721. 12312           3.06
-##  8 24-NOV-17 13037.  4311           3.02
-##  9 15-SEP-17 18488.  6129           3.02
-## 10 28-NOV-17 12863.  4285           3.00
-## # ... with 353 more rows
-```
-
-]
 
 ---
 
@@ -381,7 +337,7 @@ Plot the total spend by weeks
 transactions %&gt;%
   group_by(week_num) %&gt;%
   summarize(spend = sum(spend, na.rm = TRUE)) %&gt;%
-  ggplot(aes(________)) +
+  ggplot(aes(x = _____, y = _____)) +
   geom_______
 ```
 
@@ -401,7 +357,7 @@ transactions %&gt;%
   geom_line()
 ```
 
-&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -448,7 +404,7 @@ transactions %&gt;%
   facet_wrap(~ store_r)
 ```
 
-&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -497,7 +453,7 @@ transactions %&gt;%
   facet_wrap(~ store_r)
 ```
 
-&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 ]
 ---
@@ -548,7 +504,7 @@ transactions %&gt;%
   scale_y_continuous("Total spend", labels = scales::dollar)
 ```
 
-&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="day-2a-intro_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ]
 ]
@@ -561,6 +517,7 @@ transactions %&gt;%
 
 &lt;img src="images/questions.png" width="450" height="450" style="display: block; margin: auto;" /&gt;
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "ratio": "16:9",
@@ -571,16 +528,57 @@ transactions %&gt;%
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
 })();</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -594,7 +592,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -2,7 +2,7 @@
 title: "Day 2 Intro"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
-date: "2018-12-13"
+date: "2019-10-18"
 output:
   xaringan::moon_reader:
     css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
@@ -50,7 +50,7 @@ class: title-slide
 ## .font70[.italic['If you fall, stand tall and come back for more'] - Tupac Shakur]
 
 ### Brad Boehmke
-### Dec 13-14, 2018
+### Oct 17-18, 2019
 
 
 ---
@@ -121,11 +121,13 @@ class: yourturn
 --
 <br><br>
 ```{r}
+library(tidyverse)
+
 # 1
 households <- readr::read_csv("data/households.csv")
 
 # 2
-transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as.tibble()
+transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% as_tibble()
 ```
 
 ---
@@ -173,7 +175,11 @@ class: yourturn
 
 ### Challenge #1
 
-How much total spend has household 4124 had throughout the available data?
+How much total spend has household 4124 had throughout the available data? 
+
+__Hint:__ 
+- `hshd_num` $\rightarrow$ household variable 
+- `spend` $\rightarrow$ spend variable
 
 ```{r, eval=FALSE}
 transactions %>%
@@ -190,8 +196,6 @@ transactions %>%
 ### Solution
 
 ```{r}
-library(tidyverse)
-
 transactions %>%
   filter(hshd_num == 4124) %>%
   summarize(spend = sum(spend, na.rm = TRUE))
@@ -210,15 +214,18 @@ class: yourturn
 
 Which week did household 4124 spend the most?
 
+__Hint:__ 
+- `week_num` $\rightarrow$ week variable
+
 ```{r, eval=FALSE}
 transactions %>%
   filter(_____) %>%
   group_by(_____) %>%
-  summarize(_____) %>%
+  summarize(spend = _____) %>%
   top_n(_____) #<< 
 ```
 
-<br><br>
+<br>
 
 .center[.content-box-gray[.bold[try use .grey[`top_n()`] rather than .grey[`arrange()`]]]]
 
@@ -249,13 +256,17 @@ class: yourturn
 
 ### Challenge #3
 
-Compute the average spend per basket for each region.
+Compute the average spend per basket (`basket_num`) for each region (`store_r`).
+
+__Hint:__ 
+- `basket_num` $\rightarrow$ basket variable
+- `store_r` $\rightarrow$ region variable
 
 ```{r, eval=FALSE}
 transactions %>% 
   group_by(_____, _____) %>% 
-  summarize(_____) %>% 
-  summarize(_____) %>%
+  summarize(spend = _____) %>% 
+  summarize(avg_spend = _____) %>%
   arrange(_____)
 ```
 
@@ -278,45 +289,6 @@ transactions %>%
 
 ]
 
----
-
-class: yourturn
-# Your Turn!
-
-.pull-left[
-
-### Challenge #4
-
-Can you find the date that has the largest spend-to-units ratio? 
-
-```{r, eval=FALSE}
-transactions %>% 
-  ______ %>%
-  ______ %>%
-  ______ %>%
-  ______ %>%
-```
-
-]
-
---
-
-.pull-right[
-
-### Solution
-
-```{r}
-transactions %>%
-  group_by(purchase_) %>%
-  summarize(
-    spend = sum(spend, na.rm = TRUE),
-    units = sum(units, na.rm = TRUE)
-    ) %>%
-  mutate(spend_to_units = spend / units) %>%
-  arrange(desc(spend_to_units))
-```
-
-]
 
 ---
 
@@ -365,7 +337,7 @@ Plot the total spend by weeks
 transactions %>%
   group_by(week_num) %>%
   summarize(spend = sum(spend, na.rm = TRUE)) %>%
-  ggplot(aes(________)) +
+  ggplot(aes(x = _____, y = _____)) +
   geom_______
 ```
 
