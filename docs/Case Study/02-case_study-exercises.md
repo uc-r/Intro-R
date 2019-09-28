@@ -3,7 +3,8 @@ Day 2 Case Study Exercises
 
 The following 6 exercises are based on concepts covered over the last
 two days. They can be answered using the transactions.csv, products.csv,
-and households.csv data sets. Start by loading the `tidyverse` and
+and households.csv data sets in your data folder (not from the
+`completejourney` package). Start by loading the `tidyverse` and
 importing the three .csv data sets.
 
 ``` r
