@@ -6,11 +6,12 @@ Day 1 Case Study Exercises
 All of the exercises can be solved using the `tidyverse` and
 `completejourney` packages. The `completejourney` package is an R data
 package that has been created so the full suite of Complete Journey
-datasets can be loaded as a library. In order to use the data you must
-first install the package following these steps:
+datasets can be loaded as a library. You can find details about the data
+and the variables at <http://bit.ly/completejourney>. In order to use
+the data you must first install the package following these steps:
 
 ``` r
-devtools::install_github('bradleyboehmke/completejourney')
+install.packages('completejourney')
 ```
 
 **NOTE**: Installing packages from GitHub requires the installation of
@@ -25,9 +26,12 @@ library(_______)
 ```
 
 The exercises that follow will use various data sets included in the
-`completejourney` package to include:
+`completejourney` package to
+include:
 
 ``` r
+transactions <- transactions_sample  # just using a sample of the entire data
+
 transactions
 products
 ```
@@ -35,40 +39,33 @@ products
 # Data Transformation
 
 The following five exercises are based on concepts covered in the data
-transformation (`dplyr`) slides. Answer them using `transactions` in the
-Complete Journey data package modified with the following ( ***run the
-below code before performing the exercises that follow\!*** ):
-
-``` r
-transactions <- transactions %>% 
-  select(
-    quantity,
-    sales_value, 
-    retail_disc, coupon_disc, coupon_match_disc,
-    household_id, store_id, basket_id, product_id, 
-    week, transaction_timestamp
-  ) %>%
-  mutate(date = lubridate::as_date(transaction_timestamp))
-```
+transformation (`dplyr`) slides.
 
 -----
 
 ## Exercise 1
 
-Change the discount variables (i.e., `retail_disc`, `coupon_disc`,
-`coupon_match_disc`) from negative to positive.
+Create three new variables named `regular_price`, `loyalty_price`, and
+`coupon_price` according to the following
+logic:
 
-**Hint:** Use the `abs()` function within `mutate()`.
+``` r
+regular_price = (sales_value + retail_disc + coupon_match_disc) / quantity
+loyalty_price = (sales_value + coupon_match_disc) / quantity
+coupon_price  = (sales_value - coupon_disc) / quantity
+```
 
 This question is designed to strengthen your ability to use the `dplyr`
-verb `mutate()` to overwrite an existing variable.
+verb `mutate()` to create new variables from existing ones. It should
+also help you develop a better understanding of the discount variables
+in `transactions`.
 
 ``` r
 transactions <- transactions %>% 
   mutate(
-    ______,
-    ______,
-    ______
+    regular_price = _______,
+    loyalty_price = _______,
+    coupon_price = _______
     )
 ```
 
@@ -104,7 +101,7 @@ transactions <- transactions %>%
 
 ## Exercise 3
 
-`transactions` includes 68,509 unique product IDs. How many of these
+`transactions` includes 20,902 unique product IDs. How many of these
 products (not transactions\!) had a regular price of one dollar or less?
 What does this count equal when loyalty price is one dollar or less? How
 about when coupon price is one dollar or less?
@@ -113,84 +110,98 @@ about when coupon price is one dollar or less?
 unique products using the `n_distinct()` function.
 
 This question is designed to strengthen your ability to use the `dplyr`
-verbs `filter()` and
-`select()`.
+verbs `filter()` and `select()`.
 
 ``` r
-# change your input in filter to assess the different (i.e. regular_price <= 1 vs loyalty_price <= 1)
+# change your input in filter to assess the different options:
+#   - regular_price <= 1
+#   - loyalty_price <= 1
+#   - coupon_price <= 1
+
+# how many products had a regular price of $1 or less
 transactions %>% 
-  filter(______) %>% 
+  filter(_______) %>% 
+  select(product_id) %>% 
+  n_distinct()
+
+# how many products had a loyalty price of $1 or less
+transactions %>% 
+  filter(_______) %>% 
+  select(product_id) %>% 
+  n_distinct()
+
+# how many products had a coupon price of $1 or less
+transactions %>% 
+  filter(_______) %>% 
   select(product_id) %>% 
   n_distinct()
 ```
 
 -----
 
-## Exercise 4
+## Exercise 3
 
 What proportion of baskets are over $10 in sales value?
 
-**Hint:** You need to use `group_by()` and two consecutive `summarize()`
-functions.
+**Hint:** You need to use `group_by()` and `summarize()`. Depending on
+your approach you may or may not use `mutate()`.
 
 This question is designed to strengthen your ability to use the `dplyr`
-verbs `group_by()` and `summarize()`.
+verbs `group_by()`, and `summarize()`.
 
 ``` r
 transactions%>%
-  group_by(______) %>%
-  summarize(basket_value = sum(______)) %>%
-  summarize(proportion_over_10 = mean(______ > __))
+  group_by(_______) %>%
+  summarize(basket_value = _______) %>%
+  summarize(proportion_over_10 = _______)
 ```
 
 -----
 
-## Exercise 5
+## Exercise 4
 
-Which store with over $10K in total `sales_value`, discounts its
-products the most for loyal customers?
+Which stores had the largest total `sales_value` (hint:
+`sum(sales_value, na.rm = TRUE)`? Which stores had the largest average
+loyalty discount as defined below?
 
-**Hint:**
-
-First, create a new variable that calculates loyalty discount as a
-percentage of regular price using the following logic:
+**Hint:** You can calculate loyalty discount as a percentage of regular
+price using the following logic:
 
 ``` r
 pct_loyalty_disc = 1 - (loyalty_price / regular_price)
 ```
 
-Then you want to
-
-  - group by store
-  - compute total sales value and mean loyalty discount
-  - filter for only stores with over $10,000 in sales
-  - arrange stores based on average loyalty discount
-
 This question is designed to strengthen your ability to use the `dplyr`
-verbs `filter()`, `mutate()`, `group_by()`, `summarize()`, and
-`arrange()`.
+verbs `mutate()`, `group_by()`, `summarize()`, and `arrange()`.
 
 ``` r
+# find the stores with the largest total `sales_value`
 transactions %>%
-  mutate(______) %>%
-  group_by(______) %>%
-  summarize(______) %>%
-  filter(______) %>%
-  arrange(desc(______))
+  group_by(store_id) %>%
+  summarize(total_sales_value = _______) %>%
+  arrange(_______)
+```
+
+``` r
+# find the stores with the largest average (mean) loyalty discount
+transactions %>%
+  mutate(pct_loyalty_disc = _______) %>%
+  group_by(_______) %>%
+  summarize(avg_pct_loyalty_disc = _______) %>%
+  arrange(_______)
 ```
 
 -----
 
 # Data Visualization
 
-The following five exercises are based on concepts covered in the data
+The following five questions are based on concepts covered in the data
 visualization (`ggplot2`) slides. They can be answered using the
-`transactions` and `products` data sets from the `completejourney`
-package.
+`transactions` and `products` datasets.
 
 -----
 
-## Exercise 6
+## Exercise 5
 
 Create a histogram of the `quantity` variable in the `transactions`
 data. What, if anything, do you find unusual about this visualization?
@@ -205,25 +216,28 @@ ggplot(data = ______, aes(x = ______)) +
 
 -----
 
-## Exercise 7
+## Exercise 6
 
-Use a line graph to plot total sales value by `week` and `date`. What
-kind of patterns do you find?
+Use a line graph to plot total sales value by `date` (I have included a
+mutate statement that parses the YYY-MM-DD from the
+`transaction_timestamp` variable and names it `date`). What kind of
+patterns do you find?
 
 This question is designed to strengthen your ability to use `dplyr`
 verbs in combination with `geom_line()`.
 
 ``` r
 transactions %>% 
-  group_by(______, ______) %>% 
-  summarize(______) %>%
+  mutate(date = lubridate::as_date(transaction_timestamp)) %>%
+  group_by(______) %>% 
+  summarize(total_sales_value = ______) %>%
   ggplot(aes(x = ______, y = ______)) + 
   geom_line()
 ```
 
 -----
 
-## Exercise 8
+## Exercise 7
 
 Use a bar graph to compare the total sales values of national and
 private-label brands.
@@ -242,15 +256,15 @@ verbs in combination with `geom_col()`.
 
 ``` r
 my_transaction_data %>%
-  group_by(______) %>%
-  summarize(______) %>%
+  group_by(brand) %>%
+  summarize(total_sales_value = ______) %>%
   ggplot(aes(x = ______, y = ______)) + 
   geom_col()
 ```
 
 -----
 
-## Exercise 9
+## Exercise 8
 
 Building on the previous exercise, suppose you want to understand
 whether the retailer’s customers’ preference for national brands
@@ -271,16 +285,16 @@ private-label brands for soft drinks and cheeses.
 
 ``` r
 my_transaction_data %>%
-  filter(______ %in% c('SOFT DRINKS', 'CHEESE')) %>%
-  group_by(______, ______) %>%
-  summarize(______) %>%
-  ggplot(aes(x = ______, y = ______, fill = ______)) + 
+  filter(product_category %in% c('SOFT DRINKS', 'CHEESE')) %>%
+  group_by(brand, product_category) %>%
+  summarize(total_sales_value = sum(sales_value)) %>%
+  ggplot(aes(x = product_category, y = total_sales_value, fill = brand)) + 
   geom_col()
 ```
 
 -----
 
-## Exercise 10
+## Exercise 9
 
 The code below filters `my_transaction_data` to include only peanut
 better, jelly, and jam transactions. Then it creates a new variable
@@ -291,10 +305,10 @@ popular?
 
 ``` r
 pb_and_j_data <- my_transaction_data %>% 
-  filter(commodity_desc == 'PNT BTR/JELLY/JAMS') %>%
+  filter(product_category == 'PNT BTR/JELLY/JAMS') %>%
   mutate(
     product_size = as.factor(as.integer(gsub('([0-9]+)([[:space:]]*OZ)', '\\1',
-                                             curr_size_of_product)))
+                                             package_size)))
   )
 ```
 

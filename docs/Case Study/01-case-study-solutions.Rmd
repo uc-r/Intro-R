@@ -15,10 +15,10 @@ knitr::opts_chunk$set(
 
 # Prerequisites
 
-All of the exercises can be solved using the `tidyverse` and `completejourney` packages. The `completejourney` package is an R data package that has been created so the full suite of Complete Journey datasets can be loaded as a library. In order to use the data you must first install the package following these steps:
+All of the exercises can be solved using the `tidyverse` and `completejourney` packages. The `completejourney` package is an R data package that has been created so the full suite of Complete Journey datasets can be loaded as a library. You can find details about the data and the variables at http://bit.ly/completejourney. In order to use the data you must first install the package following these steps:
 
 ```{r, eval=FALSE}
-devtools::install_github('bradleyboehmke/completejourney')
+install.packages('completejourney')
 ```
 
 __NOTE__: Installing packages from GitHub requires the installation of the devtools package, which can be installed by running the following command from the R console: `install.packages('devtools')`.
@@ -32,7 +32,9 @@ library(completejourney)
 
 The exercises that follow will use various data sets included in the `completejourney` package to include:
 
-```{r datasets, eval=FALSE}
+```{r datasets}
+transactions <- transactions_sample  # just using a sample of the entire data
+
 transactions
 products
 ```
@@ -40,44 +42,11 @@ products
 
 # Data Transformation
 
-The following five exercises are based on concepts covered in the data transformation (`dplyr`) slides. Answer them using `transactions` in the Complete Journey data package modified with the following ( ___run the below code before performing the exercises that follow!___ ):
-
-```{r load-packages}
-transactions <- transactions %>% 
-  select(
-    quantity,
-    sales_value, 
-    retail_disc, coupon_disc, coupon_match_disc,
-    household_id, store_id, basket_id, product_id, 
-    week, transaction_timestamp
-  ) %>%
-  mutate(date = lubridate::as_date(transaction_timestamp))
-```
+The following five exercises are based on concepts covered in the data transformation (`dplyr`) slides. 
 
 ---
 
 ## Exercise 1
-
-Change the discount variables (i.e., `retail_disc`, `coupon_disc`, `coupon_match_disc`) from negative to positive. 
-
-**Hint:** Use the `abs()` function within `mutate()`. 
-
-This question is designed to strengthen your ability to use the `dplyr` verb `mutate()` to overwrite an existing variable.
-
-#### Answer
-
-```{r}
-transactions <- transactions %>% 
-  mutate(
-    retail_disc       = abs(retail_disc),
-    coupon_disc       = abs(coupon_disc),
-    coupon_match_disc = abs(coupon_match_disc)
-  )
-```
-
----
-
-## Exercise 2
 
 Create three new variables named `regular_price`, `loyalty_price`, and `coupon_price` according to the following logic:
 
@@ -105,9 +74,9 @@ This question is designed to strengthen your ability to use the `dplyr` verb `mu
 
 ---
 
-## Exercise 3
+## Exercise 2
 
-`transactions` includes 68,509 unique product IDs. How many of these products (not transactions!) had a regular price of one dollar or less? What does this count equal when loyalty price is one dollar or less?  How about when coupon price is one dollar or less?
+`transactions` includes 20,902 unique product IDs. How many of these products (not transactions!) had a regular price of one dollar or less? What does this count equal when loyalty price is one dollar or less?  How about when coupon price is one dollar or less?
 
 **Hint:** After filtering, select the `product_id` column and count unique products using the `n_distinct()` function. 
 
@@ -115,8 +84,7 @@ This question is designed to strengthen your ability to use the `dplyr` verbs `f
 
 #### Answer
 
-8,698 products had a regular price less than or equal to $1.00. This count for loyalty price is 14,043 products. For coupon price, it's 15,676. These numbers indicate that over 5,300 products were discounted to a dollar or less with 
-loyalty-card promotions or coupons.
+2,748 products had a regular price less than or equal to $1.00. This count for loyalty price is 4,648 products. For coupon price, it's 4,844. These numbers indicate that over 2,000 products were discounted to a dollar or less with loyalty-card promotions or coupons.
 
 ```{r}
 # how many products had a regular price of $1 or less
@@ -140,17 +108,17 @@ transactions %>%
 
 ---
 
-## Exercise 4
+## Exercise 3
 
 What proportion of baskets are over $10 in sales value? 
 
 **Hint:** You need to use `group_by()` and `summarize()`. Depending on your approach you may or may not use `mutate()`. 
 
-This question is designed to strengthen your ability to use the `dplyr` verbs `group_by()`, `summarize()` and `ungroup()`.
+This question is designed to strengthen your ability to use the `dplyr` verbs `group_by()`, and `summarize()`.
 
 #### Answer
 
-Approximately 66% of baskets bring the retailer over $10 in value.
+Approximately 11% of baskets bring the retailer over $10 in value.
 
 ```{r}
 transactions%>%
@@ -161,9 +129,9 @@ transactions%>%
 
 ---
 
-## Exercise 5
+## Exercise 4
 
-Which store with over $10K in total `sales_value`, discounts its products the most for loyal customers? 
+Which stores had the largest total `sales_value` (hint: `sum(sales_value, na.rm = TRUE)`? Which stores had the largest average loyalty discount as defined below?  
 
 **Hint:** You can calculate loyalty discount as a percentage of regular price using the following logic:
 
@@ -171,36 +139,37 @@ Which store with over $10K in total `sales_value`, discounts its products the mo
 pct_loyalty_disc = 1 - (loyalty_price / regular_price)
 ```
 
-This question is designed to strengthen your ability to use the `dplyr` verbs `filter()`, `mutate()`, `group_by()`, 
-`summarize()`, and `arrange()`.
+This question is designed to strengthen your ability to use the `dplyr` verbs `mutate()`, `group_by()`, `summarize()`, and `arrange()`.
 
 #### Answer
 
-`store_id == 341` has, on average, a discount of 18.7% off regular price for 
-members of the retailer's loyalty program. The code below returns all stores in 
-rank order to give a sense of how similar the discounting is (not) between 
-stores.
+`store_id == 367` has has the largest total sales value and `store_id == 224` has
+the largest average loyalty discount percentage.
+
+```{r}
+transactions %>%
+  group_by(store_id) %>%
+  summarize(total_sales_value = sum(sales_value, na.rm = TRUE)) %>%
+  arrange(-total_sales_value)
+```
+
 
 ```{r}
 transactions %>%
   mutate(pct_loyalty_disc = 1 - (loyalty_price / regular_price)) %>%
   group_by(store_id) %>%
-  summarize(
-    total_sales_value    = sum(sales_value, na.rm = TRUE), 
-    avg_pct_loyalty_disc = mean(pct_loyalty_disc, na.rm = TRUE)
-  ) %>%
-  filter(total_sales_value > 10000) %>%
+  summarize(avg_pct_loyalty_disc = mean(pct_loyalty_disc, na.rm = TRUE)) %>%
   arrange(desc(avg_pct_loyalty_disc))
 ```
 
 
 # Data Visualization
 
-The following five questions are based on concepts covered in the data visualization (`ggplot2`) slides. They can be answered using the `transactions` and `products` datasets from the `completejourney` package.  
+The following five questions are based on concepts covered in the data visualization (`ggplot2`) slides. They can be answered using the `transactions` and `products` datasets.  
 
 ---
 
-## Exercise 6
+## Exercise 5
 
 Create a histogram of the `quantity` variable in the `transactions` data. What, if anything, do you find unusual about this visualization? 
 
@@ -217,9 +186,9 @@ ggplot(data = transactions, aes(x = quantity)) +
 
 ---
 
-## Exercise 7
+## Exercise 6
 
-Use a line graph to plot total sales value by `date`. What kind of patterns do you find?
+Use a line graph to plot total sales value by `date` (I have included a mutate statement that parses the YYY-MM-DD from the `transaction_timestamp` variable and names it `date`). What kind of patterns do you find?
 
 This question is designed to strengthen your ability to use `dplyr` verbs in combination with `geom_line()`.
 
@@ -229,7 +198,8 @@ There is a definite weekly pattern to transactions; likely illustrating how most
 
 ```{r Q2}
 transactions %>% 
-  group_by(week, date) %>% 
+  mutate(date = lubridate::as_date(transaction_timestamp)) %>%
+  group_by(date) %>% 
   summarize(total_sales_value = sum(sales_value, na.rm = TRUE)) %>%
   ggplot(aes(x = date, y = total_sales_value)) + 
   geom_line()
@@ -237,7 +207,7 @@ transactions %>%
 
 ---
 
-## Exercise 8
+## Exercise 7
 
 Use a bar graph to compare the total sales values of national and private-label brands. 
 
@@ -251,7 +221,7 @@ This question is designed to strengthen your ability to use `dplyr` verbs in com
 
 #### Answer
 
-```{r Q3a}
+```{r, warning=FALSE}
 my_transaction_data %>%
   group_by(brand) %>%
   summarize(total_sales_value = sum(sales_value)) %>%
@@ -261,7 +231,7 @@ my_transaction_data %>%
 
 ---
 
-## Exercise 9
+## Exercise 8
 
 Building on the previous exercise, suppose you want to understand whether the retailer's customers' preference for national brands (compared to private-label brands) is stronger in the soft drink category than it is in the cheese category. Examine this supposition by using a stacked bar graph to compare the split between national and private-label brands for soft drinks and cheeses. 
 
@@ -284,7 +254,7 @@ my_transaction_data %>%
 
 ---
 
-## Exercise 10
+## Exercise 9
 
 The code below filters `my_transaction_data` to include only peanut better, jelly, and jam transactions. Then it creates a new variable named `package_size` equal to product size in ounces. Create a bar graph with `pb_and_j_data` to visualize the distribution of the retailer's PB\&J transactions by product size. Which two product sizes are the most popular?
 

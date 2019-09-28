@@ -6,11 +6,12 @@ Day 1 Case Study Solutions
 All of the exercises can be solved using the `tidyverse` and
 `completejourney` packages. The `completejourney` package is an R data
 package that has been created so the full suite of Complete Journey
-datasets can be loaded as a library. In order to use the data you must
-first install the package following these steps:
+datasets can be loaded as a library. You can find details about the data
+and the variables at <http://bit.ly/completejourney>. In order to use
+the data you must first install the package following these steps:
 
 ``` r
-devtools::install_github('bradleyboehmke/completejourney')
+install.packages('completejourney')
 ```
 
 **NOTE**: Installing packages from GitHub requires the installation of
@@ -25,58 +26,55 @@ library(completejourney)
 ```
 
 The exercises that follow will use various data sets included in the
-`completejourney` package to include:
+`completejourney` package to
+include:
 
 ``` r
+transactions <- transactions_sample  # just using a sample of the entire data
+
 transactions
+## # A tibble: 75,000 x 11
+##    household_id store_id basket_id product_id quantity sales_value
+##    <chr>        <chr>    <chr>     <chr>         <dbl>       <dbl>
+##  1 2261         309      31625220… 940996            1        3.86
+##  2 2131         368      32053127… 873902            1        1.59
+##  3 511          316      32445856… 847901            1        1   
+##  4 400          388      31932241… 13094913          2       11.9 
+##  5 918          340      32074655… 1085604           1        1.29
+##  6 718          324      32614612… 883203            1        2.5 
+##  7 868          323      32074722… 9884484           1        3.49
+##  8 1688         450      34850403… 1028715           1        2   
+##  9 467          31782    31280745… 896613            2        6.55
+## 10 1947         32004    32744181… 978497            1        3.99
+## # … with 74,990 more rows, and 5 more variables: retail_disc <dbl>,
+## #   coupon_disc <dbl>, coupon_match_disc <dbl>, week <int>,
+## #   transaction_timestamp <dttm>
 products
+## # A tibble: 92,331 x 7
+##    product_id manufacturer_id department brand product_category
+##    <chr>      <chr>           <chr>      <fct> <chr>           
+##  1 25671      2               GROCERY    Nati… FRZN ICE        
+##  2 26081      2               MISCELLAN… Nati… <NA>            
+##  3 26093      69              PASTRY     Priv… BREAD           
+##  4 26190      69              GROCERY    Priv… FRUIT - SHELF S…
+##  5 26355      69              GROCERY    Priv… COOKIES/CONES   
+##  6 26426      69              GROCERY    Priv… SPICES & EXTRAC…
+##  7 26540      69              GROCERY    Priv… COOKIES/CONES   
+##  8 26601      69              DRUG GM    Priv… VITAMINS        
+##  9 26636      69              PASTRY     Priv… BREAKFAST SWEETS
+## 10 26691      16              GROCERY    Priv… PNT BTR/JELLY/J…
+## # … with 92,321 more rows, and 2 more variables: product_type <chr>,
+## #   package_size <chr>
 ```
 
 # Data Transformation
 
 The following five exercises are based on concepts covered in the data
-transformation (`dplyr`) slides. Answer them using `transactions` in the
-Complete Journey data package modified with the following ( ***run the
-below code before performing the exercises that follow\!*** ):
-
-``` r
-transactions <- transactions %>% 
-  select(
-    quantity,
-    sales_value, 
-    retail_disc, coupon_disc, coupon_match_disc,
-    household_id, store_id, basket_id, product_id, 
-    week, transaction_timestamp
-  ) %>%
-  mutate(date = lubridate::as_date(transaction_timestamp))
-```
+transformation (`dplyr`) slides.
 
 -----
 
 ## Exercise 1
-
-Change the discount variables (i.e., `retail_disc`, `coupon_disc`,
-`coupon_match_disc`) from negative to positive.
-
-**Hint:** Use the `abs()` function within `mutate()`.
-
-This question is designed to strengthen your ability to use the `dplyr`
-verb `mutate()` to overwrite an existing variable.
-
-#### Answer
-
-``` r
-transactions <- transactions %>% 
-  mutate(
-    retail_disc       = abs(retail_disc),
-    coupon_disc       = abs(coupon_disc),
-    coupon_match_disc = abs(coupon_match_disc)
-  )
-```
-
------
-
-## Exercise 2
 
 Create three new variables named `regular_price`, `loyalty_price`, and
 `coupon_price` according to the following
@@ -104,30 +102,30 @@ in `transactions`.
   ) %>% 
   select(regular_price, loyalty_price, coupon_price, everything())
 )
-## # A tibble: 1,469,307 x 15
-##    regular_price loyalty_price coupon_price quantity sales_value
-##            <dbl>         <dbl>        <dbl>    <int>       <dbl>
-##  1          0.5           0.5          0.5         1        0.5 
-##  2          1.09          0.99         0.99        1        0.99
-##  3          1.58          1.43         1.43        1        1.43
-##  4          1.79          1.5          1.5         1        1.5 
-##  5          1.79          1.39         1.39        2        2.78
-##  6          5.99          5.49         5.49        1        5.49
-##  7          1.79          1.5          1.5         1        1.5 
-##  8          2.09          1.88         1.88        1        1.88
-##  9          2.79          1.5          1.5         1        1.5 
-## 10          2.69          2.69         2.69        1        2.69
-## # ... with 1,469,297 more rows, and 10 more variables: retail_disc <dbl>,
-## #   coupon_disc <dbl>, coupon_match_disc <dbl>, household_id <chr>,
-## #   store_id <chr>, basket_id <chr>, product_id <chr>, week <dbl>,
-## #   transaction_timestamp <dttm>, date <date>
+## # A tibble: 75,000 x 14
+##    regular_price loyalty_price coupon_price household_id store_id basket_id
+##            <dbl>         <dbl>        <dbl> <chr>        <chr>    <chr>    
+##  1          4.29          3.86         3.86 2261         309      31625220…
+##  2          2.49          1.59         1.59 2131         368      32053127…
+##  3          1.69          1            1    511          316      32445856…
+##  4          7.38          5.94         5.94 400          388      31932241…
+##  5          1.29          1.29         1.29 918          340      32074655…
+##  6          2.99          2.5          2.5  718          324      32614612…
+##  7          3.49          3.49         3.49 868          323      32074722…
+##  8          3.79          2            2    1688         450      34850403…
+##  9          5.50          3.28         3.28 467          31782    31280745…
+## 10          3.99          3.99         3.99 1947         32004    32744181…
+## # … with 74,990 more rows, and 8 more variables: product_id <chr>,
+## #   quantity <dbl>, sales_value <dbl>, retail_disc <dbl>,
+## #   coupon_disc <dbl>, coupon_match_disc <dbl>, week <int>,
+## #   transaction_timestamp <dttm>
 ```
 
 -----
 
-## Exercise 3
+## Exercise 2
 
-`transactions` includes 68,509 unique product IDs. How many of these
+`transactions` includes 20,902 unique product IDs. How many of these
 products (not transactions\!) had a regular price of one dollar or less?
 What does this count equal when loyalty price is one dollar or less? How
 about when coupon price is one dollar or less?
@@ -140,10 +138,10 @@ verbs `filter()` and `select()`.
 
 #### Answer
 
-8,698 products had a regular price less than or equal to $1.00. This
-count for loyalty price is 14,043 products. For coupon price, it’s
-15,676. These numbers indicate that over 5,300 products were discounted
-to a dollar or less with loyalty-card promotions or coupons.
+2,748 products had a regular price less than or equal to $1.00. This
+count for loyalty price is 4,648 products. For coupon price, it’s 4,844.
+These numbers indicate that over 2,000 products were discounted to a
+dollar or less with loyalty-card promotions or coupons.
 
 ``` r
 # how many products had a regular price of $1 or less
@@ -151,26 +149,26 @@ transactions %>%
   filter(regular_price <= 1) %>% 
   select(product_id) %>% 
   n_distinct()
-## [1] 8698
+## [1] 2748
 
 # how many products had a loyalty price of $1 or less
 transactions %>% 
   filter(loyalty_price <= 1) %>% 
   select(product_id) %>% 
   n_distinct()
-## [1] 14043
+## [1] 4648
 
 # how many products had a coupon price of $1 or less
 transactions %>% 
   filter(coupon_price <= 1) %>% 
   select(product_id) %>% 
   n_distinct()
-## [1] 15676
+## [1] 4844
 ```
 
 -----
 
-## Exercise 4
+## Exercise 3
 
 What proportion of baskets are over $10 in sales value?
 
@@ -182,7 +180,7 @@ verbs `group_by()`, `summarize()` and `ungroup()`.
 
 #### Answer
 
-Approximately 66% of baskets bring the retailer over $10 in value.
+Approximately 11% of baskets bring the retailer over $10 in value.
 
 ``` r
 transactions%>%
@@ -192,15 +190,16 @@ transactions%>%
 ## # A tibble: 1 x 1
 ##   proportion_over_10
 ##                <dbl>
-## 1              0.661
+## 1              0.107
 ```
 
 -----
 
-## Exercise 5
+## Exercise 4
 
-Which store with over $10K in total `sales_value`, discounts its
-products the most for loyal customers?
+Which stores had the largest total `sales_value` (hint:
+`sum(sales_value, na.rm = TRUE)`? Which stores had the largest average
+loyalty discount as defined below?
 
 **Hint:** You can calculate loyalty discount as a percentage of regular
 price using the following logic:
@@ -210,52 +209,65 @@ pct_loyalty_disc = 1 - (loyalty_price / regular_price)
 ```
 
 This question is designed to strengthen your ability to use the `dplyr`
-verbs `filter()`, `mutate()`, `group_by()`, `summarize()`, and
-`arrange()`.
+verbs `mutate()`, `group_by()`, `summarize()`, and `arrange()`.
 
 #### Answer
 
-`store_id == 341` has, on average, a discount of 18.7% off regular price
-for members of the retailer’s loyalty program. The code below returns
-all stores in rank order to give a sense of how similar the discounting
-is (not) between stores.
+`store_id == 367` has has the largest total sales value and `store_id
+== 224` has the largest average loyalty discount percentage.
+
+``` r
+transactions %>%
+  group_by(store_id) %>%
+  summarize(total_sales_value = sum(sales_value, na.rm = TRUE)) %>%
+  arrange(-total_sales_value)
+## # A tibble: 293 x 2
+##    store_id total_sales_value
+##    <chr>                <dbl>
+##  1 367                  7713.
+##  2 406                  6034.
+##  3 429                  4702.
+##  4 343                  4471.
+##  5 361                  4061.
+##  6 356                  3807.
+##  7 381                  3746.
+##  8 292                  3702.
+##  9 31782                3684.
+## 10 321                  3515.
+## # … with 283 more rows
+```
 
 ``` r
 transactions %>%
   mutate(pct_loyalty_disc = 1 - (loyalty_price / regular_price)) %>%
   group_by(store_id) %>%
-  summarize(
-    total_sales_value    = sum(sales_value, na.rm = TRUE), 
-    avg_pct_loyalty_disc = mean(pct_loyalty_disc, na.rm = TRUE)
-  ) %>%
-  filter(total_sales_value > 10000) %>%
+  summarize(avg_pct_loyalty_disc = mean(pct_loyalty_disc, na.rm = TRUE)) %>%
   arrange(desc(avg_pct_loyalty_disc))
-## # A tibble: 106 x 3
-##    store_id total_sales_value avg_pct_loyalty_disc
-##    <chr>                <dbl>                <dbl>
-##  1 341                 24163.                0.187
-##  2 306                 27890.                0.164
-##  3 436                 29880.                0.157
-##  4 31401               20265.                0.154
-##  5 403                 32507.                0.153
-##  6 422                 58873.                0.152
-##  7 288                 21336.                0.152
-##  8 370                 31398.                0.151
-##  9 311                 37335.                0.150
-## 10 443                 38471.                0.149
-## # ... with 96 more rows
+## # A tibble: 293 x 2
+##    store_id avg_pct_loyalty_disc
+##    <chr>                   <dbl>
+##  1 224                     0.576
+##  2 62                      0.501
+##  3 779                     0.475
+##  4 3163                    0.433
+##  5 784                     0.430
+##  6 2950                    0.418
+##  7 572                     0.401
+##  8 65                      0.390
+##  9 486                     0.388
+## 10 2839                    0.373
+## # … with 283 more rows
 ```
 
 # Data Visualization
 
 The following five questions are based on concepts covered in the data
 visualization (`ggplot2`) slides. They can be answered using the
-`transactions` and `products` datasets from the `completejourney`
-package.
+`transactions` and `products` datasets.
 
 -----
 
-## Exercise 6
+## Exercise 5
 
 Create a histogram of the `quantity` variable in the `transactions`
 data. What, if anything, do you find unusual about this visualization?
@@ -279,9 +291,11 @@ ggplot(data = transactions, aes(x = quantity)) +
 
 -----
 
-## Exercise 7
+## Exercise 6
 
-Use a line graph to plot total sales value by `date`. What kind of
+Use a line graph to plot total sales value by `date` (I have included a
+mutate statement that parses the YYY-MM-DD from the
+`transaction_timestamp` variable and names it `date`). What kind of
 patterns do you find?
 
 This question is designed to strengthen your ability to use `dplyr`
@@ -296,7 +310,8 @@ holidays.
 
 ``` r
 transactions %>% 
-  group_by(week, date) %>% 
+  mutate(date = lubridate::as_date(transaction_timestamp)) %>%
+  group_by(date) %>% 
   summarize(total_sales_value = sum(sales_value, na.rm = TRUE)) %>%
   ggplot(aes(x = date, y = total_sales_value)) + 
   geom_line()
@@ -306,7 +321,7 @@ transactions %>%
 
 -----
 
-## Exercise 8
+## Exercise 7
 
 Use a bar graph to compare the total sales values of national and
 private-label brands.
@@ -333,11 +348,11 @@ my_transaction_data %>%
   geom_col()
 ```
 
-![](01-case-study-solutions_files/figure-gfm/Q3a-1.png)<!-- -->
+![](01-case-study-solutions_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 -----
 
-## Exercise 9
+## Exercise 8
 
 Building on the previous exercise, suppose you want to understand
 whether the retailer’s customers’ preference for national brands
@@ -369,7 +384,7 @@ my_transaction_data %>%
 
 -----
 
-## Exercise 10
+## Exercise 9
 
 The code below filters `my_transaction_data` to include only peanut
 better, jelly, and jam transactions. Then it creates a new variable
@@ -405,18 +420,26 @@ This result can be confirmed numerically in the data below:
 pb_and_j_data %>% 
   count(product_size) %>% 
   arrange(-n)
-## # A tibble: 22 x 2
+## # A tibble: 19 x 2
 ##    product_size     n
 ##    <fct>        <int>
-##  1 18            2926
-##  2 32             737
-##  3 12             559
-##  4 16             498
-##  5 28             470
-##  6 <NA>           402
-##  7 40             301
-##  8 13             183
-##  9 17             158
-## 10 15             157
-## # ... with 12 more rows
+##  1 18             168
+##  2 32              37
+##  3 12              28
+##  4 16              21
+##  5 28              21
+##  6 <NA>            20
+##  7 40              14
+##  8 17              13
+##  9 15               9
+## 10 21               9
+## 11 10               8
+## 12 20               5
+## 13 13               4
+## 14 22               4
+## 15 64               4
+## 16 8                3
+## 17 11               3
+## 18 24               3
+## 19 48               2
 ```
