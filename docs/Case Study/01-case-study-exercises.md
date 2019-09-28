@@ -135,7 +135,7 @@ transactions %>%
 
 -----
 
-## Exercise 3
+## Exercise 4
 
 What proportion of baskets are over $10 in sales value?
 
@@ -154,7 +154,7 @@ transactions%>%
 
 -----
 
-## Exercise 4
+## Exercise 5
 
 Which stores had the largest total `sales_value` (hint:
 `sum(sales_value, na.rm = TRUE)`? Which stores had the largest average
@@ -197,7 +197,7 @@ visualization (`ggplot2`) slides. They can be answered using the
 
 -----
 
-## Exercise 5
+## Exercise 6
 
 Create a histogram of the `quantity` variable in the `transactions`
 data. What, if anything, do you find unusual about this visualization?
@@ -212,7 +212,7 @@ ggplot(data = ______, aes(x = ______)) +
 
 -----
 
-## Exercise 6
+## Exercise 7
 
 Use a line graph to plot total sales value by `date` (I have included a
 mutate statement that parses the YYY-MM-DD from the
@@ -233,7 +233,7 @@ transactions %>%
 
 -----
 
-## Exercise 7
+## Exercise 8
 
 Use a bar graph to compare the total sales values of national and
 private-label brands.
@@ -260,7 +260,7 @@ my_transaction_data %>%
 
 -----
 
-## Exercise 8
+## Exercise 9
 
 Building on the previous exercise, suppose you want to understand
 whether the retailer’s customers’ preference for national brands
@@ -290,7 +290,7 @@ my_transaction_data %>%
 
 -----
 
-## Exercise 9
+## Exercise 10
 
 The code below filters `my_transaction_data` to include only peanut
 better, jelly, and jam transactions. Then it creates a new variable

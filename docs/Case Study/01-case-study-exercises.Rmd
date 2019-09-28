@@ -128,7 +128,7 @@ transactions %>%
 
 ---
 
-## Exercise 3
+## Exercise 4
 
 What proportion of baskets are over $10 in sales value? 
 
@@ -145,7 +145,7 @@ transactions%>%
 
 ---
 
-## Exercise 4
+## Exercise 5
 
 Which stores had the largest total `sales_value` (hint: `sum(sales_value, na.rm = TRUE)`? Which stores had the largest average loyalty discount as defined below?  
 
@@ -182,7 +182,7 @@ The following five questions are based on concepts covered in the data visualiza
 
 ---
 
-## Exercise 5
+## Exercise 6
 
 Create a histogram of the `quantity` variable in the `transactions` data. What, if anything, do you find unusual about this visualization? 
 
@@ -196,7 +196,7 @@ ggplot(data = ______, aes(x = ______)) +
 
 ---
 
-## Exercise 6
+## Exercise 7
 
 Use a line graph to plot total sales value by `date` (I have included a mutate statement that parses the YYY-MM-DD from the `transaction_timestamp` variable and names it `date`). What kind of patterns do you find?
 
@@ -213,7 +213,7 @@ transactions %>%
 
 ---
 
-## Exercise 7
+## Exercise 8
 
 Use a bar graph to compare the total sales values of national and private-label brands. 
 
@@ -235,7 +235,7 @@ my_transaction_data %>%
 
 ---
 
-## Exercise 8
+## Exercise 9
 
 Building on the previous exercise, suppose you want to understand whether the retailer's customers' preference for national brands (compared to private-label brands) is stronger in the soft drink category than it is in the cheese category. Examine this supposition by using a stacked bar graph to compare the split between national and private-label brands for soft drinks and cheeses. 
 
@@ -256,7 +256,7 @@ my_transaction_data %>%
 
 ---
 
-## Exercise 9
+## Exercise 10
 
 The code below filters `my_transaction_data` to include only peanut better, jelly, and jam transactions. Then it creates a new variable named `package_size` equal to product size in ounces. Create a bar graph with `pb_and_j_data` to visualize the distribution of the retailer's PB\&J transactions by product size. Which two product sizes are the most popular?
 
