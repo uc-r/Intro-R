@@ -14,10 +14,6 @@ the data you must first install the package following these steps:
 install.packages('completejourney')
 ```
 
-**NOTE**: Installing packages from GitHub requires the installation of
-the devtools package, which can be installed by running the following
-command from the R console: `install.packages('devtools')`.
-
 Go ahead and load the `tidyverse` and `completejourney` packages:
 
 ``` r
@@ -176,7 +172,7 @@ What proportion of baskets are over $10 in sales value?
 your approach you may or may not use `mutate()`.
 
 This question is designed to strengthen your ability to use the `dplyr`
-verbs `group_by()`, `summarize()` and `ungroup()`.
+verbs `group_by()`, and `summarize()`.
 
 #### Answer
 
