@@ -32,12 +32,12 @@ filter(transactions, is.na(spend))
 
 ## ---- what will these produce? ------------------------------------------
 # set 1
-filter(transactions, week == 1, store_r == "SOUTH")
-filter(transactions, week == 1 & store_r == "SOUTH")
+filter(transactions, week_num == 1, store_r == "SOUTH")
+filter(transactions, week_num == 1 & store_r == "SOUTH")
 
 # set 2
 filter(transactions, store_r == "SOUTH" | store_r == "NORTH")
-filter(transactions, store %in% c("SOUTH", "NORTH"))
+filter(transactions, store_r %in% c("SOUTH", "NORTH"))
 
 # set 3 --> are these the same?
 filter(transactions, !(week_num < 50 | spend > 2))
