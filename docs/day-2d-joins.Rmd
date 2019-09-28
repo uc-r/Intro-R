@@ -375,9 +375,9 @@ class: yourturn
 
 ### Challenge
 
-1. Join the transactions and products data using `inner_join()`
+1. Join the transactions and products data using `inner_join()`. The join key is the `product_num` variable.
 
-2. Join the transactions, products, and households data using two `inner_join()`s
+2. Join the transactions, products, and households data using two `inner_join()`s. The join key between transactions and products is the `product_num` variable and the join key between transactions and housholds is the `hshd_num` variable.
 
 ]
 
@@ -583,9 +583,31 @@ class: yourturn
 
 Compute the total `spend` by `commodity` for household (`hshd_num`) 3708.  See if you can plot the results in rank order. 
 
---
+### Steps:
 
-### Solution
+```{r, eval=FALSE}
+households %>%
+  filter(______) %>%               # filter for hshd_num 3708
+  inner_join(______) %>%           # inner join w/transactions
+  inner_join(______) %>%           # inner join w/products
+  group_by(______) %>%             # group by commodity
+  summarize(total = ______) %>%    # compute total spend
+  ggplot(aes(______, ______)) +    # plot total spend vs. commodity
+  geom_point()
+```
+
+
+
+---
+class: yourturn
+
+# Your Turn!
+
+### Challenge
+
+Compute the total `spend` by `commodity` for household (`hshd_num`) 3708.  See if you can plot the results in rank order. 
+
+### Solution:
 
 .pull-left[
 
