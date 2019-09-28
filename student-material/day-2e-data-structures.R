@@ -102,7 +102,7 @@ a1[1, , ]
 
 
 ## ---Data Frames ----------------------------------------------------------
-completejourney::transactions
+completejourney::transactions_sample
 
 ## ---data frame indexing --------------------------------------------------
 # first 10 rows for 3 columns

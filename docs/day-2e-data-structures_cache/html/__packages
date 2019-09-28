@@ -9,3 +9,9 @@ purrr
 dplyr
 stringr
 forcats
+readxl
+lubridate
+hms
+completejourney
+ggmap
+gganimate
