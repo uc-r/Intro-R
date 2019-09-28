@@ -6,9 +6,11 @@ library(lubridate) # to work with dates
 library(hms)       # to work with dates
 
 ## ----load-data-----------------------------------------------------------
+library(completejourney)
+
 # complete journey data
-transactions <- completejourney::transactions
-products <- completejourney::products
+transactions <- transactions_sample
+products
 
 # imported data
 households <- data.table::fread("data/households.csv", data.table = FALSE) %>% as_tibble()

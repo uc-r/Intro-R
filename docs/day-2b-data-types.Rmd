@@ -2,7 +2,7 @@
 title: "Data Types"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
-date: "2018-12-13"
+date: "2019-10-18"
 output:
   xaringan::moon_reader:
     css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
@@ -66,7 +66,7 @@ class: yourturn
 ```{r types-of-data, echo=FALSE}
 library(tidyverse)
 
-completejourney::transactions %>%
+completejourney::transactions_sample %>%
   sample_n(1000) %>%
   inner_join(completejourney::products) %>%
   select(household_id, basket_id, brand, product_category, transaction_timestamp, quantity) %>%
@@ -157,10 +157,12 @@ library(hms)       # to work with dates
 
 ### Data sets
 
-```{r load-data}
+```{r load-data, results='hide'}
+library(completejourney)
+
 # complete journey data
-transactions <- completejourney::transactions
-products <- completejourney::products
+transactions <- transactions_sample
+products
 
 # imported data
 households <- data.table::fread("data/households.csv", data.table = FALSE) %>% as_tibble()
@@ -249,9 +251,9 @@ class: yourturn
 
 ### Challenge
 
-Using the __completejourney::transactions__ data and the `coupon_disc` variable
+Using the __transactions__ data and the `coupon_disc` variable
 
-1. How many transactions used a coupon?
+1. How many transactions used a coupon (coupon_disc > 0)?
 2. What proportion of transactions used a coupon?
 
 ]
@@ -499,7 +501,7 @@ class: yourturn
 
 ### Challenge
 
-Using the __completejourney::products__ data and `product_category` variable
+Using the __products__ data and `product_category` variable
 
 1. How many products contain "SEAFOOD"
 2. What is the proportion of products that contain "SEAFOOD"
@@ -1020,7 +1022,7 @@ class: yourturn
 
 ### Challenge
 
-Using the __completejourney::transactions__ data set
+Using the __transactions__ data set
 
 1. Make a bar chart showing the total number of transactions by weekday. Which weekday experiences the most traffic?
 
@@ -1052,7 +1054,7 @@ class: yourturn
 
 ### Challenge
 
-Using the __completejourney::transactions__ data set
+Using the __transactions__ data set
 
 1. Make a bar chart showing the total number of transactions by weekday. Which weekday experiences the most traffic?
 
