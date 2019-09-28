@@ -49,10 +49,12 @@ To prepare for this course please complete the following ***prior*** to
 the day of class:
 
 1.  Download the class material
-    [here](https://www.dropbox.com/sh/atlmrrqnxadlv2b/AACmHEKViL-eFeH9itgc5E9oa?dl=1).
-    This will provide you with the data and R scripts to follow along
-    during class. I have also included handy cheat sheets that you can
-    reference throughout different sections.
+    [here](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/uc-r/Intro-R/tree/master/student-material).
+    This will provide you with a zipped file that contains the data and
+    R scripts to follow along during class. I have also included handy
+    cheat sheets that you can reference throughout different sections.
+    Be sure to unzip this file and save it in an easy to reach directory
+    for the workshop.
 
 2.  All slides are available via the hyperlinks in the schedule above so
     that you can follow along.
@@ -61,9 +63,9 @@ the day of class:
     you have an earlier version of R that is at least version 3.4.5 or
     later you should be ok but its best to be as current as possible.
     
-      - R: 3.5.1 \[[download latest
+      - R: 3.6.1 \[[download latest
         version](https://cran.r-project.org/)\]
-      - RStudio: 1.1.463 \[[download latest
+      - RStudio: 1.2.5001 \[[download latest
         version](https://www.rstudio.com/products/rstudio/download/#download)\]
       - Visit [here](http://uc-r.github.io/basics#installation) if you
         need installation instructions
