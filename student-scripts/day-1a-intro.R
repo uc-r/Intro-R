@@ -1,6 +1,6 @@
 
 ## First Commands---------------------------------------------------------
-
+# my commment
 mtcars
 ?sum
 hist(mtcars$mpg)
@@ -42,8 +42,8 @@ getwd()
 
 ## Assigning & evaluating --------------------------------------------------
 
-x <- 4 + 3 / 10 ^ 2   # GOOD
-x = 4 + 3 / 10 ^ 2    # BAD
+x <- 4 + 3 / 10 ^ 2   # Good
+x = 4 + 3 / 10 ^ 2    # Works but not idiomatic
 
 # we can increment (build onto) existing objects
 x

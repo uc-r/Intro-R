@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Introduction to R</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="Brad Boehmke" />
-    <meta name="date" content="2018-12-13" />
+    <meta name="date" content="2018-10-17" />
     <link href="libs/font-awesome-animation/font-awesome-animation-emi.css" rel="stylesheet" />
     <script src="libs/fontawesome/js/fontawesome-all.min.js"></script>
     <link rel="stylesheet" href="scrollable.css" type="text/css" />
@@ -79,7 +79,7 @@ background-size: cover
 
 #### R Community
 
-&lt;img src="images/r-contributions.png" alt="family" width="400" /&gt;
+&lt;img src="images/r-contributions2.png" alt="family" width="400" /&gt;
 
 ]
 
@@ -111,10 +111,10 @@ background-size: cover
 
 | Course | Dates |
 |:------|:------:|
-| Intro to R | Dec 13-14 |
-| Intermediate R | Jan 31 - Feb 1 |
-| Advanced R | Feb 28 - Mar 1 |
-| Machine Learning with R | Apr 1-2 |
+| Intro to R | Oct 17-18 |
+| Intermediate R | Nov 21-22 |
+| Machine Learning with R | Jan/Feb ?? |
+| Deep Learning with R | Jan 20-21 |
 
 ]
 
@@ -449,8 +449,8 @@ getwd()
 
 
 ```r
-x &lt;- 4 + 3 / 10 ^ 2   # GOOD
-x = 4 + 3 / 10 ^ 2    # BAD
+x &lt;- 4 + 3 / 10 ^ 2   # Good
+x = 4 + 3 / 10 ^ 2    # Works but not idiomatic
 
 # we can increment (build onto) existing objects
 x
@@ -789,6 +789,7 @@ library(forcats)
 
 .center[[Back to training repo](https://github.com/uc-r/Intro-R)]
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "ratio": "16:9",
@@ -799,16 +800,57 @@ library(forcats)
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
 })();</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -822,7 +864,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

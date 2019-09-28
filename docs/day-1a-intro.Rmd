@@ -2,7 +2,7 @@
 title: "Introduction to R"
 subtitle: ".font70[.italic['Success is stumbling from failure to failure with no loss of enthusiasm'] - Winston Churchill]"
 author: "Brad Boehmke"
-date: "2018-12-13"
+date: "2018-10-17"
 output:
   xaringan::moon_reader:
     css: ["scrollable.css", "mtheme_max.css", "fonts_mtheme_max.css"]
@@ -102,7 +102,7 @@ knitr::include_graphics("images/name-tag.png")
 
 #### R Community
 
-<img src="images/r-contributions.png" alt="family" width="400" />
+<img src="images/r-contributions2.png" alt="family" width="400" />
 
 ]
 
@@ -140,10 +140,10 @@ knitr::include_graphics("images/applied-data-science.gif")
 
 | Course | Dates |
 |:------|:------:|
-| Intro to R | Dec 13-14 |
-| Intermediate R | Jan 31 - Feb 1 |
-| Advanced R | Feb 28 - Mar 1 |
-| Machine Learning with R | Apr 1-2 |
+| Intro to R | Oct 17-18 |
+| Intermediate R | Nov 21-22 |
+| Machine Learning with R | Jan/Feb ?? |
+| Deep Learning with R | Jan 20-21 |
 
 ]
 
@@ -483,8 +483,8 @@ knitr::include_graphics("images/set-wk-dir.png")
 ### Assigning & evaluating
 
 ```{r, error=TRUE}
-x <- 4 + 3 / 10 ^ 2   # GOOD
-x = 4 + 3 / 10 ^ 2    # BAD
+x <- 4 + 3 / 10 ^ 2   # Good
+x = 4 + 3 / 10 ^ 2    # Works but not idiomatic
 
 # we can increment (build onto) existing objects
 x
