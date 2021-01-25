@@ -8,6 +8,7 @@ library(dplyr)   # for other data wrangling tasks
 mpg
 
 ## ---- Exercise Data -----------------------------------------------------
+set.seed(123)
 transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% 
   sample_frac(0.25) %>%
   as_tibble()
@@ -93,7 +94,12 @@ ggplot(data = mpg, aes(x = displ, y = hwy)) +
 # Compute total spend by store region and week. Plot the week vs total spend 
 # and use facetting to compare store regions.
 
-
+transactions %>%
+  group_by(store_r, week_num) %>%
+  summarize(spend = sum(spend, na.rm = TRUE)) %>%
+  ggplot(aes(x = week_num, y = spend)) +
+  geom_line() + 
+  facet_wrap(~ store_r)
 
 ## ---- Titles --------------------------------------------------------------
 ggplot(data = mpg, aes(x = displ, y = hwy)) + 

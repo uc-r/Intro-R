@@ -1,7 +1,6 @@
 
 ## ----load-pkgs-----------------------------------------------------------
 library(tidyverse)
-library(forcats)   # to work with factors
 library(lubridate) # to work with dates
 library(hms)       # to work with dates
 
@@ -43,10 +42,12 @@ mean(x)
 ## ---- Your Turn Logicals---------------------------------------------------
 # Using the completejourney::transactions data and the coupon_disc variable
 #   1. How many transactions used a coupon?
+transactions %>%
+  summarise(how_many = sum(coupon_disc > 0))
+
 #   2. What proportion of transactions used a coupon?
-
-
-
+transactions %>%
+  summarise(proportion = mean(coupon_disc > 0))
 
 ## ----Character Data Types -------------------------------------------------
 
@@ -99,13 +100,13 @@ products %>%
 #   2. What is the proportion of products that contain "SEAFOOD"
 
 # Hint:
-## products %>%
-##   distinct(product_category) %>%
-##   mutate(seafood = _____) %>%
-##   summarise(
-##     count = _____,
-##     prop  = _____
-##     )
+products %>%
+  distinct(product_category) %>%
+  mutate(seafood = str_detect(product_category, pattern = "SEAFOOD")) %>%
+  summarise(
+    count = sum(seafood, na.rm = TRUE),
+    prop  = mean(seafood, na.rm = TRUE)
+    )
 
 
 
@@ -218,6 +219,14 @@ month("2018-12-02 01:31:27", label = TRUE)
 # get weekday
 wday("2018-12-02 01:31:27", label = TRUE, abbr = FALSE)
 
+# create new features
+transactions %>%
+  mutate(
+    weekday = wday(transaction_timestamp),
+    hour = hour(transaction_timestamp)
+    ) %>% 
+  select(transaction_timestamp, weekday, hour)
+
 # filter for weekends
 transactions %>%
   filter(wday(transaction_timestamp) %in% 6:7) %>% #<<
@@ -228,6 +237,11 @@ transactions %>%
   mutate(weekday = wday(transaction_timestamp, label = TRUE)) %>% #<<
   select(basket_id, transaction_timestamp, weekday)
 
+transactions %>%
+  group_by(month = month(transaction_timestamp, label = TRUE)) %>%
+  summarize(total_spend = sum(sales_value)) %>%
+  ggplot(aes(month, total_spend)) +
+  geom_col()
 
 ## ---- Your Turn Dates ---------------------------------------------------
 
@@ -238,4 +252,8 @@ transactions %>%
 #   2. Make a line chart showing the total daily sales value (sum(sales_value)) 
 #      for each day of the year (hint: use yday()). Is there any obvious trend 
 #      in the daily total sales value?
-
+transactions %>%
+  group_by(day = yday(transaction_timestamp)) %>%
+  summarize(total_spend = sum(sales_value)) %>%
+  ggplot(aes(day, total_spend)) +
+  geom_line()

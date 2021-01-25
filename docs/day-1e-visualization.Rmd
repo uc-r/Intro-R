@@ -37,6 +37,8 @@ library(ggplot2)
 thm <- theme_bw()
 theme_set(thm)
 
+library(dplyr)
+library(tibble)
 transactions <- data.table::fread("data/transactions.csv", data.table = FALSE) %>% 
   sample_frac(0.25) %>%
   as_tibble()
@@ -898,7 +900,7 @@ animate(p, renderer = gifski_renderer(), device = "png")
 
 <br><br><br><br><br>
 
-.center[https://www.ggplot2-exts.org/]
+.center[https://exts.ggplot2.tidyverse.org/]
 
 
 ]

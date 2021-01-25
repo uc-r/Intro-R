@@ -7,7 +7,6 @@ hist(mtcars$mpg)
 random_numbers <- runif(25)
 history()
 
-
 ## Getting Help ----------------------------------------------------------
 
 # provides details for specific function
