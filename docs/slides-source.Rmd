@@ -3097,7 +3097,7 @@ animate(p, renderer = gifski_renderer(), device = "png")
 
 <br><br><br><br><br>
 
-.center[https://www.ggplot2-exts.org/]
+.center[https://exts.ggplot2.tidyverse.org/]
 
 
 ]
